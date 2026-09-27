@@ -4,19 +4,20 @@ Supports destinés à des étudiants qui connaissent Java et découvrent Spring 
 
 Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Les diagrammes de séquence UML sont intégrés aux cours et fonctionnent hors ligne.
 
-| Séance | Cours | Atelier associé | Notions abordées |
+| Séance | Cours | Démo | Atelier associé | Notions abordées |
 | --- | --- | --- | --- |
-| 1 | [Découvrir Spring et lancer sa première application](cours/01-premiers-pas.html) | [Atelier 01 — Première application](ateliers/01-demarrage/index.html) | Framework, Spring Boot, contrôleur et première route |
-| 2 | [Comprendre HTTP et envoyer des données JSON](cours/02-http-json.html) | [Atelier 02 — HTTP et JSON](ateliers/02-http-json/index.html) | Requêtes, réponses, paramètres, objets Java et JSON |
-| 3 | [Comprendre les objets gérés par Spring et séparer les rôles](cours/03-injection-couches.html) | [Atelier 03 — Injection et service](ateliers/03-injection/index.html) | Beans, injection par constructeur, contrôleur et service |
-| 4 | [Créer une petite API de gestion d’utilisateurs](cours/04-api-crud.html) | [Atelier 04 — Annuaire en mémoire](ateliers/04-crud/index.html) | Requêtes CRUD, corps JSON, validation et statuts HTTP |
-| 5 | [Conserver les données avec Spring Data JPA](cours/05-persistance.html) | [Atelier 05 — Annuaire persistant](ateliers/05-persistance/index.html) | Entité, repository, base H2 et persistance |
-| 6 | [Vérifier son application et découvrir les transactions](cours/06-tests-transactions.html) | [Atelier 06 — Tests et transactions](ateliers/06-tests/index.html) | JUnit, assertions, MockMvc et rollback |
-| 7 | [Appeler une API depuis un programme Spring](cours/07-client-http.html) | [Atelier 07 — Client HTTP](ateliers/07-client/index.html) | RestClient, contrat HTTP, JSON et erreurs de connexion |
-| 8 | [Découvrir les messages asynchrones avec Spring JMS](cours/08-messages.html) | [Atelier 08 — Messages texte](ateliers/08-messages/index.html) | Producteur, broker, file et consommateur |
+| 1 | [Découvrir Spring et lancer sa première application](cours/01-premiers-pas.html) | [Lancer la démo](demos/course-01-premiers-pas/index.html) | [Atelier 01 — Première application](ateliers/01-demarrage/index.html) | Framework, Spring Boot, contrôleur et première route |
+| 2 | [Comprendre HTTP et envoyer des données JSON](cours/02-http-json.html) | [Lancer la démo](demos/course-02-http-json/index.html) | [Atelier 02 — HTTP et JSON](ateliers/02-http-json/index.html) | Requêtes, réponses, paramètres, objets Java et JSON |
+| 3 | [Comprendre les objets gérés par Spring et séparer les rôles](cours/03-injection-couches.html) | [Lancer la démo](demos/course-03-injection-couches/index.html) | [Atelier 03 — Injection et service](ateliers/03-injection/index.html) | Beans, injection par constructeur, contrôleur et service |
+| 4 | [Créer une petite API de gestion d’utilisateurs](cours/04-api-crud.html) | [Lancer la démo](demos/course-04-api-crud/index.html) | [Atelier 04 — Annuaire en mémoire](ateliers/04-crud/index.html) | Requêtes CRUD, corps JSON, validation et statuts HTTP |
+| 5 | [Conserver les données avec Spring Data JPA](cours/05-persistance.html) | [Lancer la démo](demos/course-05-persistance/index.html) | [Atelier 05 — Annuaire persistant](ateliers/05-persistance/index.html) | Entité, repository, base H2 et persistance |
+| 6 | [Vérifier son application et découvrir les transactions](cours/06-tests-transactions.html) | [Lancer la démo](demos/course-06-tests-transactions/index.html) | [Atelier 06 — Tests et transactions](ateliers/06-tests/index.html) | JUnit, assertions, MockMvc et rollback |
+| 7 | [Appeler une API depuis un programme Spring](cours/07-client-http.html) | [Lancer la démo](demos/course-07-client-http/index.html) | [Atelier 07 — Client HTTP](ateliers/07-client/index.html) | RestClient, contrat HTTP, JSON et erreurs de connexion |
+| 8 | [Découvrir les messages asynchrones avec Spring JMS](cours/08-messages.html) | [Lancer la démo](demos/course-08-messages/index.html) | [Atelier 08 — Messages texte](ateliers/08-messages/index.html) | Producteur, broker, file et consommateur |
 
 ## Ressources
 
+- [Démonstrations exécutables des huit cours](demos/index.html)
 - [Préparer le poste et démarrer les ateliers](demarrage.html)
 - [Glossaire Spring](guide-spring.html)
 - [Guide pédagogique](guide-pedagogique.html)

@@ -12,5 +12,5 @@
   <version>1.0.0</version>
   <packaging>pom</packaging>
   <properties><java.version>25</java.version></properties>
-  <modules><module>rest-users</module><module>jms-orders</module></modules>
+  <modules><module>rest-users</module><module>jms-orders</module><module>course-01-premiers-pas</module><module>course-02-http-json</module><module>course-03-injection-couches</module><module>course-04-api-crud</module><module>course-05-persistance</module><module>course-06-tests-transactions</module><module>course-07-client-http</module><module>course-08-messages</module></modules>
 </project>

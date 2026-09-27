@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Exemples complémentaires pour l’enseignant</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+<title>Démonstrations des huit cours Spring</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
 header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
@@ -25,13 +25,21 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
 <button onclick="window.print()">Imprimer / PDF</button></header>
 <main><section>
-<h1>Exemples complémentaires pour l’enseignant</h1>
-<p>Ces deux applications regroupent davantage de mécanismes et ne constituent pas les TP du parcours débutant. Pour enseigner les bases, utiliser les huit projets progressifs du dossier <a href="../ateliers/index.html">ateliers</a>.</p>
-<ul>
-<li><a href="rest-users/index.html">API utilisateurs complète</a> : exemple d’assemblage après les premières séances, avec validation et filtre de clé.</li>
-<li><a href="jms-orders/index.html">Événements de commande</a> : exemple complémentaire de contrat de message structuré.</li>
-</ul>
-<p>La lecture de ces projets n’est nécessaire pour aucun quiz ni pour le mini-projet débutant.</p></section></main><footer>Source modifiable : <a href="README.md">README.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<h1>Démonstrations des huit cours Spring</h1>
+<p>Huit applications Maven autonomes accompagnent les cours. Chaque démo montre un état exécutable du concept traité ; les ateliers associés servent aux manipulations des étudiants. Prérequis : Java 25 et Maven 3.9. Les projets utilisent Spring Boot 3.5.16.</p>
+<div class="table"><table>
+<tr><th>Cours</th><th>Démonstration</th><th>Ressources associées</th></tr>
+<tr><td>01</td><td><a href="course-01-premiers-pas/index.html">Découvrir Spring et lancer sa première application</a></td><td><a href="../cours/01-premiers-pas.html">Cours</a> · <a href="../ateliers/01-demarrage/index.html">Atelier</a></td></tr>
+<tr><td>02</td><td><a href="course-02-http-json/index.html">Comprendre HTTP et envoyer des données JSON</a></td><td><a href="../cours/02-http-json.html">Cours</a> · <a href="../ateliers/02-http-json/index.html">Atelier</a></td></tr>
+<tr><td>03</td><td><a href="course-03-injection-couches/index.html">Comprendre les objets gérés par Spring et séparer les rôles</a></td><td><a href="../cours/03-injection-couches.html">Cours</a> · <a href="../ateliers/03-injection/index.html">Atelier</a></td></tr>
+<tr><td>04</td><td><a href="course-04-api-crud/index.html">Créer une petite API de gestion d’utilisateurs</a></td><td><a href="../cours/04-api-crud.html">Cours</a> · <a href="../ateliers/04-crud/index.html">Atelier</a></td></tr>
+<tr><td>05</td><td><a href="course-05-persistance/index.html">Conserver les données avec Spring Data JPA</a></td><td><a href="../cours/05-persistance.html">Cours</a> · <a href="../ateliers/05-persistance/index.html">Atelier</a></td></tr>
+<tr><td>06</td><td><a href="course-06-tests-transactions/index.html">Vérifier son application et découvrir les transactions</a></td><td><a href="../cours/06-tests-transactions.html">Cours</a> · <a href="../ateliers/06-tests/index.html">Atelier</a></td></tr>
+<tr><td>07</td><td><a href="course-07-client-http/index.html">Appeler une API depuis un programme Spring</a></td><td><a href="../cours/07-client-http.html">Cours</a> · <a href="../ateliers/07-client/index.html">Atelier</a></td></tr>
+<tr><td>08</td><td><a href="course-08-messages/index.html">Découvrir les messages asynchrones avec Spring JMS</a></td><td><a href="../cours/08-messages.html">Cours</a> · <a href="../ateliers/08-messages/index.html">Atelier</a></td></tr>
+</table></div>
+<p>Les projets complémentaires <a href="rest-users/index.html">API utilisateurs complète</a> et <a href="jms-orders/index.html">événements de commande</a> montrent un assemblage plus avancé.</p>
+<p>Depuis ce dossier, <code>mvn test</code> lance les tests de tous les modules. Pour exécuter une démo isolément, ouvrir son dossier <code>course-XX-*</code> puis suivre son README.</p></section></main><footer>Source modifiable : <a href="README.md">README.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
 <script>
 const slides = Array.from(document.querySelectorAll('main section'));
 let currentSlide = 0;
