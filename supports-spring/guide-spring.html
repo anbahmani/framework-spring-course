@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossaire progressif — Les mots rencontrés dans les cours</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Glossaire progressif — Les mots rencontrés dans les cours</h1>
+<p>Lire les entrées de la séance en cours ; il n’est pas nécessaire de mémoriser toute la liste avant le premier TP.</p>
+<div class="table"><table>
+<tr><th>Cours</th><th>Mot</th><th>Sens dans notre parcours</th></tr>
+<tr><td>1</td><td>Client</td><td>Programme qui envoie une demande</td></tr>
+<tr><td>1</td><td>Serveur</td><td>Programme qui attend et traite des demandes</td></tr>
+<tr><td>1</td><td>API</td><td>Interface utilisable par un autre programme</td></tr>
+<tr><td>1</td><td>Framework</td><td>Cadre qui organise l’exécution et appelle notre code</td></tr>
+<tr><td>1</td><td>Spring Boot</td><td>Outils pour configurer et démarrer l’application Spring</td></tr>
+<tr><td>1</td><td>Maven / POM</td><td>Outil de préparation du projet / fichier qui le décrit</td></tr>
+<tr><td>1</td><td>Dépendance Maven</td><td>Bibliothèque nécessaire au projet</td></tr>
+<tr><td>1</td><td>Starter</td><td>Ensemble de dépendances préparé pour un besoin</td></tr>
+<tr><td>1</td><td>Annotation</td><td>Information attachée au code, écrite avec <code>@</code></td></tr>
+<tr><td>1</td><td>Contrôleur</td><td>Classe qui reçoit des demandes HTTP</td></tr>
+<tr><td>1</td><td>Port</td><td>Numéro permettant de joindre un service sur une machine</td></tr>
+<tr><td>2</td><td>HTTP</td><td>Protocole de requête et de réponse</td></tr>
+<tr><td>2</td><td>Route</td><td>Association entre méthode HTTP, chemin et traitement</td></tr>
+<tr><td>2</td><td>Statut</td><td>Code décrivant le résultat d’une requête</td></tr>
+<tr><td>2</td><td>Corps / en-têtes</td><td>Contenu du message / informations qui l’accompagnent</td></tr>
+<tr><td>2</td><td>JSON</td><td>Format texte représentant des objets et tableaux de données</td></tr>
+<tr><td>2</td><td>Sérialisation</td><td>Transformation de données Java en représentation texte</td></tr>
+<tr><td>3</td><td>Dépendance entre objets</td><td>Objet dont une classe a besoin pour travailler</td></tr>
+<tr><td>3</td><td>Injection</td><td>Fourniture d’une dépendance depuis l’extérieur</td></tr>
+<tr><td>3</td><td>Bean</td><td>Objet géré par Spring</td></tr>
+<tr><td>3</td><td>Conteneur</td><td>Infrastructure qui crée et assemble les beans</td></tr>
+<tr><td>3</td><td>Service</td><td>Classe qui porte des opérations et règles applicatives</td></tr>
+<tr><td>3</td><td>Couche</td><td>Regroupement de responsabilités dans le logiciel</td></tr>
+<tr><td>3</td><td>Singleton</td><td>Instance partagée pour un bean dans son conteneur</td></tr>
+<tr><td>4</td><td>CRUD</td><td>Créer, lire, modifier, supprimer</td></tr>
+<tr><td>4</td><td>DTO</td><td>Petit objet décrivant les données échangées</td></tr>
+<tr><td>4</td><td>Désérialisation</td><td>Conversion d’une représentation reçue vers un objet Java</td></tr>
+<tr><td>4</td><td>Contrat</td><td>Accord sur les requêtes et réponses de l’API</td></tr>
+<tr><td>5</td><td>Table / ligne / colonne</td><td>Ensemble de données / enregistrement / information nommée</td></tr>
+<tr><td>5</td><td>Clé primaire</td><td>Identifiant unique d’une ligne dans sa table</td></tr>
+<tr><td>5</td><td>Entité</td><td>Classe décrivant des données persistantes</td></tr>
+<tr><td>5</td><td>Repository</td><td>Composant offrant les opérations d’accès aux données</td></tr>
+<tr><td>5</td><td>Hibernate / H2</td><td>Outil de persistance objet / base utilisée dans le TP</td></tr>
+<tr><td>6</td><td>Assertion</td><td>Vérification d’un résultat attendu</td></tr>
+<tr><td>6</td><td>Test unitaire / intégration</td><td>Test isolé / test de composants assemblés</td></tr>
+<tr><td>6</td><td>Transaction</td><td>Groupe d’opérations de base à valider ou annuler ensemble</td></tr>
+<tr><td>6</td><td>Commit / rollback</td><td>Validation / annulation des changements de la transaction</td></tr>
+<tr><td>7</td><td>RestClient</td><td>Outil Spring pour appeler une API HTTP</td></tr>
+<tr><td>7</td><td>Synchrone</td><td>Le code attend le résultat de l’appel avant de poursuivre</td></tr>
+<tr><td>8</td><td>Asynchrone</td><td>L’envoi et la fin du traitement sont découplés</td></tr>
+<tr><td>8</td><td>Producteur / consommateur</td><td>Composant qui envoie / qui reçoit et traite</td></tr>
+<tr><td>8</td><td>File / broker</td><td>Destination d’attente / logiciel qui gère les échanges</td></tr>
+<tr><td>8</td><td>Listener</td><td>Méthode appelée lorsqu’un événement ou message arrive</td></tr>
+</table></div>
+<h2>Retrouver une annotation par son usage</h2>
+<div class="table"><table>
+<tr><th>Annotation</th><th>Première séance</th><th>Ce qu’elle indique ici</th></tr>
+<tr><td><code>@SpringBootApplication</code></td><td>1</td><td>Classe de démarrage</td></tr>
+<tr><td><code>@RestController</code></td><td>1</td><td>Contrôleur renvoyant du contenu au client</td></tr>
+<tr><td><code>@GetMapping</code></td><td>1</td><td>Route de lecture</td></tr>
+<tr><td><code>@RequestParam</code>, <code>@PathVariable</code></td><td>2</td><td>Lecture d’un paramètre ou d’un segment du chemin</td></tr>
+<tr><td><code>@Service</code></td><td>3</td><td>Service découvert et géré par Spring</td></tr>
+<tr><td><code>@RequestBody</code></td><td>4</td><td>Lecture et conversion du corps de requête</td></tr>
+<tr><td><code>@PostMapping</code>, <code>@PutMapping</code>, <code>@DeleteMapping</code></td><td>4</td><td>Routes des autres opérations CRUD</td></tr>
+<tr><td><code>@RestControllerAdvice</code>, <code>@ExceptionHandler</code></td><td>4</td><td>Traitement commun des erreurs de contrôleur</td></tr>
+<tr><td><code>@Entity</code>, <code>@Id</code></td><td>5</td><td>Classe persistante et identifiant</td></tr>
+<tr><td><code>@Test</code></td><td>6</td><td>Méthode de test</td></tr>
+<tr><td><code>@Transactional</code></td><td>6</td><td>Frontière d’une transaction de service</td></tr>
+<tr><td><code>@JmsListener</code></td><td>8</td><td>Méthode recevant les messages d’une destination</td></tr>
+</table></div></section></main><footer>Source modifiable : <a href="guide-spring.md">guide-spring.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

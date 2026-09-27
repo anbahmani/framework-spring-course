@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préparer son premier TP Spring</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Préparer son premier TP Spring</h1>
+<h2>Ce que vous devez déjà savoir</h2>
+<p>Créer une classe Java, appeler une méthode, utiliser un constructeur, une liste et une exception simple. Les mots propres à Spring et aux API seront expliqués dans les cours. Un petit rappel des records est inclus au cours 2.</p>
+<h2>Préparer le poste avec l’enseignant</h2>
+<p>Installer ou faire préparer <strong>un JDK 25</strong>, <strong>Maven 3.9</strong>, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier <code>pom.xml</code>. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.</p>
+<p>Les deux premiers projets sont déjà fournis : aucun générateur de projet, serveur externe ou base de données séparée n’est nécessaire.</p>
+<h2>Vérifier avant de coder</h2>
+<p>Ouvrir un terminal et exécuter séparément :</p>
+<pre><code>java -version
+mvn -v</code></pre>
+<p>Les deux sorties doivent annoncer Java 25. Si Maven affiche une autre version Java, demander à l’enseignant de régler le JDK du terminal et du projet. Si <code>mvn</code> est introuvable, cela concerne l’installation de l’outil, pas le code de votre contrôleur.</p>
+<p>Ouvrir le dossier de l’atelier dans l’IDE comme projet Maven. Attendre la fin de l’import des dépendances. Ne pas copier seulement un fichier <code>.java</code> dans un projet console vide : les bibliothèques Spring seraient absentes.</p>
+<h2>Où exécuter les commandes ?</h2>
+<p>Pour le cours 1, ouvrir un terminal <strong>dans <code>supports-spring/ateliers/01-demarrage</code></strong>, le dossier où se trouve son <code>pom.xml</code>.</p>
+<pre><code>mvn spring-boot:run</code></pre>
+<p>Le serveur doit rester actif pendant que vous utilisez le navigateur ou un second terminal. Attendre <code>Started Application</code>. Pour arrêter : Ctrl+C dans le terminal du serveur. Après chaque modification Java dans ces ateliers, arrêter et relancer ; le rechargement automatique n’est pas configuré.</p>
+<p>Pour changer d’atelier, arrêter le précédent, ouvrir le nouveau dossier et lancer la commande à cet endroit. Les ateliers 01 et 02 utilisent tous les deux le port 8080, donc <strong>un seul de ces serveurs à la fois</strong>.</p>
+<h2>Envoyer des requêtes</h2>
+<p>Pour les premières lectures, saisir une URL dans le navigateur suffit. Pour voir le statut HTTP :</p>
+<pre><code>curl -i &#x27;http://localhost:8080/hello&#x27;</code></pre>
+<p>Les commandes curl des cours sont écrites pour Bash/zsh ou un terminal compatible, comme Git Bash. Dans PowerShell, <code>curl.exe -i http://localhost:8080/hello</code> appelle explicitement curl pour une lecture.</p>
+<p>Pour un POST JSON dans PowerShell, utiliser cette alternative lorsque les guillemets de curl posent problème :</p>
+<pre><code>$body = @{ name = &quot;Ana&quot; } | ConvertTo-Json
+Invoke-WebRequest -Uri &#x27;http://localhost:8080/users&#x27; -Method Post -ContentType &#x27;application/json&#x27; -Body $body</code></pre>
+<p><code>Invoke-WebRequest</code> affiche le statut et le contenu d’une réponse réussie ; il signale les réponses 4xx comme erreurs. Les exercices d’observation des statuts se font plus simplement avec les commandes curl dans un terminal Bash/zsh fourni en salle. Ne pas confondre une erreur HTTP attendue et une panne de compilation.</p>
+<h2>Dépanner dans l’ordre</h2>
+<div class="table"><table>
+<tr><th>Symptôme</th><th>Vérification utile</th></tr>
+<tr><td>Pas de <code>pom.xml</code> trouvé</td><td>Ouvrir le bon dossier avant de lancer Maven</td></tr>
+<tr><td>Imports Spring en rouge</td><td>Attendre/recharger l’import Maven, vérifier le réseau</td></tr>
+<tr><td>Erreur de compilation</td><td>Lire le premier fichier et numéro de ligne signalés</td></tr>
+<tr><td>Port 8080 déjà utilisé</td><td>Arrêter l’autre atelier plutôt que lancer plusieurs copies</td></tr>
+<tr><td>Connexion refusée</td><td>Vérifier que le serveur a démarré et reste actif</td></tr>
+<tr><td>Réponse 404</td><td>Vérifier le chemin demandé et le mapping du contrôleur</td></tr>
+<tr><td>Ancien texte toujours affiché</td><td>Arrêter, relancer puis actualiser la page</td></tr>
+<tr><td>Test qui échoue</td><td>Comparer valeur attendue et valeur obtenue dans le rapport</td></tr>
+<tr><td>Base H2 verrouillée</td><td>Arrêter l’autre processus utilisant le même fichier</td></tr>
+</table></div>
+<h2>Utiliser les solutions sans sauter l’apprentissage</h2>
+<p>Chaque projet est un état de départ fonctionnel : commencer par observer ce qu’il fait, puis appliquer la modification demandée dans le TP. Le volet « Aide et correction du TP » montre la solution de cette modification. Au début, les tests fournis servent à vérifier le projet ; leur écriture devient un objectif au cours 6.</p></section></main><footer>Source modifiable : <a href="demarrage.md">demarrage.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 1 — Découvrir Spring et lancer sa première application</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 1 — Découvrir Spring et lancer sa première application</h1>
+<p><strong>Durée : 3 h. Prérequis : écrire une classe Java, une méthode et un <code>main</code>.</strong></p>
+<p>À la fin, vous saurez lancer puis arrêter une application Spring Boot, appeler une première adresse et expliquer les trois annotations rencontrées. Aucun serveur ni framework n’est supposé connu.</p>
+</section><section>
+<h2>1. Partir d’un programme Java connu</h2>
+<p>Dans un programme console, <code>main</code> peut appeler <code>System.out.println(&quot;Bonjour&quot;)</code>, puis le programme se termine. Maintenant, nous voulons qu’un autre programme puisse demander ce message, éventuellement plusieurs fois. Notre application doit rester démarrée, attendre une demande et envoyer une réponse.</p>
+<p>Le programme qui demande est le <strong>client</strong>. Celui qui attend et répond est le <strong>serveur</strong>. Un navigateur peut être un client. Les deux peuvent fonctionner sur le même ordinateur : c’est ce que nous ferons pendant les TP.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 806 142" aria-label="Navigateur puis Requete /hello puis Application Spring puis Reponse texte"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Navigateur</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">Requete /hello</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Application Spring</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Reponse texte</tspan></text></svg></figure>
+<p>Une <strong>API</strong> est une interface par laquelle un programme utilise les fonctions d’un autre. Ici, cette interface sera accessible par des adresses HTTP. Nous détaillerons ce protocole à la séance 2.</p>
+</section><section>
+<h2>2. Pourquoi utiliser un framework ?</h2>
+<p>Une bibliothèque contient du code réutilisable que l’on appelle. Un <strong>framework</strong> organise une partie du fonctionnement de l’application et appelle notre code aux endroits prévus. Il évite, par exemple, de programmer toute la réception des demandes réseau.</p>
+<p><strong>Spring</strong> fournit des outils pour construire des applications Java. <strong>Spring Boot</strong> simplifie leur préparation et leur démarrage. <strong>Spring MVC</strong> relie les demandes HTTP aux méthodes Java qui doivent répondre. Pour cette séance, retenir leurs rôles suffit ; il n’est pas demandé de connaître leur fonctionnement interne.</p>
+<p>Notre responsabilité reste d’écrire la réponse et les règles de l’application. Le framework ne connaît pas spontanément le nom des utilisateurs ni les règles d’une boutique.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 806 142" aria-label="Demande HTTP puis Spring MVC puis Methode Java puis Contenu de reponse"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Demande HTTP</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">Spring MVC</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Methode Java</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Contenu de reponse</tspan></text></svg></figure>
+</section><section>
+<h2>3. Lire le dossier d’un projet</h2>
+<p>Ouvrir <code>ateliers/01-demarrage</code>. C’est un petit projet complet, sans base de données ni mot de passe.</p>
+<pre><code>01-demarrage/
+├── pom.xml
+└── src/
+    ├── main/java/fr/miage/debut/
+    │   ├── Application.java
+    │   └── HelloController.java
+    ├── main/resources/application.properties
+    └── test/java/...</code></pre>
+<p><code>src/main/java</code> contient le code de l’application. <code>src/main/resources</code> contient sa configuration. Les fichiers de <code>src/test</code> vérifient le fonctionnement ; nous apprendrons à les lire à la séance 6.</p>
+<p><strong>Maven</strong> est l’outil qui télécharge les bibliothèques, compile et lance certaines commandes du projet. Sa recette s’appelle <code>pom.xml</code>. Une <strong>dépendance Maven</strong> est une bibliothèque nécessaire au projet. Le <strong>starter web</strong> est un ensemble de dépendances préparé pour une application web.</p>
+<p>Dans le POM, repérer <code>spring-boot-starter-web</code>, <code>java.version</code> et <code>spring-boot-maven-plugin</code>. Le parent fixe des réglages communs ; le plugin permet notamment la commande de lancement. Il n’est pas demandé d’écrire tout le POM de mémoire.</p>
+</section><section>
+<h2>4. Le point de départ reste <code>main</code></h2>
+<pre><code>package fr.miage.debut;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+<p><code>package</code> et <code>import</code> gardent leur sens habituel en Java. Le préfixe <code>@</code> indique une <strong>annotation</strong> : une information attachée à une classe ou une méthode, que des outils peuvent lire. Une annotation n’est pas un appel de méthode.</p>
+<p><code>@SpringBootApplication</code> désigne ici la classe de démarrage. <code>SpringApplication.run(...)</code> lance Spring et, avec le starter web, le serveur HTTP embarqué. « Embarqué » signifie qu’il démarre avec notre application : nous n’installons pas un serveur séparé.</p>
+<p>Placer les autres classes dans <code>fr.miage.debut</code> ou ses sous-packages permet à Spring de les rechercher à partir de ce point de départ.</p>
+</section><section>
+<h2>5. Une méthode qui répond</h2>
+<pre><code>package fr.miage.debut;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+    @GetMapping(&quot;/hello&quot;)
+    public String hello() {
+        return &quot;Bonjour Spring&quot;;
+    }
+}</code></pre>
+<p>Un <strong>contrôleur</strong> est une classe qui reçoit des demandes web. <code>@RestController</code> signale ce rôle et indique que le résultat doit servir de contenu de réponse. <code>@GetMapping(&quot;/hello&quot;)</code> associe une demande GET sur <code>/hello</code> à cette méthode.</p>
+<p>C’est Spring qui appelle <code>hello()</code> quand la demande arrive. Le <code>return</code> envoie le texte au client. Un <code>System.out.println</code> écrirait seulement dans le terminal du serveur : ce ne serait pas la réponse du navigateur.</p>
+</section><section>
+<h2>6. Comprendre l’adresse</h2>
+<p>Dans <code>http://localhost:8080/hello</code>, <code>http</code> indique le protocole, <code>localhost</code> notre ordinateur, <code>8080</code> le <strong>port</strong> où l’application écoute, et <code>/hello</code> le chemin demandé. Un port permet de distinguer plusieurs services sur une même machine.</p>
+<p>Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveur tourne mais que le chemin n’existe pas, il peut répondre avec une erreur 404. Nous apprendrons à lire les codes de réponse au cours suivant.</p>
+</section><section>
+<h2>TP guidé — obtenir puis modifier une réponse</h2>
+<p><strong>Point de départ :</strong> <a href="../ateliers/01-demarrage/index.html">atelier 01</a>. Prévoir 65 minutes. Le poste doit être préparé avec la <a href="../demarrage.html">fiche de démarrage</a>.</p>
+<h3>Étape 1 — vérifier les outils (10 min)</h3>
+<p>Ouvrir un terminal dans <code>ateliers/01-demarrage</code>, le dossier contenant <code>pom.xml</code>. Exécuter <code>java -version</code> puis <code>mvn -v</code>. Vérifier que Maven utilise Java 25. Une commande introuvable se règle avec l’enseignant avant de modifier le code.</p>
+<h3>Étape 2 — démarrer (10 min)</h3>
+<pre><code>mvn spring-boot:run</code></pre>
+<p>Attendre le message <code>Started Application</code>. Le terminal reste occupé : l’application attend les demandes. Le premier lancement peut télécharger des dépendances et nécessite un accès réseau.</p>
+<h3>Étape 3 — appeler (10 min)</h3>
+<p>Ouvrir <code>http://localhost:8080/hello</code> dans le navigateur. <strong>Résultat attendu :</strong> <code>Bonjour Spring</code>. Recharger la page : la méthode est appelée à nouveau. Lire les deux classes et tracer à la main le chemin du navigateur vers <code>hello()</code>.</p>
+<h3>Étape 4 — modifier (15 min)</h3>
+<p>Remplacer le texte retourné par <code>Bonjour MIAGE</code>. Arrêter le serveur par Ctrl+C dans son terminal, puis relancer la même commande. Actualiser la page. Le projet ne recharge pas automatiquement les modifications.</p>
+<h3>Étape 5 — ajouter une route (20 min)</h3>
+<p>Dans <code>HelloController</code>, ajouter une méthode <code>info()</code> répondant à <code>/info</code> par <code>Mon premier serveur Java</code>. Utiliser le même modèle que <code>hello()</code>. Tester les deux adresses puis essayer <code>/inconnu</code>.</p>
+<p><strong>À rendre :</strong> <code>HelloController.java</code> et trois phrases expliquant client, contrôleur et rôle du <code>return</code>. <strong>Réussite :</strong> deux chemins renvoient deux textes distincts ; l’étudiant sait arrêter le serveur.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Ajouter dans la classe, avant sa dernière accolade :</p>
+<pre><code>@GetMapping(&quot;/info&quot;)
+public String info() { return &quot;Mon premier serveur Java&quot;; }</code></pre>
+<p>Si <code>/info</code> n’existe pas : vérifier le chemin, l’annotation, l’emplacement de la méthode dans la classe et le redémarrage. Si le port est occupé, arrêter l’autre application. Une classe nommée <code>InfoController</code> n’est pas nécessaire pour cette petite variante.</p>
+</details>
+<p>Référence enseignant : <a href="https://docs.spring.io/spring-boot/3.5/tutorial/first-application/index.html">première application Spring Boot</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<p>Une réponse attendue par question ; répondre avec les notions de cette séance.</p>
+<ol>
+<li>Dans notre essai, qui est le client : le navigateur ou <code>HelloController</code> ?</li>
+<li>Quel fichier décrit les dépendances Maven ?</li>
+<li>À quoi sert Spring Boot dans notre projet ?</li>
+<li>Quelle annotation signale la classe qui répond aux demandes web ?</li>
+<li>Quel chemin faut-il demander pour appeler une méthode annotée <code>@GetMapping(&quot;/info&quot;)</code> ?</li>
+<li>Le texte retourné par <code>return</code> et celui écrit par <code>System.out.println</code> arrivent-ils au même endroit ?</li>
+<li>Pourquoi le programme reste-t-il actif après son démarrage ?</li>
+<li>Après modification du code, quelles actions réalise-t-on dans ce TP avant de retester ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Le navigateur : il envoie la demande.</li>
+<li><code>pom.xml</code> : il contient notamment les dépendances.</li>
+<li>Il prépare et démarre l’application Spring avec son infrastructure configurée.</li>
+<li><code>@RestController</code>.</li>
+<li><code>/info</code>, sur l’adresse du serveur.</li>
+<li>Non : le premier devient la réponse au client ; le second s’affiche dans le terminal serveur.</li>
+<li>Il attend d’autres demandes, contrairement à un petit programme console qui termine son travail.</li>
+<li>Arrêter avec Ctrl+C, relancer, attendre le démarrage puis actualiser le navigateur.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="01-premiers-pas.md">01-premiers-pas.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

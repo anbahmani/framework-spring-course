@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 6 — Vérifier son application et découvrir les transactions</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 6 — Vérifier son application et découvrir les transactions</h1>
+<p><strong>Durée : 3 h. Prérequis : annuaire HTTP, service, repository et exceptions Java.</strong></p>
+<p>Objectifs : lire une assertion, lancer des tests, distinguer trois choses à vérifier et comprendre le principe « tout ou rien » d’une transaction. Aucun outil de test n’est supposé déjà connu.</p>
+</section><section>
+<h2>1. Pourquoi un test automatisé ?</h2>
+<p>Nous avons vérifié l’API avec curl. Mais après chaque modification, refaire tous les essais à la main devient long et facile à oublier. Un <strong>test automatisé</strong> exécute une action puis compare le résultat à ce qui est attendu.</p>
+<p>Une <strong>assertion</strong> est cette comparaison. Si elle échoue, le test échoue. Un test réussi prouve seulement le comportement qu’il vérifie dans ses conditions : il ne prouve pas que tout le programme est correct.</p>
+<p>JUnit est la bibliothèque qui organise les tests Java dans les ateliers. <code>@Test</code> marque une méthode à exécuter comme test. Maven lance les tests par <code>mvn test</code> ; lire ensuite le nombre d’échecs et d’erreurs dans le terminal.</p>
+</section><section>
+<h2>2. Commencer avec une classe Java simple</h2>
+<p>Nous savons créer le service du cours 3 sans démarrer de serveur. Le même principe permet ce test :</p>
+<pre><code>@Test
+void greetingContainsTheName() {
+    GreetingService service = new GreetingService();
+    String result = service.greet(&quot;Ana&quot;);
+    assertEquals(&quot;Bonjour Ana&quot;, result);
+}</code></pre>
+<p>Les trois étapes sont : préparer l’objet, agir, vérifier. <code>assertEquals</code> reçoit ici la valeur attendue puis la valeur réelle. Ce code est illustratif : le <code>GreetingService</code> se trouve dans l’atelier 03. Le TP utilisera le <code>UserService</code> de l’atelier 06.</p>
+<p>Un <strong>test unitaire</strong> vise une petite partie du code isolée. Un <strong>test d’intégration</strong> vérifie plusieurs composants assemblés, par exemple Spring et la base de données.</p>
+</section><section>
+<h2>3. Vérifier le contrat HTTP avec MockMvc</h2>
+<p><strong>MockMvc</strong> envoie une requête à la chaîne de traitement Spring MVC dans le test, sans ouvrir un serveur sur le port 8080.</p>
+<pre><code>mvc.perform(get(&quot;/users/999999&quot;))
+   .andExpect(status().isNotFound());</code></pre>
+<p><code>perform</code> exécute la requête simulée ; <code>andExpect</code> exprime le résultat attendu. Dans un test où cet identifiant n’existe pas, on attend 404. Un test de création peut aussi vérifier 201 et le nom dans le JSON.</p>
+<p>Dans <code>UserApiTest</code>, <code>@SpringBootTest</code> démarre le contexte Spring pour assembler les composants ; <code>@AutoConfigureMockMvc</code> prépare l’outil MVC. Le champ annoté <code>@Autowired</code> reçoit l’objet de test fourni par Spring. Cette injection dans un champ du test est un raccourci ; nos classes applicatives gardent l’injection par constructeur.</p>
+</section><section>
+<h2>4. Ne pas confondre données de test et données du TP</h2>
+<p>Les tests fournis utilisent une base H2 <strong>en mémoire</strong>, créée pour leur exécution. Elle est distincte de la base en fichier utilisée lors de <code>spring-boot:run</code>. Lancer <code>mvn test</code> ne doit donc pas effacer l’annuaire que vous avez saisi manuellement.</p>
+<p>Un test doit préparer ses données ou indiquer précisément celles qu’il attend. Tester une ligne « qui devrait déjà être là depuis mon essai d’hier » rend le résultat dépendant du poste et de l’ordre d’exécution.</p>
+</section><section>
+<h2>5. Le problème des deux écritures</h2>
+<p>Imaginons une opération qui crée deux utilisateurs ensemble. La première création réussit, mais le second nom est vide. Si les opérations sont enregistrées indépendamment, le premier utilisateur peut rester en base malgré l’échec global.</p>
+<p>Une <strong>transaction</strong> regroupe des opérations de base de données en une unité de travail. <strong>Commit</strong> signifie valider les changements ; <strong>rollback</strong> signifie annuler les changements de cette transaction.</p>
+<pre><code>Début → créer Ana → deuxième nom invalide → rollback
+Résultat voulu : aucune des deux créations n’est conservée.</code></pre>
+<p>C’est une question de comportement métier : l’opération promise est « créer la paire », pas « essayer séparément deux créations ».</p>
+</section><section>
+<h2>6. Déclarer l’unité de travail avec Spring</h2>
+<pre><code>@Transactional
+public void createPair(String first, String second) {
+    create(first);
+    create(second);
+}</code></pre>
+<p>Dans l’atelier 06, cette méthode appartient à <code>UserService</code>. L’annotation <code>@Transactional</code> est celle de Spring. Quand un autre composant appelle cette méthode sur le service géré par Spring, l’infrastructure encadre les opérations de base.</p>
+<p><code>InvalidName</code> étend <code>RuntimeException</code> : si elle sort de la méthode, Spring annule normalement la transaction. Une fin normale permet sa validation. D’autres types d’exceptions ou appels nécessitent des précisions ; nous nous limitons à ce cas expliqué et testé.</p>
+<p>Pour ce TP, utiliser <strong>le service injecté dans le test</strong>, pas <code>new UserService(...)</code>, afin d’exercer aussi le comportement fourni par Spring. L’infrastructure d’interception détaillée sera étudiée plus tard.</p>
+</section><section>
+<h2>TP guidé — lire un test, en ajouter un, observer un rollback</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/06-tests/index.html">atelier 06</a>. Durée : 65 min. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.</p>
+<h3>Étape 1 — exécuter la vérification (10 min)</h3>
+<p>Ouvrir le terminal dans <code>06-tests</code>, lancer <code>mvn test</code>. <strong>Attendu initial :</strong> 5 tests réussis. Repérer les fichiers sous <code>src/test/java/fr/miage/debut</code> et distinguer tests et code de l’application.</p>
+<h3>Étape 2 — comprendre une assertion HTTP (10 min)</h3>
+<p>Ouvrir <code>UserApiTest</code>, lire <code>rejectEmptyName</code>. Identifier le JSON envoyé et le statut attendu. Remplacer temporairement <code>isBadRequest()</code> par <code>isOk()</code> et relancer. <strong>Attendu :</strong> un échec signalant 200 attendu et 400 obtenu. Remettre la bonne assertion.</p>
+<h3>Étape 3 — écrire une variante (15 min)</h3>
+<p>Dupliquer ce test sous le nom <code>rejectMissingName</code>, en envoyant <code>{}</code> comme corps. Garder le statut attendu 400. <strong>Attendu :</strong> 6 tests réussis après cet ajout. L’absence de propriété produit ici un nom <code>null</code>, rejeté par le service.</p>
+<h3>Étape 4 — observer le tout-ou-rien (15 min)</h3>
+<p>Lire <code>TransactionTest.secondInvalidNameCancelsBothCreations</code>. Il vide sa base de test, appelle <code>createPair(&quot;Ana&quot;, &quot; &quot;)</code>, attend <code>InvalidName</code> et vérifie <code>repository.count() == 0</code> après l’échec. Retirer temporairement <code>@Transactional</code> de <code>createPair</code>, puis lancer seulement :</p>
+<pre><code>mvn -Dtest=TransactionTest test</code></pre>
+<p><strong>Attendu :</strong> le test d’échec ne passe plus ; le premier utilisateur reste enregistré. Remettre l’annotation et relancer : les deux tests de transaction passent.</p>
+<h3>Étape 5 — expliquer et stabiliser (15 min)</h3>
+<p>Relancer tous les tests, noter le résultat et dessiner ce qui se passe avec l’annotation puis sans elle. Dans <code>NameRuleTest</code>, <code>mock(UserRepository.class)</code> fournit un faux repository et <code>verifyNoInteractions</code> vérifie qu’il n’est pas appelé pour un nom invalide ; la création de mocks est une lecture accompagnée, pas un exercice à reproduire de mémoire.</p>
+<p><strong>À rendre :</strong> nouveau test, dessin du rollback et résultat final. <strong>Réussite :</strong> test ajouté utile, bonne assertion restaurée et transaction rétablie. Ne pas annoter le test lui-même avec <code>@Transactional</code> : cela changerait l’expérience observée.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Dans <code>UserApiTest</code> :</p>
+<pre><code>@Test
+void rejectMissingName() throws Exception {
+    mvc.perform(post(&quot;/users&quot;)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(&quot;{}&quot;))
+        .andExpect(status().isBadRequest());
+}</code></pre>
+<p>Sans transaction de service, la première opération <code>save</code> peut se valider avant la seconde. Avec la transaction englobante et l’exception non absorbée, la première écriture est annulée. Les bases de tests sont isolées de <code>data/users</code>.</p>
+</details>
+<p>Références : <a href="https://docs.spring.io/spring-framework/reference/testing/mockmvc.html">MockMvc</a> et <a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html">transactions Spring</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>À quoi sert une assertion ?</li>
+<li>Quelle commande lance les tests Maven ?</li>
+<li>Quel résultat attend <code>assertEquals(0, repository.count())</code> ?</li>
+<li>MockMvc ouvre-t-il obligatoirement le port 8080 ?</li>
+<li>Quelle différence étudie-t-on entre test unitaire et test d’intégration ?</li>
+<li>Que signifie rollback ?</li>
+<li>Dans <code>createPair</code>, pourquoi grouper les deux créations dans une transaction ?</li>
+<li>Un test réussi prouve-t-il tous les comportements de l’application ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>À vérifier un résultat réel par rapport à une attente explicite.</li>
+<li><code>mvn test</code> depuis le dossier du projet.</li>
+<li>Aucun utilisateur dans la base concernée à ce moment du test.</li>
+<li>Non : il exerce MVC sans serveur HTTP en écoute.</li>
+<li>Le premier isole une petite partie ; le second vérifie l’assemblage de plusieurs composants.</li>
+<li>L’annulation des changements de la transaction.</li>
+<li>Pour qu’une erreur sur le deuxième nom ne laisse pas une création partielle.</li>
+<li>Non : seulement les cas qu’il couvre dans les conditions du test.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="06-tests-transactions.md">06-tests-transactions.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

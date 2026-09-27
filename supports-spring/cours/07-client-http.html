@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 7 — Appeler une API depuis un programme Spring</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 7 — Appeler une API depuis un programme Spring</h1>
+<p><strong>Durée : 3 h. Prérequis : GET, JSON, service, injection et annuaire du cours 5.</strong></p>
+<p>Objectifs : distinguer serveur et client dans deux applications Java, lire une API avec <code>RestClient</code>, convertir la réponse et reconnaître une panne de connexion. Pas de fournisseur externe, compte ou service payant à configurer.</p>
+</section><section>
+<h2>1. Une application Java peut aussi être cliente</h2>
+<p>Jusqu’ici, le navigateur ou curl appelait notre serveur. Un autre programme Java peut envoyer la même requête. Les rôles client et serveur dépendent de l’échange, pas du langage utilisé.</p>
+<pre><code>Application cliente Java, atelier 07
+      │ GET http://localhost:8080/users
+      ↓
+Application serveur Java, atelier 05
+      │ réponse JSON
+      ↓
+Application cliente : affiche les noms dans son terminal</code></pre>
+<p>Les applications sont deux processus distincts. Le client ne peut pas accéder directement aux objets en mémoire du serveur. Il utilise son adresse et son contrat HTTP. Il serait possible que les deux processus fonctionnent sur des machines différentes ; ici tout reste local.</p>
+</section><section>
+<h2>2. Réutiliser le contrat que nous connaissons</h2>
+<p>Nous savons que GET <code>/users</code> retourne un tableau, par exemple :</p>
+<pre><code>[{&quot;id&quot;:1,&quot;name&quot;:&quot;Ana&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Lea&quot;}]</code></pre>
+<p>Le client prépare une représentation Java de ces données : <code>UserView(long id, String name)</code>. Le serveur et le client possèdent chacun leur propre classe. Le réseau transporte le JSON, pas une référence vers le même objet Java.</p>
+<p>Si le serveur change ses champs ou leur sens, le client peut devoir évoluer. Le <strong>contrat</strong> est donc un accord sur l’adresse, la méthode, le format et la signification des données.</p>
+</section><section>
+<h2>3. Construire un client HTTP avec Spring</h2>
+<pre><code>@Service
+public class DirectoryClient {
+    private final RestClient client;
+
+    public DirectoryClient(RestClient.Builder builder) {
+        this.client = builder.baseUrl(&quot;http://localhost:8080&quot;).build();
+    }
+
+    public UserView[] list() {
+        return client.get().uri(&quot;/users&quot;).retrieve().body(UserView[].class);
+    }
+}</code></pre>
+<p><code>RestClient</code> est l’outil qui envoie les requêtes HTTP. Spring Boot fournit le <code>RestClient.Builder</code> demandé au constructeur. Un <strong>builder</strong> est un objet qui aide à préparer un autre objet : ici on lui donne l’adresse de base, puis <code>build()</code> crée le client configuré.</p>
+<p>Lire la dernière ligne de gauche à droite : <code>get()</code> choisit GET ; <code>uri(&quot;/users&quot;)</code> complète l’adresse ; <code>retrieve()</code> prépare la lecture de la réponse ; <code>body(UserView[].class)</code> la convertit en tableau d’objets Java. Le symbole <code>[]</code> désigne bien un tableau Java.</p>
+<p>Cet appel est <strong>synchrone</strong> : la suite du code attend que l’appel fournisse un résultat ou échoue. Un serveur lent peut donc faire attendre le client.</p>
+</section><section>
+<h2>4. Exécuter une action au démarrage</h2>
+<p>L’atelier 07 n’expose pas de routes. Il appelle l’annuaire puis se termine. La propriété <code>spring.main.web-application-type=none</code> indique que nous ne voulons pas démarrer un serveur web pour ce client.</p>
+<p><code>ClientRunner</code> implémente <code>CommandLineRunner</code>, une interface Spring Boot dont la méthode <code>run</code> est appelée une fois après préparation de l’application. Elle reçoit <code>DirectoryClient</code> par constructeur et parcourt le tableau :</p>
+<pre><code>UserView[] users = directory.list();
+if (users != null) {
+    System.out.println(&quot;Utilisateurs reçus : &quot; + users.length);
+    for (UserView user : users) {
+        System.out.println(user.id() + &quot; : &quot; + user.name());
+    }
+}</code></pre>
+<p>Nous connaissons déjà la boucle <code>for</code> et l’écriture console. Les nouvelles notions sont le point d’exécution fourni par Spring et l’origine distante des données.</p>
+</section><section>
+<h2>5. Quand le serveur n’est pas disponible</h2>
+<p>Si le serveur est arrêté, il ne peut envoyer aucun statut HTTP. L’échec est une erreur de connexion. C’est différent d’une réponse 404, qui suppose qu’un serveur a répondu.</p>
+<p>Le code fourni utilise <code>try/catch</code> pour présenter un message compréhensible lorsqu’un appel HTTP échoue :</p>
+<pre><code>try {
+    UserView[] users = directory.list();
+    // Utiliser les données reçues.
+} catch (RestClientException error) {
+    System.out.println(&quot;Impossible de lire l&#x27;annuaire : vérifier le serveur et son adresse.&quot;);
+}</code></pre>
+<p>Un annuaire vide doit produire <code>Utilisateurs reçus : 0</code>. Une connexion échouée doit produire un message d’échec. Transformer toute erreur en tableau vide masquerait la différence entre « aucun utilisateur » et « impossible de savoir ».</p>
+<p>Des délais d’attente explicites sont importants dans une application déployée. Leur configuration, les tentatives multiples et les circuits de protection seront un approfondissement ; ils ne sont pas à réaliser pour ce premier client local.</p>
+</section><section>
+<h2>TP guidé — faire communiquer deux programmes</h2>
+<p><strong>Projets :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a> côté serveur et <a href="../ateliers/07-client/index.html">atelier 07</a> côté client. Durée : 65 min. Deux terminaux sont nécessaires.</p>
+<h3>Étape 1 — préparer le serveur (10 min)</h3>
+<p>Dans le terminal A, ouvrir <code>05-persistance</code> et lancer <code>mvn spring-boot:run</code>. Si des utilisateurs existent déjà, les conserver. Sinon, dans un autre terminal, envoyer un POST avec <code>{&quot;name&quot;:&quot;Ana&quot;}</code> puis vérifier GET <code>/users</code>.</p>
+<h3>Étape 2 — lancer le client (10 min)</h3>
+<p>Dans le terminal B, ouvrir <code>07-client</code> et lancer <code>mvn spring-boot:run</code>. <strong>Attendu :</strong> le nombre d’utilisateurs, leurs identifiants et leurs noms s’affichent dans B. Le serveur A reste démarré. Le client B rend la main après son action.</p>
+<h3>Étape 3 — tracer l’échange (10 min)</h3>
+<p>Repérer <code>baseUrl</code>, <code>uri</code> et <code>UserView</code>. Écrire l’adresse finale appelée. Comparer les données affichées au JSON obtenu avec curl. Les identifiants peuvent différer des exemples selon les créations précédentes.</p>
+<h3>Étape 4 — modifier l’affichage (15 min)</h3>
+<p>Dans <code>ClientRunner</code>, afficher chaque ligne sous la forme <code>Utilisateur #1 : Ana</code>, en conservant les vraies valeurs reçues. Relancer seulement le client. Ne pas modifier le serveur pour ce changement de présentation.</p>
+<h3>Étape 5 — observer un échec réel (10 min)</h3>
+<p>Arrêter le serveur A, puis relancer B. <strong>Attendu :</strong> le message « Impossible de lire l’annuaire… ». Ce n’est pas une réponse vide du serveur, puisqu’il est arrêté.</p>
+<h3>Étape 6 — reprendre (10 min)</h3>
+<p>Relancer A puis B. <strong>Attendu :</strong> les données redeviennent lisibles. Dessiner les deux processus et indiquer lequel doit rester en écoute.</p>
+<p><strong>À rendre :</strong> modification de l’affichage et tableau à deux lignes « serveur démarré / arrêté » avec observations. <strong>Réussite :</strong> deux applications distinctes, données réellement lues par HTTP et différence entre panne et annuaire vide comprise.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<pre><code>System.out.println(&quot;Utilisateur #&quot; + user.id() + &quot; : &quot; + user.name());</code></pre>
+<p>Adresse finale : <code>http://localhost:8080/users</code>. Si les données ne sont pas celles attendues, vérifier quel serveur occupe le port 8080 et le dossier depuis lequel l’atelier 05 a été lancé. L’atelier 07 n’a pas besoin de ce port pour écouter, car il ne joue que le rôle client.</p>
+</details>
+<p>Référence : <a href="https://docs.spring.io/spring-framework/reference/integration/rest-clients.html">clients REST Spring</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Un programme Java peut-il jouer le rôle de client HTTP ?</li>
+<li>Quelle adresse résulte de <code>baseUrl(&quot;http://localhost:8080&quot;)</code> et <code>uri(&quot;/users&quot;)</code> ?</li>
+<li>Quel format traverse le réseau dans notre exemple ?</li>
+<li>Quel type Java représente la liste reçue par le client ?</li>
+<li>Que signifie « appel synchrone » dans ce cours ?</li>
+<li>Un serveur arrêté peut-il renvoyer un statut HTTP 404 ?</li>
+<li>Pourquoi ne pas remplacer une panne par un tableau vide ?</li>
+<li>Faut-il modifier le serveur pour préfixer les lignes affichées dans le terminal client ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Oui, comme curl ou un navigateur ; le rôle dépend de l’échange.</li>
+<li><code>http://localhost:8080/users</code>.</li>
+<li>Du texte JSON dans une réponse HTTP.</li>
+<li><code>UserView[]</code>, un tableau d’objets <code>UserView</code>.</li>
+<li>Le code attend le résultat ou l’échec de l’appel avant de poursuivre ce traitement.</li>
+<li>Non : il n’y a pas de réponse de ce serveur ; la connexion échoue.</li>
+<li>Cela confondrait absence de données et impossibilité de les lire.</li>
+<li>Non : l’affichage console relève de l’application cliente.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="07-client-http.md">07-client-http.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

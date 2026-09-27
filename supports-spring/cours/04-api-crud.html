@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 4 — Créer une petite API de gestion d’utilisateurs</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 4 — Créer une petite API de gestion d’utilisateurs</h1>
+<p><strong>Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.</strong></p>
+<p>Objectifs : envoyer du JSON au serveur, créer et retrouver un utilisateur, reconnaître les quatre opérations de base et retourner une erreur simple. Le stockage reste une collection Java pour se concentrer sur l’API.</p>
+</section><section>
+<h2>1. Notre annuaire et son contrat</h2>
+<p>Jusqu’ici, le serveur retournait des données écrites dans le code. Nous voulons maintenant ajouter un utilisateur depuis un client. Le serveur conservera ces données pendant son exécution.</p>
+<p><strong>CRUD</strong> désigne quatre opérations : Create, Read, Update, Delete — créer, lire, modifier, supprimer. Le <strong>contrat de l’API</strong> décrit comment un client les demande et ce qu’il reçoit.</p>
+<div class="table"><table>
+<tr><th>Action</th><th>Requête</th><th>Résultat attendu</th></tr>
+<tr><td>Lister</td><td><code>GET /users</code></td><td>200 et tableau JSON</td></tr>
+<tr><td>Lire un utilisateur</td><td><code>GET /users/1</code></td><td>200 et objet JSON, ou 404</td></tr>
+<tr><td>Créer</td><td><code>POST /users</code> avec un corps JSON</td><td>201 et utilisateur créé</td></tr>
+<tr><td>Modifier le nom</td><td><code>PUT /users/1</code> avec un corps JSON</td><td>200 et utilisateur modifié, ou 404</td></tr>
+<tr><td>Supprimer</td><td><code>DELETE /users/1</code></td><td>204 sans corps, ou 404</td></tr>
+</table></div>
+<p>Nous utilisons des noms de ressources dans les chemins. REST est un style d’organisation des échanges autour de ressources ; ici nous apprenons une API HTTP simple qui suit cette logique.</p>
+</section><section>
+<h2>2. Envoyer un corps JSON</h2>
+<p>Une barre d’adresse de navigateur convient à nos essais GET, mais pas à la saisie d’un corps POST. Utilisons curl dans un second terminal :</p>
+<pre><code>curl -i -X POST &#x27;http://localhost:8080/users&#x27; -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot;Ana&quot;}&#x27;</code></pre>
+<p><code>-X POST</code> choisit la méthode ; <code>-H</code> ajoute un en-tête ; <code>-d</code> fournit le corps. <code>Content-Type: application/json</code> indique au serveur comment lire ce corps. Nous fournissons seulement le nom : le serveur choisira l’identifiant.</p>
+<p>La fiche <a href="../demarrage.html">démarrage</a> donne une commande PowerShell équivalente si les guillemets du terminal posent problème. Aucun compte ni en-tête de clé API n’est nécessaire dans les ateliers débutants.</p>
+</section><section>
+<h2>3. Transformer le JSON en argument Java</h2>
+<pre><code>public record UserRequest(String name) {}
+public record UserView(long id, String name) {}</code></pre>
+<p>Ces deux déclarations sont dans deux fichiers. <code>UserRequest</code> décrit l’entrée attendue et <code>UserView</code> la sortie. Ce sont des <strong>DTO</strong>, c’est-à-dire de petits objets destinés au transfert de données.</p>
+<pre><code>@PostMapping
+public ResponseEntity&lt;UserView&gt; create(@RequestBody UserRequest request) {
+    UserView created = service.create(request.name());
+    return ResponseEntity.created(URI.create(&quot;/users/&quot; + created.id())).body(created);
+}</code></pre>
+<p><code>@RequestBody</code> demande la conversion du corps JSON en <code>UserRequest</code> : c’est la <strong>désérialisation</strong>. <code>request.name()</code> lit le nom. Le service crée l’utilisateur. <code>ResponseEntity</code> permet de choisir le statut, les en-têtes et le corps de réponse.</p>
+<p><code>created(...)</code> construit une réponse 201 avec un en-tête <code>Location</code>, l’adresse du nouvel utilisateur. <code>.body(created)</code> ajoute ses données. Les imports exacts sont fournis dans <code>UserController.java</code>.</p>
+</section><section>
+<h2>4. Regrouper les routes</h2>
+<p>La classe porte <code>@RequestMapping(&quot;/users&quot;)</code>. Ce préfixe s’applique aux méthodes qu’elle contient. <code>@GetMapping</code> sans chemin supplémentaire traite donc <code>/users</code>, et <code>@GetMapping(&quot;/{id}&quot;)</code> traite <code>/users/7</code>, par exemple.</p>
+<p>Le corps de <code>get</code> appelle <code>service.get(id)</code>. Le corps de <code>delete</code> appelle <code>service.delete(id)</code>, puis renvoie <code>ResponseEntity.noContent().build()</code>, une réponse 204 sans contenu. Ne pas essayer de lire du JSON dans cette réponse vide.</p>
+<p>Pour le PUT, le client envoie un nouveau nom au chemin de l’utilisateur existant. L’identifiant ne change pas. Dans ce petit contrat, modifier un identifiant absent renvoie 404.</p>
+</section><section>
+<h2>5. Stocker dans une collection Java</h2>
+<p><code>UserService</code> contient une <code>Map&lt;Long, UserView&gt;</code> : chaque clé est un identifiant et chaque valeur un utilisateur. <code>nextId</code> fournit des identifiants successifs. <code>put</code> ajoute/remplace ; <code>get</code> lit ; <code>remove</code> supprime.</p>
+<pre><code>public synchronized UserView create(String name) {
+    checkName(name);
+    UserView user = new UserView(nextId++, name.strip());
+    users.put(user.id(), user);
+    return user;
+}</code></pre>
+<p><code>strip()</code> retire les espaces au début et à la fin. Le <code>synchronized</code> fourni protège les accès à cette collection partagée dans cette petite application ; sa programmation détaillée n’est pas demandée dans ce TP.</p>
+<p>Cette collection disparaît lorsque le processus s’arrête. Ce n’est pas un bug : nous n’avons encore écrit aucun stockage durable. Au cours 5, une base de données prendra ce rôle.</p>
+</section><section>
+<h2>6. Refuser une entrée invalide</h2>
+<p>Le service vérifie une règle très simple : le nom ne doit pas être absent ni ne contenir que des espaces.</p>
+<pre><code>private void checkName(String name) {
+    if (name == null || name.isBlank()) throw new InvalidName();
+}</code></pre>
+<p>L’exception <code>InvalidName</code> est une classe fournie qui étend <code>RuntimeException</code>. Lancer une exception interrompt le déroulement normal. Le service décrit ainsi le problème sans construire lui-même une réponse HTTP.</p>
+<p>Dans <code>ApiErrors</code>, <code>@RestControllerAdvice</code> déclare un gestionnaire commun aux contrôleurs. <code>@ExceptionHandler(InvalidName.class)</code> choisit le problème traité et <code>@ResponseStatus(HttpStatus.BAD_REQUEST)</code> impose le statut 400. Le même principe traduit <code>UserNotFound</code> en 404. Les détails du format d’erreur restent volontairement simples : un texte explicatif.</p>
+</section><section>
+<h2>TP guidé — un cycle complet puis une nouvelle règle</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/04-crud/index.html">atelier 04</a>. Prévoir 65 min. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.</p>
+<h3>Étape 1 — partir d’un annuaire vide (5 min)</h3>
+<p>Démarrer l’application puis envoyer <code>GET /users</code>. <strong>Attendu :</strong> <code>[]</code>, un tableau JSON vide. Ce résultat n’est pas une erreur.</p>
+<h3>Étape 2 — créer puis retrouver (15 min)</h3>
+<p>Exécuter le POST montré plus haut. Repérer le statut 201, <code>Location</code> et l’identifiant retourné. Envoyer un GET à cette adresse. <strong>Attendu :</strong> le même identifiant et le nom <code>Ana</code>. Ne pas supposer que l’identifiant sera toujours 1 après plusieurs essais.</p>
+<h3>Étape 3 — modifier puis supprimer (15 min)</h3>
+<p>Dans les commandes suivantes, remplacer <code>1</code> par l’identifiant obtenu :</p>
+<pre><code>curl -i -X PUT &#x27;http://localhost:8080/users/1&#x27; -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot;Lea&quot;}&#x27;
+curl -i -X DELETE &#x27;http://localhost:8080/users/1&#x27;
+curl -i &#x27;http://localhost:8080/users/1&#x27;</code></pre>
+<p><strong>Attendu :</strong> 200 avec <code>Lea</code>, puis 204 sans corps, puis 404. Relever ces trois résultats.</p>
+<h3>Étape 4 — suivre une erreur (10 min)</h3>
+<p>Envoyer <code>{&quot;name&quot;:&quot; &quot;}</code> par POST. <strong>Attendu :</strong> 400 et aucune création. Retrouver <code>checkName</code>, <code>InvalidName</code> et sa méthode de traitement dans <code>ApiErrors</code>.</p>
+<h3>Étape 5 — ajouter une règle (15 min)</h3>
+<p>Dans <code>checkName</code>, refuser aussi un nom de plus de 30 caractères après suppression des espaces extérieurs. Conserver la même exception pour cet exercice. Tester un nom de 30 caractères puis de 31 : le premier est accepté, le second refusé. Utiliser le nom compté, pas une estimation visuelle.</p>
+<h3>Étape 6 — constater la limite (5 min)</h3>
+<p>Créer un utilisateur valide, arrêter puis redémarrer le serveur. <strong>Attendu :</strong> le listing est vide. Expliquer où étaient les données.</p>
+<p><strong>À rendre :</strong> méthode <code>checkName</code>, tableau des statuts observés et explication de la perte au redémarrage.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<pre><code>private void checkName(String name) {
+    if (name == null || name.isBlank() || name.strip().length() &gt; 30) {
+        throw new InvalidName();
+    }
+}</code></pre>
+<p>Le <code>||</code> évite d’appeler une méthode sur <code>null</code> si le premier test est vrai. Pour compter exactement, utiliser une chaîne préparée, par exemple trois fois <code>abcdefghij</code> pour 30 caractères, puis ajouter <code>k</code> pour 31. Le tableau attendu est : création 201, lecture 200, modification 200, suppression 204, lecture supprimée 404, nom invalide 400.</p>
+</details>
+<p>Référence : <a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html">réponses des contrôleurs Spring MVC</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Que signifient les quatre lettres CRUD ?</li>
+<li>Quelle méthode HTTP utilisons-nous pour créer un utilisateur ?</li>
+<li>Quel rôle joue <code>@RequestBody</code> ?</li>
+<li>Pourquoi le client n’envoie-t-il pas l’identifiant dans <code>UserRequest</code> ?</li>
+<li>Quelle information fournit l’en-tête <code>Location</code> après création ?</li>
+<li>Une réponse 204 de notre API contient-elle un utilisateur JSON ?</li>
+<li>Où place-t-on la règle de nom obligatoire : dans le service ou dans le navigateur ?</li>
+<li>Pourquoi les utilisateurs disparaissent-ils au redémarrage de cet atelier ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Create, Read, Update, Delete : créer, lire, modifier, supprimer.</li>
+<li>POST sur <code>/users</code> avec le nom dans le corps.</li>
+<li>Il demande la conversion du corps de requête en objet Java.</li>
+<li>L’identifiant est choisi par le serveur lors de la création.</li>
+<li>L’adresse de l’utilisateur créé, que le client peut ensuite lire.</li>
+<li>Non : 204 signifie ici succès sans corps de réponse.</li>
+<li>Dans le service : tous les appels à cette opération doivent respecter la règle.</li>
+<li>Ils étaient dans une collection en mémoire du processus, sans stockage durable.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="04-api-crud.md">04-api-crud.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

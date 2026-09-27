@@ -1,0 +1,54 @@
+name: Publier les supports Spring sur GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+      - name: Préparer GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Préparer le site des deux séances finalisées
+        run: |
+          mkdir -p _site/cours _site/ateliers/01-demarrage _site/ateliers/02-http-json _site/telechargements
+          cp supports-spring/index.html supports-spring/README.md supports-spring/.nojekyll _site/
+          cp supports-spring/demarrage.md supports-spring/demarrage.html _site/
+          cp supports-spring/guide-pedagogique.md supports-spring/guide-pedagogique.html _site/
+          cp supports-spring/guide-spring.md supports-spring/guide-spring.html _site/
+          cp supports-spring/verification.md supports-spring/verification.html _site/
+          cp supports-spring/cours/01-premiers-pas.md supports-spring/cours/01-premiers-pas.html supports-spring/cours/01-premiers-pas.pdf _site/cours/
+          cp supports-spring/cours/02-http-json.md supports-spring/cours/02-http-json.html _site/cours/
+          cp supports-spring/ateliers/README.md supports-spring/ateliers/index.html _site/ateliers/
+          for atelier in 01-demarrage 02-http-json; do
+            mkdir -p "_site/ateliers/$atelier"
+            cp "supports-spring/ateliers/$atelier/README.md" "supports-spring/ateliers/$atelier/index.html" "supports-spring/ateliers/$atelier/pom.xml" "_site/ateliers/$atelier/"
+            cp -R "supports-spring/ateliers/$atelier/src" "_site/ateliers/$atelier/"
+          done
+          cp supports-spring/telechargements/supports-spring-cours-01-02-java25.zip _site/telechargements/
+      - name: Publier les fichiers statiques
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          include-hidden-files: true
+      - name: Déployer
+        id: deployment
+        uses: actions/deploy-pages@v5

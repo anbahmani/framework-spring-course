@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 3 — Comprendre les objets gérés par Spring et séparer les rôles</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 3 — Comprendre les objets gérés par Spring et séparer les rôles</h1>
+<p><strong>Durée : 3 h. Prérequis : cours 1–2, constructeurs et attributs Java.</strong></p>
+<p>Objectifs : comprendre qui crée les objets, expliquer une injection par constructeur et séparer un contrôleur d’un service. Les interfaces multiples, scopes particuliers et aspects ne font pas partie de cette première découverte.</p>
+</section><section>
+<h2>1. Un besoin très simple de séparation</h2>
+<p>Notre contrôleur salue un utilisateur. Demain, un autre écran doit utiliser la même règle de salutation. Copier cette règle dans plusieurs contrôleurs rendrait son évolution plus difficile.</p>
+<p>Nous créons une classe qui sait saluer et laissons au contrôleur la lecture de la requête. C’est un premier choix d’<strong>architecture</strong> : organiser les responsabilités pour comprendre et faire évoluer le programme.</p>
+<pre><code>Demande HTTP → HelloController → GreetingService
+                 lit le nom        fabrique le message</code></pre>
+<p>Une <strong>couche</strong> regroupe des responsabilités de même nature. Cela n’impose pas une machine différente : ces deux classes fonctionnent dans la même application Java.</p>
+</section><section>
+<h2>2. Faire d’abord l’assemblage en Java</h2>
+<pre><code>public class GreetingService {
+    public String greet(String name) { return &quot;Bonjour &quot; + name; }
+}</code></pre>
+<p>Le contrôleur utilise ce service. En Java, une solution consiste à recevoir l’objet au constructeur :</p>
+<pre><code>public class HelloController {
+    private final GreetingService service;
+    public HelloController(GreetingService service) {
+        this.service = service;
+    }
+}</code></pre>
+<p>On pourrait assembler les deux manuellement : <code>new HelloController(new GreetingService())</code>. Le mot <strong>dépendance</strong> signifie ici « objet dont une classe a besoin ». Une <strong>injection</strong> consiste à fournir cette dépendance depuis l’extérieur, au lieu de la créer à l’intérieur.</p>
+<p>Ne pas confondre cette dépendance entre objets avec une dépendance Maven, qui est une bibliothèque ajoutée au projet.</p>
+</section><section>
+<h2>3. Confier cet assemblage à Spring</h2>
+<p>Dans l’atelier, ajouter <code>@Service</code> sur <code>GreetingService</code> et <code>@RestController</code> sur <code>HelloController</code> indique à Spring quelles classes il doit gérer. Un objet géré par Spring s’appelle un <strong>bean</strong>. L’ensemble qui crée et assemble les beans est le <strong>conteneur</strong>.</p>
+<p>Au démarrage, Spring découvre ces classes dans les packages de l’application, crée le service puis le fournit au constructeur du contrôleur. C’est l’<strong>injection de dépendances</strong>. Avec le constructeur unique de notre exemple, aucune annotation supplémentaire n’est nécessaire sur ce constructeur.</p>
+<pre><code>@Service
+public class GreetingService {
+    public String greet(String name) { return &quot;Bonjour &quot; + name; }
+}</code></pre>
+<p>Les annotations viennent de bibliothèques différentes selon leur rôle : l’IDE peut ajouter les imports. Les fichiers complets de l’atelier contiennent les imports corrects.</p>
+</section><section>
+<h2>4. Suivre une requête après l’assemblage</h2>
+<pre><code>@RestController
+public class HelloController {
+    private final GreetingService service;
+
+    public HelloController(GreetingService service) {
+        this.service = service;
+    }
+
+    @GetMapping(&quot;/hello&quot;)
+    public String hello(@RequestParam(name=&quot;name&quot;, defaultValue=&quot;tout le monde&quot;) String name) {
+        return service.greet(name);
+    }
+}</code></pre>
+<p>Le constructeur intervient lors de la création de l’objet. La méthode <code>hello</code> intervient quand une requête arrive. Ce sont deux moments différents.</p>
+<p>Pour <code>/hello?name=Ana</code>, Spring lit le paramètre et appelle <code>hello(&quot;Ana&quot;)</code>. Le contrôleur appelle ensuite le service comme n’importe quel objet Java. Le résultat revient au contrôleur puis au client.</p>
+</section><section>
+<h2>5. Ce que la séparation apporte</h2>
+<div class="table"><table>
+<tr><th>Modification</th><th>Classe concernée principalement</th></tr>
+<tr><td>Changer <code>/hello</code> en <code>/greeting</code></td><td>Contrôleur</td></tr>
+<tr><td>Ajouter <code>!</code> au message</td><td>Service</td></tr>
+<tr><td>Changer le paramètre HTTP</td><td>Contrôleur</td></tr>
+<tr><td>Appliquer la même règle depuis un autre contrôleur</td><td>Réutiliser le service</td></tr>
+</table></div>
+<p>Le service n’a pas besoin de connaître une URL ou un navigateur. On peut appeler <code>new GreetingService().greet(&quot;Ana&quot;)</code> dans un programme Java ordinaire. Nous exploiterons cette propriété pour écrire des tests.</p>
+<p>Par défaut, Spring réutilise une même instance de chaque bean de ce type dans son conteneur : c’est la portée <strong>singleton</strong>. Éviter de stocker le nom de la personne courante dans un attribut du service ; utiliser un paramètre et une variable locale évite de mélanger les demandes.</p>
+</section><section>
+<h2>6. Comprendre une erreur d’assemblage</h2>
+<p>Si <code>GreetingService</code> n’est plus déclaré comme bean, le contrôleur demande un objet que Spring ne sait plus fournir. L’application échoue au démarrage avec un message indiquant un bean manquant.</p>
+<p>Il faut examiner l’erreur, la présence de <code>@Service</code>, les imports et le package. Ajouter un <code>new</code> au hasard dans le contrôleur ferait perdre l’exercice d’assemblage. Plusieurs beans candidats au même type constituent un autre cas, réservé à plus tard.</p>
+<p>Référence : <a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html">injection de dépendances Spring</a>.</p>
+</section><section>
+<h2>TP guidé — observer puis utiliser l’injection</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/03-injection/index.html">atelier 03</a>. Durée : 65 min. Arrêter le serveur précédent.</p>
+<h3>Étape 1 — identifier les rôles (10 min)</h3>
+<p>Ouvrir <code>Application</code>, <code>HelloController</code> et <code>GreetingService</code>. Colorier ou noter : classe de démarrage, contrôleur, service. Entourer l’argument du constructeur et son affectation à l’attribut.</p>
+<h3>Étape 2 — suivre une demande (10 min)</h3>
+<p>Lancer le projet avec <code>mvn spring-boot:run</code>. Appeler <code>/hello?name=Ana</code>. <strong>Attendu :</strong> <code>Bonjour Ana</code>. Écrire les noms des méthodes appelées dans l’ordre, sans supposer que Spring rappelle le constructeur à chaque requête.</p>
+<h3>Étape 3 — déplacer une règle (15 min)</h3>
+<p>Modifier uniquement <code>GreetingService</code> pour que le nom apparaisse en majuscules. Après redémarrage, <code>/hello?name=Ana</code> doit répondre <code>Bonjour ANA</code>. Vérifier que le contrôleur n’a pas changé.</p>
+<h3>Étape 4 — observer un bean manquant (15 min)</h3>
+<p>Retirer temporairement <code>@Service</code>, arrêter et relancer. Chercher dans le message d’échec le nom <code>GreetingService</code>. Expliquer le lien avec le constructeur du contrôleur. Remettre l’annotation et relancer avec succès.</p>
+<h3>Étape 5 — réutiliser le service (15 min)</h3>
+<p>Ajouter <code>/welcome?name=Lea</code> dans le même contrôleur. La nouvelle méthode doit appeler le même service. <strong>Attendu :</strong> <code>Bonjour LEA</code>, sans recopier la règle de mise en majuscules.</p>
+<p><strong>À rendre :</strong> les deux classes et un schéma des appels. <strong>Réussite :</strong> règle écrite une seule fois, constructeur expliqué et application à nouveau fonctionnelle après la manipulation.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Dans le service :</p>
+<pre><code>public String greet(String name) {
+    return &quot;Bonjour &quot; + name.toUpperCase(java.util.Locale.ROOT);
+}</code></pre>
+<p>Dans le contrôleur :</p>
+<pre><code>@GetMapping(&quot;/welcome&quot;)
+public String welcome(@RequestParam(name=&quot;name&quot;, defaultValue=&quot;tout le monde&quot;) String name) {
+    return service.greet(name);
+}</code></pre>
+<p><code>Locale.ROOT</code> rend l’exemple indépendant de la langue du poste. <code>@Service</code> permet au conteneur de découvrir le service et de fournir l’objet demandé par le constructeur.</p>
+</details>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Qu’appelle-t-on un bean Spring ?</li>
+<li>Quelle dépendance reçoit <code>HelloController</code> dans son constructeur ?</li>
+<li>Dans l’atelier, qui crée et fournit le service au contrôleur ?</li>
+<li>Pourquoi <code>@Service</code> n’est-il pas le nom d’une méthode à appeler ?</li>
+<li>Où modifier la règle de salutation pour la réutiliser partout ?</li>
+<li>Deux couches logiques exigent-elles deux ordinateurs ?</li>
+<li>Pourquoi éviter un attribut <code>currentName</code> dans le service partagé ?</li>
+<li>Si un message de démarrage indique un service introuvable, citer deux vérifications utiles.</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Un objet dont Spring gère notamment la création et l’assemblage.</li>
+<li>Un <code>GreetingService</code>.</li>
+<li>Le conteneur Spring, au démarrage dans cet exemple.</li>
+<li>C’est une annotation décrivant le rôle d’une classe et permettant sa découverte.</li>
+<li>Dans <code>GreetingService</code> ; les contrôleurs utilisent sa méthode.</li>
+<li>Non : il s’agit d’une séparation des responsabilités dans le code.</li>
+<li>Plusieurs demandes peuvent partager le même objet et écraser cet état ; utiliser un paramètre.</li>
+<li>Vérifier <code>@Service</code> et le package situé sous celui d’<code>Application</code> ; vérifier aussi les imports et le type attendu.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="03-injection-couches.md">03-injection-couches.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

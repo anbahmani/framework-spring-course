@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 5 — Conserver les données avec Spring Data JPA</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 5 — Conserver les données avec Spring Data JPA</h1>
+<p><strong>Durée : 3 h. Prérequis : annuaire CRUD et injection par constructeur. SQL n’est pas un prérequis de ce cours.</strong></p>
+<p>Objectifs : comprendre table, ligne et identifiant ; reconnaître une entité et un repository ; conserver un utilisateur après arrêt et redémarrage.</p>
+</section><section>
+<h2>1. Pourquoi une base de données ?</h2>
+<p>Une collection Java appartient au processus en cours. Pour retrouver les informations après son arrêt, nous avons besoin de les stocker durablement. Une <strong>base de données</strong> organise des données et permet de les lire ou de les modifier.</p>
+<p>Dans une base relationnelle, une <strong>table</strong> ressemble à un ensemble de lignes de même structure. Une <strong>colonne</strong> décrit une information. Une <strong>clé primaire</strong> identifie chaque ligne sans ambiguïté dans sa table.</p>
+<div class="table"><table>
+<tr><th>id</th><th>name</th></tr>
+<tr><td>1</td><td>Ana</td></tr>
+<tr><td>2</td><td>Lea</td></tr>
+</table></div>
+<p>Ici <code>id</code> est la clé primaire. Deux utilisateurs pourraient porter le même nom tout en ayant deux identifiants distincts.</p>
+</section><section>
+<h2>2. Situer les outils sans tout apprendre à la fois</h2>
+<p><strong>H2</strong> est la base légère utilisée dans l’atelier. <strong>SQL</strong> est un langage pour demander des opérations à une base relationnelle. Exemple à lire : <code>select * from app_users</code> signifie « lire les colonnes des lignes de la table app_users ».</p>
+<p><strong>JPA</strong> décrit comment représenter des données persistantes par des objets Java. <strong>Hibernate</strong> est l’outil qui réalise cette correspondance dans le projet. <strong>Spring Data JPA</strong> fournit des repositories afin d’utiliser des opérations usuelles sans les réécrire.</p>
+<pre><code>Contrôleur → service → repository → Hibernate → H2</code></pre>
+<p>Une <strong>entité</strong> décrit un objet persistant. Un <strong>repository</strong> offre des opérations pour le stocker et le retrouver. Nous ne demandons pas encore de maîtriser les relations entre plusieurs tables ni les requêtes complexes.</p>
+</section><section>
+<h2>3. Lire une entité ligne par ligne</h2>
+<p>Le fichier complet <code>UserEntity.java</code> contient les imports. Voici la partie à comprendre :</p>
+<pre><code>@Entity
+@Table(name=&quot;app_users&quot;)
+public class UserEntity {
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    protected UserEntity() {}
+    public UserEntity(String name) { this.name = name; }
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+}</code></pre>
+<p><code>@Entity</code> déclare la classe persistante. <code>@Table</code> choisit le nom de table. <code>@Id</code> désigne l’identifiant ; <code>@GeneratedValue</code> indique que sa valeur sera générée. <code>Long</code>, avec une majuscule, peut valoir <code>null</code> avant l’attribution de l’identifiant.</p>
+<p>Le constructeur sans argument est utilisé par l’outil de persistance ; le constructeur avec nom sert à notre code. Cette classe n’est pas un contrôleur : aucune méthode HTTP n’y est déclarée.</p>
+</section><section>
+<h2>4. Une interface dont Spring fournit l’implémentation</h2>
+<pre><code>public interface UserRepository extends JpaRepository&lt;UserEntity, Long&gt; {}</code></pre>
+<p>Les paramètres entre chevrons indiquent le type d’entité et le type de son identifiant. <code>extends</code> permet d’hériter des méthodes du repository de base. Spring Data fournit l’objet qui implémente l’interface au démarrage ; nous n’écrivons pas <code>new UserRepository()</code>.</p>
+<div class="table"><table>
+<tr><th>Méthode</th><th>Utilité dans l’atelier</th></tr>
+<tr><td><code>save(entity)</code></td><td>Enregistrer un utilisateur</td></tr>
+<tr><td><code>findAll()</code></td><td>Lire tous les utilisateurs</td></tr>
+<tr><td><code>findById(id)</code></td><td>Chercher une ligne par identifiant</td></tr>
+<tr><td><code>delete(entity)</code></td><td>Supprimer cette ligne</td></tr>
+<tr><td><code>count()</code></td><td>Compter les utilisateurs</td></tr>
+</table></div>
+<p><code>findById</code> retourne un <code>Optional</code> : il peut contenir une entité ou être vide. Dans le code fourni, <code>.orElseThrow(UserNotFound::new)</code> transforme l’absence en exception. Cette écriture signifie « si rien n’est trouvé, créer et lancer UserNotFound ».</p>
+</section><section>
+<h2>5. Relier le repository au service</h2>
+<p>Le service reçoit désormais <code>UserRepository</code> au constructeur. Pour créer :</p>
+<pre><code>public UserView create(String name) {
+    checkName(name);
+    UserEntity entity = new UserEntity(name.strip());
+    UserEntity saved = repository.save(entity);
+    return new UserView(saved.getId(), saved.getName());
+}</code></pre>
+<p>L’entité sert au stockage ; <code>UserView</code> sert à la réponse. Cette séparation permet de choisir ce que reçoit le client. Le contrôleur conserve les mêmes routes et reçoit toujours les mêmes DTO.</p>
+<p><strong>Idée d’architecture à retenir :</strong> le client n’a pas à connaître le détail du stockage. Une nouvelle organisation interne n’impose pas de changer les adresses publiques si le contrat reste identique.</p>
+</section><section>
+<h2>6. Lire la configuration de l’atelier</h2>
+<pre><code>spring.datasource.url=jdbc:h2:file:./data/users
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
+spring.jpa.show-sql=true</code></pre>
+<p>Une propriété est une ligne <code>clé=valeur</code>. L’URL indique une base H2 stockée dans des fichiers sous <code>data</code>, à partir du dossier de lancement. <code>ddl-auto=update</code> permet à cet atelier de créer/adapter ses tables. <code>show-sql=true</code> affiche les requêtes générées pour les observer. La propriété <code>open-in-view</code> est fournie : son étude détaillée n’est pas requise ici.</p>
+<p>Ce réglage de création automatique est un confort pédagogique, pas une méthode de mise à jour de schéma à généraliser sans étude. Notre objectif est d’observer une table simple. Ne pas lancer deux instances sur le même fichier H2.</p>
+</section><section>
+<h2>TP guidé — vérifier la persistance</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a>. Durée : 65 min. Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.</p>
+<h3>Étape 1 — retrouver les trois rôles (10 min)</h3>
+<p>Ouvrir <code>UserEntity</code>, <code>UserRepository</code> et <code>UserService</code>. Dans chacun, retrouver respectivement le mapping, les opérations de stockage et les règles d’utilisation. Repérer l’injection du repository.</p>
+<h3>Étape 2 — enregistrer (10 min)</h3>
+<p>Démarrer depuis le dossier <code>05-persistance</code>. Envoyer le même POST <code>{&quot;name&quot;:&quot;Ana&quot;}</code> que précédemment. Noter l’identifiant, puis vérifier avec GET. <strong>Attendu :</strong> 201 puis 200, avec le nom enregistré.</p>
+<h3>Étape 3 — redémarrer au même endroit (15 min)</h3>
+<p>Arrêter par Ctrl+C puis relancer depuis le même dossier. Relire l’URL notée. <strong>Attendu :</strong> l’utilisateur est encore présent. Identifier le dossier <code>data</code> sans modifier ses fichiers à la main.</p>
+<h3>Étape 4 — observer le SQL (10 min)</h3>
+<p>Regarder le terminal lors d’une création puis d’une lecture. Relever les mots <code>insert</code> et <code>select</code>. Associer chaque mot à l’action réalisée. La syntaxe SQL complète ne sera pas évaluée.</p>
+<h3>Étape 5 — ajouter une lecture simple (15 min)</h3>
+<p>Ajouter <code>count()</code> au service en déléguant au repository. Dans le contrôleur, ajouter GET <code>/users/count</code> qui retourne ce nombre. La route fixe <code>/count</code> est plus précise que <code>/{id}</code> et peut coexister avec elle.</p>
+<p><strong>Attendu :</strong> créer un nouvel utilisateur fait augmenter le nombre de 1 ; supprimer cet utilisateur le fait diminuer de 1. Utiliser la valeur initiale observée, pas une valeur supposée.</p>
+<h3>Étape 6 — expliquer (5 min)</h3>
+<p>Comparer l’atelier 04 et l’atelier 05 : ce qui est identique pour le client, et ce qui change après redémarrage.</p>
+<p><strong>À rendre :</strong> les deux nouvelles méthodes, deux nombres observés et l’explication du rôle de l’entité.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Dans <code>UserService</code> :</p>
+<pre><code>public long count() { return repository.count(); }</code></pre>
+<p>Dans <code>UserController</code>, dont le préfixe est déjà <code>/users</code> :</p>
+<pre><code>@GetMapping(&quot;/count&quot;)
+public long count() { return service.count(); }</code></pre>
+<p>Ne pas réécrire <code>/users/count</code> sur la méthode, sinon le préfixe serait répété. Si les données semblent absentes, vérifier le dossier de lancement et l’URL de base : chaque chemin de fichier désigne son propre stockage.</p>
+</details>
+<p>Référence : <a href="https://docs.spring.io/spring-data/jpa/reference/repositories/core-concepts.html">repositories Spring Data</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Dans la table montrée au début, <code>name</code> est-il une ligne ou une colonne ?</li>
+<li>À quoi sert une clé primaire ?</li>
+<li>Quelle annotation indique qu’une classe est une entité persistante ?</li>
+<li>Qui implémente le <code>UserRepository</code> vide de notre exemple ?</li>
+<li>Quelle méthode permet d’enregistrer une entité ?</li>
+<li>Pourquoi ne demande-t-on pas au client d’inventer l’identifiant généré ?</li>
+<li>Quel élément de configuration permet de distinguer ici une base en fichier d’une simple collection mémoire ?</li>
+<li>Pourquoi les routes HTTP peuvent-elles rester identiques après le changement de stockage ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Une colonne ; chaque utilisateur occupe une ligne.</li>
+<li>À identifier une ligne sans ambiguïté dans la table.</li>
+<li><code>@Entity</code>.</li>
+<li>Spring Data fournit l’implémentation au démarrage.</li>
+<li><code>save</code>.</li>
+<li>Son attribution est gérée côté serveur/base selon la configuration de l’entité.</li>
+<li>L’URL <code>jdbc:h2:file:./data/users</code> indique un stockage dans des fichiers.</li>
+<li>Le contrôleur expose le contrat, tandis que le service et le repository organisent l’accès aux données.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="05-persistance.md">05-persistance.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

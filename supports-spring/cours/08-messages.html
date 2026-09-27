@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours 8 — Découvrir les messages asynchrones avec Spring JMS</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body>
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 8 — Découvrir les messages asynchrones avec Spring JMS</h1>
+<p><strong>Durée : 3 h. Prérequis : service, injection et appel HTTP synchrone.</strong></p>
+<p>Objectifs : expliquer producteur, file, broker et consommateur ; envoyer un texte et observer sa réception. Le TP utilise un broker embarqué fourni, sans Docker ni administration de serveur.</p>
+</section><section>
+<h2>1. Un autre mode de communication</h2>
+<p>Dans le cours précédent, le client attendait une réponse à son appel. Pour certaines actions, nous souhaitons plutôt déposer une demande et la traiter ensuite, par exemple préparer une notification de bienvenue.</p>
+<p>Une <strong>communication asynchrone</strong> sépare l’envoi de la demande de son traitement final. L’expéditeur n’attend pas que tout le travail métier soit terminé. Cela ne signifie pas que l’envoi réseau lui-même prend zéro temps ou qu’il ne peut jamais échouer.</p>
+<p>L’analogie d’une boîte de dépôt aide : déposer un document ne prouve pas que son destinataire l’a déjà lu. De même, « message envoyé » ne signifie pas « notification terminée ».</p>
+</section><section>
+<h2>2. Quatre mots à comprendre</h2>
+<div class="table"><table>
+<tr><th>Terme</th><th>Rôle dans l’exemple</th></tr>
+<tr><td>Message</td><td>Texte <code>Bienvenue Ana</code> à transporter</td></tr>
+<tr><td>Producteur</td><td>Composant qui envoie le texte</td></tr>
+<tr><td>File, ou queue</td><td>Destination nommée <code>notifications</code> où attendent les messages</td></tr>
+<tr><td>Consommateur</td><td>Composant qui reçoit et traite un message</td></tr>
+<tr><td>Broker</td><td>Logiciel intermédiaire qui gère les files et leur distribution</td></tr>
+</table></div>
+<pre><code>NotificationSender → file notifications dans Artemis → NotificationReceiver
+     producteur              broker                        consommateur</code></pre>
+<p><strong>Artemis</strong> est le broker choisi. <strong>Spring JMS</strong> fournit les outils pour l’utiliser depuis nos composants Spring. Dans cet atelier, le broker, le producteur et le consommateur sont réunis dans le même processus pour simplifier le lancement. Dans d’autres architectures, ils peuvent être séparés.</p>
+</section><section>
+<h2>3. Envoyer avec <code>JmsTemplate</code></h2>
+<pre><code>@Service
+public class NotificationSender {
+    private final JmsTemplate jms;
+    public NotificationSender(JmsTemplate jms) { this.jms = jms; }
+    public void send(String message) {
+        jms.convertAndSend(&quot;notifications&quot;, message);
+    }
+}</code></pre>
+<p>Le constructeur reçoit un objet configuré par Spring. <code>JmsTemplate</code> est l’outil d’envoi. Le premier argument est le nom de la destination ; le second est le contenu à envoyer. Ici <code>convertAndSend</code> convertit la chaîne Java en message texte approprié.</p>
+<p>Le service ne contient pas de boucle réseau ni de code pour ouvrir et fermer manuellement chaque connexion. Ces détails sont pris en charge par l’infrastructure fournie.</p>
+</section><section>
+<h2>4. Recevoir avec <code>@JmsListener</code></h2>
+<pre><code>@Component
+public class NotificationReceiver {
+    @JmsListener(destination=&quot;notifications&quot;)
+    public void receive(String message) {
+        System.out.println(&quot;RECU : &quot; + message);
+    }
+}</code></pre>
+<p><code>@Component</code> déclare une classe gérée par Spring ; <code>@Service</code> est une annotation plus spécialisée que nous utilisons pour les services métier. <code>@JmsListener</code> demande d’appeler cette méthode lorsqu’un message arrive sur la destination indiquée.</p>
+<p>On ne doit pas appeler <code>receive</code> directement depuis le producteur pour faire la démonstration : cela contournerait le broker. Ici, Spring déclenche la réception et fournit le contenu du message au paramètre Java.</p>
+</section><section>
+<h2>5. Déclencher l’essai au démarrage</h2>
+<p>Comme au cours 7, un <code>CommandLineRunner</code> exécute une action après le démarrage :</p>
+<pre><code>sender.send(&quot;Bienvenue Ana&quot;);
+System.out.println(&quot;Demande envoyée&quot;);</code></pre>
+<p>Le listener affiche de son côté <code>RECU : Bienvenue Ana</code>. Les lignes peuvent s’entrelacer avec les messages techniques du serveur, et leur ordre d’affichage n’est pas une preuve de la durée du traitement. L’application reste en écoute après cet envoi ; l’arrêter avec Ctrl+C.</p>
+<p>La configuration embarquée est fournie dans <code>application.properties</code>. Elle crée la file <code>notifications</code> et utilise <code>persistent=false</code> : les messages ne sont pas conservés durablement après l’arrêt du broker. Le TP ne prétend pas démontrer une résistance aux pannes.</p>
+</section><section>
+<h2>6. Les limites à connaître sans les implémenter maintenant</h2>
+<p>Si un traitement échoue, un système de messagerie peut présenter à nouveau un message, selon sa configuration. Une réception ne garantit donc pas à elle seule que l’effet métier ne se produira jamais deux fois. Il faut aussi connaître la configuration du stockage et des confirmations pour parler de fiabilité.</p>
+<p>Pour cette première découverte, nous attendons seulement un échange de texte observé, avec les acteurs correctement identifiés. Les reprises automatiques, files d’erreur et garanties entre base et broker sont des sujets ultérieurs.</p>
+<p>Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajoutons pas de second modèle de diffusion dans le TP : maîtriser un premier chemin complet est l’objectif.</p>
+</section><section>
+<h2>TP guidé — envoyer et reconnaître deux messages</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/08-messages/index.html">atelier 08</a>. Durée : 65 min. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.</p>
+<h3>Étape 1 — repérer les acteurs (10 min)</h3>
+<p>Ouvrir <code>NotificationSender</code>, <code>NotificationReceiver</code> et <code>DemoRunner</code>. Noter la ligne d’envoi, la méthode de réception et le nom de la file. Repérer la dépendance <code>spring-boot-starter-artemis</code> dans le POM sans modifier les bibliothèques.</p>
+<h3>Étape 2 — démarrer et observer (15 min)</h3>
+<p>Dans <code>08-messages</code>, lancer <code>mvn spring-boot:run</code>. <strong>Attendu :</strong> une ligne contenant <code>Demande envoyée</code> et une ligne <code>RECU : Bienvenue Ana</code>. Les autres logs ne sont pas des messages applicatifs à compter.</p>
+<h3>Étape 3 — changer le contenu (10 min)</h3>
+<p>Remplacer dans <code>DemoRunner</code> le texte par <code>Bienvenue MIAGE</code>. Arrêter puis relancer. <strong>Attendu :</strong> <code>RECU : Bienvenue MIAGE</code>.</p>
+<h3>Étape 4 — envoyer deux messages (15 min)</h3>
+<p>Ajouter un second appel <code>sender.send(&quot;Bienvenue Lea&quot;)</code>. Après redémarrage, identifier les deux textes reçus. Le but n’est pas de déduire une garantie générale d’ordre à partir de cette petite observation.</p>
+<h3>Étape 5 — changer ensemble la destination (10 min)</h3>
+<p>Remplacer le nom <code>notifications</code> par <code>accueil</code> dans le producteur, l’annotation du consommateur et la propriété <code>spring.artemis.embedded.queues</code>. Relancer et vérifier que les deux textes arrivent. Comprendre pourquoi ces trois éléments doivent désigner la même destination.</p>
+<h3>Étape 6 — expliquer (5 min)</h3>
+<p>Dessiner la chaîne d’un message et expliquer pourquoi une ligne « envoyé » ne prouve pas à elle seule la fin d’un traitement.</p>
+<p><strong>À rendre :</strong> les trois fichiers de code/configuration concernés, deux lignes reçues et le schéma. <strong>Réussite :</strong> passage par le broker et destination cohérente, sans appel direct au récepteur.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Dans <code>DemoRunner.run</code> :</p>
+<pre><code>sender.send(&quot;Bienvenue MIAGE&quot;);
+sender.send(&quot;Bienvenue Lea&quot;);
+System.out.println(&quot;Demandes envoyées&quot;);</code></pre>
+<p>Pour le changement de file : <code>convertAndSend(&quot;accueil&quot;, message)</code>, <code>@JmsListener(destination=&quot;accueil&quot;)</code> et <code>spring.artemis.embedded.queues=accueil</code>. Redémarrer pour prendre en compte toutes les modifications. Garder l’application active assez longtemps pour observer les réceptions.</p>
+</details>
+<p>Référence : <a href="https://docs.spring.io/spring-boot/3.5/reference/messaging/jms.html">messagerie avec Spring Boot</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Quel composant joue le rôle de producteur dans l’atelier ?</li>
+<li>Qu’est-ce qu’un broker ?</li>
+<li>À quoi sert le nom <code>notifications</code> dans l’envoi ?</li>
+<li>Quel outil Spring utilisons-nous pour envoyer ?</li>
+<li>Quelle annotation déclenche une méthode à la réception ?</li>
+<li>Le producteur doit-il appeler directement <code>receive</code> pour passer par la file ?</li>
+<li>« Envoyé » signifie-t-il nécessairement « traitement final terminé » ?</li>
+<li>Notre broker embarqué non persistant garantit-il la conservation des messages après arrêt ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li><code>NotificationSender</code>.</li>
+<li>Le logiciel intermédiaire qui gère les files et la distribution des messages, ici Artemis.</li>
+<li>Il identifie la destination de messagerie utilisée par producteur et consommateur.</li>
+<li><code>JmsTemplate</code>, avec <code>convertAndSend</code>.</li>
+<li><code>@JmsListener</code>.</li>
+<li>Non : c’est Spring qui appelle le listener lorsque le broker fournit un message.</li>
+<li>Non : dépôt/envoi et fin du traitement sont deux étapes distinctes.</li>
+<li>Non ; cet atelier sert à observer un échange, pas à prouver la durabilité.</li>
+</ol>
+</details></section></main><footer>Source modifiable : <a href="08-messages.md">08-messages.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>
