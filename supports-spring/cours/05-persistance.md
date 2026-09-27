@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : annuaire CRUD et injection par constructeur. SQL n’est pas un prérequis de ce cours.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : comprendre table, ligne et identifiant ; reconnaître une entité et un repository ; conserver un utilisateur après arrêt et redémarrage.
 
 ---
@@ -27,8 +29,8 @@ Ici `id` est la clé primaire. Deux utilisateurs pourraient porter le même nom 
 
 **JPA** décrit comment représenter des données persistantes par des objets Java. **Hibernate** est l’outil qui réalise cette correspondance dans le projet. **Spring Data JPA** fournit des repositories afin d’utiliser des opérations usuelles sans les réécrire.
 
-```text
-Contrôleur → service → repository → Hibernate → H2
+```diagram
+UserController -> UserService -> UserRepository -> Hibernate -> Base H2
 ```
 
 Une **entité** décrit un objet persistant. Un **repository** offre des opérations pour le stocker et le retrouver. Nous ne demandons pas encore de maîtriser les relations entre plusieurs tables ni les requêtes complexes.
@@ -58,6 +60,11 @@ public class UserEntity {
 `@Entity` déclare la classe persistante. `@Table` choisit le nom de table. `@Id` désigne l’identifiant ; `@GeneratedValue` indique que sa valeur sera générée. `Long`, avec une majuscule, peut valoir `null` avant l’attribution de l’identifiant.
 
 Le constructeur sans argument est utilisé par l’outil de persistance ; le constructeur avec nom sert à notre code. Cette classe n’est pas un contrôleur : aucune méthode HTTP n’y est déclarée.
+
+```diagram
+UserEntity en Java -> Hibernate -> Ligne app_users
+id devient cle primaire; name devient colonne
+```
 
 ---
 
@@ -96,7 +103,24 @@ public UserView create(String name) {
 
 L’entité sert au stockage ; `UserView` sert à la réponse. Cette séparation permet de choisir ce que reçoit le client. Le contrôleur conserve les mêmes routes et reçoit toujours les mêmes DTO.
 
+```uml-sequence
+participant controller as UserController
+participant service as UserService
+participant repository as UserRepository
+participant database as Base H2
+controller -> service: create("Ana")
+service -> repository: save(UserEntity)
+repository -> database: INSERT dans app_users
+database --> repository: ligne avec id genere
+repository --> service: UserEntity enregistree
+service --> controller: UserView pour la reponse
+```
+
 **Idée d’architecture à retenir :** le client n’a pas à connaître le détail du stockage. Une nouvelle organisation interne n’impose pas de changer les adresses publiques si le contrat reste identique.
+
+```diagram
+Client et routes HTTP -> Controleur -> Service -> Repository -> Base persistante
+```
 
 ---
 
@@ -112,6 +136,10 @@ spring.jpa.show-sql=true
 Une propriété est une ligne `clé=valeur`. L’URL indique une base H2 stockée dans des fichiers sous `data`, à partir du dossier de lancement. `ddl-auto=update` permet à cet atelier de créer/adapter ses tables. `show-sql=true` affiche les requêtes générées pour les observer. La propriété `open-in-view` est fournie : son étude détaillée n’est pas requise ici.
 
 Ce réglage de création automatique est un confort pédagogique, pas une méthode de mise à jour de schéma à généraliser sans étude. Notre objectif est d’observer une table simple. Ne pas lancer deux instances sur le même fichier H2.
+
+```diagram
+Lancement -> Lecture de la base fichier -> Requetes -> Arret -> Fichier conserve les donnees
+```
 
 ---
 

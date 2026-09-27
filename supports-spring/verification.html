@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Verification de la livraison active</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+<title>Vérification de la livraison complète</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
 header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
@@ -11,6 +11,7 @@ pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8p
 .table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
 details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
 .diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.sequence-diagram .lifeline{stroke:#78909a;stroke-width:1.5;stroke-dasharray:6 6}.sequence-diagram .participant{fill:#e7f3f1;stroke:#087e72;stroke-width:2}.sequence-diagram .message{stroke:#32515c;stroke-width:2;fill:none}.sequence-diagram .message.return{stroke-dasharray:7 5}.sequence-diagram .message-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}.sequence-diagram .actor-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
 .deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
 body.projection section{min-height:75vh;font-size:1.12em}
 body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
@@ -24,17 +25,18 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
 <button onclick="window.print()">Imprimer / PDF</button></header>
 <main><section>
-<h1>Verification de la livraison active</h1>
-<p>Cette livraison active cible les deux premiers cours : premiers pas avec Spring Boot, puis HTTP et JSON. Le socle attendu en salle est <strong>Java 25</strong>, Maven 3.9 et Spring Boot 3.5.16.</p>
-<p>Les supports des cours 3 a 8 seront repris plus tard. Les fichiers deja presents pour ces themes ne sont pas encore a considerer comme des supports diffuses.</p>
-<h2>Points controles dans cette reprise</h2>
+<h1>Vérification de la livraison complète</h1>
+<p>La livraison comprend les huit cours et ateliers du parcours Architecture et Spring. Les supports ciblent des étudiants connaissant Java et découvrant les frameworks Spring et API.</p>
+<p>Le socle est <strong>Java 25, Maven 3.9 et Spring Boot 3.5.16</strong>. Les huit ateliers autonomes déclarent Java 25 et utilisent le même parent Spring Boot.</p>
+<h2>Contrôles de contenu</h2>
 <ul>
-<li>Les consignes d&#x27;installation et les deux premiers ateliers mentionnent Java 25.</li>
-<li>Les POM des ateliers utilisent <code>java.version</code> 25.</li>
-<li>Les cours 1 et 2 disposent d&#x27;un TP guide, d&#x27;un quiz corrige et de diagrammes exportables en HTML.</li>
-<li>Le generateur HTML fournit un mode diaporama avec navigation clavier.</li>
+<li>Chaque cours dispose d’un déroulé de trois heures, d’un TP guidé de 65 minutes et de huit questions avec leurs réponses.</li>
+<li>Les cours 1 à 8 sont rendus en HTML, avec navigation en diaporama et export imprimable.</li>
+<li>Les cours 3 à 8 contiennent des diagrammes de séquence UML rendus en SVG autonome, ainsi que des schémas explicatifs.</li>
+<li>Le sommaire référence les huit cours et ateliers, et le pack téléchargeable contient les projets correspondants.</li>
+<li>Le workflow GitHub Pages prépare les huit cours, les huit ateliers et leurs sources sans inclure les répertoires <code>target</code>.</li>
 </ul>
-<p>Les tests Maven n&#x27;ont pas ete relances pendant cette reprise.</p></section></main><footer>Source modifiable : <a href="verification.md">verification.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<p>Les liens HTML internes sont contrôlés après génération. Les tests Maven des ateliers ne sont pas relancés dans cette vérification de contenu.</p></section></main><footer>Source modifiable : <a href="verification.md">verification.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
 <script>
 const slides = Array.from(document.querySelectorAll('main section'));
 let currentSlide = 0;

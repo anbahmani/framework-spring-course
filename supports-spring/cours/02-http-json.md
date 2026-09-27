@@ -103,6 +103,19 @@ Objet Java -> Serialisation -> Texte JSON -> Navigateur
 
 Transformer l’objet Java en JSON s’appelle la **sérialisation**. Le starter web apporte les outils de conversion ; le contrôleur retourne l’objet et Spring construit la réponse. Nous n’avons pas à concaténer nous-mêmes les accolades et guillemets. L’ordre des propriétés JSON n’a pas d’importance pour notre contrat.
 
+```uml-sequence
+participant client as Client HTTP
+participant mvc as Spring MVC
+participant controller as UserController
+participant converter as Convertisseur JSON
+client -> mvc: GET /users/7
+mvc -> controller: appelle user(7)
+controller --> mvc: UserView(7, Ana)
+mvc -> converter: convertit l objet en JSON
+converter --> mvc: texte JSON
+mvc --> client: HTTP 200 avec JSON
+```
+
 ---
 
 ## 6. Observer la réponse autrement que dans le navigateur

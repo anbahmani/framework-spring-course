@@ -100,6 +100,16 @@ public class HelloController {
 
 Un **contrôleur** est une classe qui reçoit des demandes web. `@RestController` signale ce rôle et indique que le résultat doit servir de contenu de réponse. `@GetMapping("/hello")` associe une demande GET sur `/hello` à cette méthode.
 
+```uml-sequence
+participant browser as Navigateur
+participant spring as Spring MVC
+participant controller as HelloController
+browser -> spring: GET /hello
+spring -> controller: appelle hello()
+controller --> spring: Bonjour Spring
+spring --> browser: HTTP 200 avec le texte
+```
+
 C’est Spring qui appelle `hello()` quand la demande arrive. Le `return` envoie le texte au client. Un `System.out.println` écrirait seulement dans le terminal du serveur : ce ne serait pas la réponse du navigateur.
 
 ---

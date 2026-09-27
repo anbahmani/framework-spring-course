@@ -45,4 +45,4 @@ Les architectures distribuées, les schémas de données complexes, les proxies 
 
 ## Préparation et vérification
 
-Précharger les dépendances Maven sur les postes ; tester Java 25, le port 8080 et les commandes du premier cours. Les projets utilisent un socle fixé. Pour cette livraison, les étudiants lancent uniquement les ateliers 01 et 02 depuis leur sous-dossier. Voir le bilan de vérification pour les contrôles effectués et leurs limites.
+Précharger les dépendances Maven sur les postes ; tester Java 25, le port 8080 et les commandes avant le cours. Les huit projets utilisent un socle fixé ; les ateliers de serveur HTTP partagent le port 8080 et se lancent un à la fois. L’atelier 07 agit comme client console et l’atelier 06 exécute des tests sans serveur. Voir le bilan de vérification pour les contrôles effectués et leurs limites.

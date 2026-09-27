@@ -11,6 +11,7 @@ pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8p
 .table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
 details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
 .diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.sequence-diagram .lifeline{stroke:#78909a;stroke-width:1.5;stroke-dasharray:6 6}.sequence-diagram .participant{fill:#e7f3f1;stroke:#087e72;stroke-width:2}.sequence-diagram .message{stroke:#32515c;stroke-width:2;fill:none}.sequence-diagram .message.return{stroke-dasharray:7 5}.sequence-diagram .message-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}.sequence-diagram .actor-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
 .deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
 body.projection section{min-height:75vh;font-size:1.12em}
 body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
@@ -29,7 +30,7 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <p>Créer une classe Java, appeler une méthode, utiliser un constructeur, une liste et une exception simple. Les mots propres à Spring et aux API seront expliqués dans les cours. Un petit rappel des records est inclus au cours 2.</p>
 <h2>Préparer le poste avec l’enseignant</h2>
 <p>Installer ou faire préparer <strong>un JDK 25</strong>, <strong>Maven 3.9</strong>, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier <code>pom.xml</code>. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.</p>
-<p>Les deux premiers projets sont déjà fournis : aucun générateur de projet, serveur externe ou base de données séparée n’est nécessaire.</p>
+<p>Les huit projets d’atelier sont déjà fournis : aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.</p>
 <h2>Vérifier avant de coder</h2>
 <p>Ouvrir un terminal et exécuter séparément :</p>
 <pre><code>java -version
@@ -40,7 +41,7 @@ mvn -v</code></pre>
 <p>Pour le cours 1, ouvrir un terminal <strong>dans <code>supports-spring/ateliers/01-demarrage</code></strong>, le dossier où se trouve son <code>pom.xml</code>.</p>
 <pre><code>mvn spring-boot:run</code></pre>
 <p>Le serveur doit rester actif pendant que vous utilisez le navigateur ou un second terminal. Attendre <code>Started Application</code>. Pour arrêter : Ctrl+C dans le terminal du serveur. Après chaque modification Java dans ces ateliers, arrêter et relancer ; le rechargement automatique n’est pas configuré.</p>
-<p>Pour changer d’atelier, arrêter le précédent, ouvrir le nouveau dossier et lancer la commande à cet endroit. Les ateliers 01 et 02 utilisent tous les deux le port 8080, donc <strong>un seul de ces serveurs à la fois</strong>.</p>
+<p>Pour changer d’atelier, arrêter le précédent, ouvrir le nouveau dossier et lancer la commande à cet endroit. Les ateliers qui exposent l’API de l’annuaire utilisent le port 8080 : <strong>un seul de ces serveurs à la fois</strong>.</p>
 <h2>Envoyer des requêtes</h2>
 <p>Pour les premières lectures, saisir une URL dans le navigateur suffit. Pour voir le statut HTTP :</p>
 <pre><code>curl -i &#x27;http://localhost:8080/hello&#x27;</code></pre>

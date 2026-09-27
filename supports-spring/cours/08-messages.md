@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : service, injection et appel HTTP synchrone.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : expliquer producteur, file, broker et consommateur ; envoyer un texte et observer sa réception. Le TP utilise un broker embarqué fourni, sans Docker ni administration de serveur.
 
 ---
@@ -26,9 +28,9 @@ L’analogie d’une boîte de dépôt aide : déposer un document ne prouve pas
 | Consommateur | Composant qui reçoit et traite un message |
 | Broker | Logiciel intermédiaire qui gère les files et leur distribution |
 
-```text
-NotificationSender → file notifications dans Artemis → NotificationReceiver
-     producteur              broker                        consommateur
+```diagram
+NotificationSender -> File notifications -> NotificationReceiver
+Producteur -> Broker Artemis -> Consommateur
 ```
 
 **Artemis** est le broker choisi. **Spring JMS** fournit les outils pour l’utiliser depuis nos composants Spring. Dans cet atelier, le broker, le producteur et le consommateur sont réunis dans le même processus pour simplifier le lancement. Dans d’autres architectures, ils peuvent être séparés.
@@ -50,7 +52,22 @@ public class NotificationSender {
 
 Le constructeur reçoit un objet configuré par Spring. `JmsTemplate` est l’outil d’envoi. Le premier argument est le nom de la destination ; le second est le contenu à envoyer. Ici `convertAndSend` convertit la chaîne Java en message texte approprié.
 
+```uml-sequence
+participant sender as NotificationSender
+participant template as JmsTemplate
+participant broker as Broker Artemis
+participant queue as File notifications
+sender -> template: convertAndSend avec message texte
+template -> broker: envoie le message a la destination
+broker -> queue: place le message en attente
+queue --> broker: message disponible
+```
+
 Le service ne contient pas de boucle réseau ni de code pour ouvrir et fermer manuellement chaque connexion. Ces détails sont pris en charge par l’infrastructure fournie.
+
+```diagram
+Code Java -> JmsTemplate -> Broker Artemis -> File notifications
+```
 
 ---
 
@@ -69,6 +86,19 @@ public class NotificationReceiver {
 `@Component` déclare une classe gérée par Spring ; `@Service` est une annotation plus spécialisée que nous utilisons pour les services métier. `@JmsListener` demande d’appeler cette méthode lorsqu’un message arrive sur la destination indiquée.
 
 On ne doit pas appeler `receive` directement depuis le producteur pour faire la démonstration : cela contournerait le broker. Ici, Spring déclenche la réception et fournit le contenu du message au paramètre Java.
+
+```uml-sequence
+participant queue as File notifications
+participant broker as Broker Artemis
+participant listener as NotificationReceiver
+queue -> broker: message pret a etre distribue
+broker -> listener: appelle receive(message)
+listener --> broker: traitement du texte termine
+```
+
+```diagram
+Message dans la file -> Spring detecte le message -> @JmsListener -> Methode receive(String)
+```
 
 ---
 

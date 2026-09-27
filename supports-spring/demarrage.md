@@ -8,7 +8,7 @@ Créer une classe Java, appeler une méthode, utiliser un constructeur, une list
 
 Installer ou faire préparer **un JDK 25**, **Maven 3.9**, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier `pom.xml`. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.
 
-Les deux premiers projets sont déjà fournis : aucun générateur de projet, serveur externe ou base de données séparée n’est nécessaire.
+Les huit projets d’atelier sont déjà fournis : aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.
 
 ## Vérifier avant de coder
 
@@ -33,7 +33,7 @@ mvn spring-boot:run
 
 Le serveur doit rester actif pendant que vous utilisez le navigateur ou un second terminal. Attendre `Started Application`. Pour arrêter : Ctrl+C dans le terminal du serveur. Après chaque modification Java dans ces ateliers, arrêter et relancer ; le rechargement automatique n’est pas configuré.
 
-Pour changer d’atelier, arrêter le précédent, ouvrir le nouveau dossier et lancer la commande à cet endroit. Les ateliers 01 et 02 utilisent tous les deux le port 8080, donc **un seul de ces serveurs à la fois**.
+Pour changer d’atelier, arrêter le précédent, ouvrir le nouveau dossier et lancer la commande à cet endroit. Les ateliers qui exposent l’API de l’annuaire utilisent le port 8080 : **un seul de ces serveurs à la fois**.
 
 ## Envoyer des requêtes
 

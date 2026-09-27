@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : annuaire HTTP, service, repository et exceptions Java.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : lire une assertion, lancer des tests, distinguer trois choses à vérifier et comprendre le principe « tout ou rien » d’une transaction. Aucun outil de test n’est supposé déjà connu.
 
 ---
@@ -33,6 +35,10 @@ Les trois étapes sont : préparer l’objet, agir, vérifier. `assertEquals` re
 
 Un **test unitaire** vise une petite partie du code isolée. Un **test d’intégration** vérifie plusieurs composants assemblés, par exemple Spring et la base de données.
 
+```diagram
+Preparation -> Action testee -> Resultat obtenu -> Assertion compare -> Test reussi ou echoue
+```
+
 ---
 
 ## 3. Vérifier le contrat HTTP avec MockMvc
@@ -47,6 +53,23 @@ mvc.perform(get("/users/999999"))
 `perform` exécute la requête simulée ; `andExpect` exprime le résultat attendu. Dans un test où cet identifiant n’existe pas, on attend 404. Un test de création peut aussi vérifier 201 et le nom dans le JSON.
 
 Dans `UserApiTest`, `@SpringBootTest` démarre le contexte Spring pour assembler les composants ; `@AutoConfigureMockMvc` prépare l’outil MVC. Le champ annoté `@Autowired` reçoit l’objet de test fourni par Spring. Cette injection dans un champ du test est un raccourci ; nos classes applicatives gardent l’injection par constructeur.
+
+```uml-sequence
+participant test as Test Java
+participant mockmvc as MockMvc
+participant controller as UserController
+participant service as UserService
+test -> mockmvc: demande GET /users/999999
+mockmvc -> controller: transmet la requete MVC
+controller -> service: cherche l utilisateur
+service --> controller: UserNotFound
+controller --> mockmvc: reponse HTTP 404
+mockmvc --> test: assertion de statut satisfaite
+```
+
+```diagram
+Test Java -> Requete MockMvc -> Controleur Spring -> Resultat HTTP -> Assertion de statut
+```
 
 ---
 
@@ -71,6 +94,10 @@ Résultat voulu : aucune des deux créations n’est conservée.
 
 C’est une question de comportement métier : l’opération promise est « créer la paire », pas « essayer séparément deux créations ».
 
+```diagram
+Debut transaction -> Sauver Ana -> Deuxieme nom invalide -> Rollback -> Aucune creation conservee
+```
+
 ---
 
 ## 6. Déclarer l’unité de travail avec Spring
@@ -86,6 +113,27 @@ public void createPair(String first, String second) {
 Dans l’atelier 06, cette méthode appartient à `UserService`. L’annotation `@Transactional` est celle de Spring. Quand un autre composant appelle cette méthode sur le service géré par Spring, l’infrastructure encadre les opérations de base.
 
 `InvalidName` étend `RuntimeException` : si elle sort de la méthode, Spring annule normalement la transaction. Une fin normale permet sa validation. D’autres types d’exceptions ou appels nécessitent des précisions ; nous nous limitons à ce cas expliqué et testé.
+
+```uml-sequence
+participant test as TransactionTest
+participant service as UserService transactionnel
+participant repository as UserRepository
+participant database as H2 en memoire
+test -> service: createPair("Ana", " ")
+service -> repository: save(Ana)
+repository -> database: INSERT Ana
+database --> repository: ecriture en attente
+service --> test: InvalidName sur le deuxieme nom
+test -> repository: count()
+repository -> database: SELECT COUNT(*)
+database --> repository: zero ligne apres rollback
+repository --> test: aucune creation conservee
+```
+
+```diagram
+Appel du service -> Spring ouvre la transaction -> Methode termine -> Commit
+Appel du service -> Spring ouvre la transaction -> Exception sort -> Rollback
+```
 
 Pour ce TP, utiliser **le service injecté dans le test**, pas `new UserService(...)`, afin d’exercer aussi le comportement fourni par Spring. L’infrastructure d’interception détaillée sera étudiée plus tard.
 

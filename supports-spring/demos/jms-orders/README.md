@@ -2,7 +2,7 @@
 
 **Complément enseignant, hors TP débutants.** Pour les premiers exercices, ouvrir les [ateliers progressifs](../../ateliers/README.md).
 
-Application pédagogique de communication asynchrone avec Spring Boot, Spring JMS et Artemis. Cette démo n’appartient pas à la livraison active Java 25 centrée sur les deux premiers cours ; elle sera revue avec la séance messagerie. Conserver le POM parent. Depuis ce dossier :
+Application complémentaire de communication asynchrone avec Spring Boot, Spring JMS et Artemis. Ce scénario de commandes est distinct de l’atelier 08, qui reste le projet de référence du cours sur les messages. Conserver le POM parent. Depuis ce dossier :
 
 ```bash
 mvn test

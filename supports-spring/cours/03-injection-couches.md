@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : cours 1–2, constructeurs et attributs Java.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : comprendre qui crée les objets, expliquer une injection par constructeur et séparer un contrôleur d’un service. Les interfaces multiples, scopes particuliers et aspects ne font pas partie de cette première découverte.
 
 ---
@@ -12,9 +14,9 @@ Notre contrôleur salue un utilisateur. Demain, un autre écran doit utiliser la
 
 Nous créons une classe qui sait saluer et laissons au contrôleur la lecture de la requête. C’est un premier choix d’**architecture** : organiser les responsabilités pour comprendre et faire évoluer le programme.
 
-```text
-Demande HTTP → HelloController → GreetingService
-                 lit le nom        fabrique le message
+```diagram
+Demande HTTP -> HelloController -> GreetingService -> Reponse texte
+                     lit le nom      fabrique le message
 ```
 
 Une **couche** regroupe des responsabilités de même nature. Cela n’impose pas une machine différente : ces deux classes fonctionnent dans la même application Java.
@@ -52,6 +54,15 @@ Dans l’atelier, ajouter `@Service` sur `GreetingService` et `@RestController` 
 
 Au démarrage, Spring découvre ces classes dans les packages de l’application, crée le service puis le fournit au constructeur du contrôleur. C’est l’**injection de dépendances**. Avec le constructeur unique de notre exemple, aucune annotation supplémentaire n’est nécessaire sur ce constructeur.
 
+```uml-sequence
+participant spring as Conteneur Spring
+participant service as GreetingService
+participant controller as HelloController
+spring -> service: cree le service
+spring -> controller: appelle le constructeur avec GreetingService
+controller --> spring: instance du controleur creee
+```
+
 ```java
 @Service
 public class GreetingService {
@@ -60,6 +71,10 @@ public class GreetingService {
 ```
 
 Les annotations viennent de bibliothèques différentes selon leur rôle : l’IDE peut ajouter les imports. Les fichiers complets de l’atelier contiennent les imports corrects.
+
+```diagram
+Application Spring -> Cherche les composants -> Cree GreetingService -> Injecte le service -> Cree HelloController
+```
 
 ---
 
@@ -83,7 +98,21 @@ public class HelloController {
 
 Le constructeur intervient lors de la création de l’objet. La méthode `hello` intervient quand une requête arrive. Ce sont deux moments différents.
 
+```diagram
+Demarrage -> Spring assemble les objets -> Requete /hello -> hello(name) -> service.greet(name)
+```
+
 Pour `/hello?name=Ana`, Spring lit le paramètre et appelle `hello("Ana")`. Le contrôleur appelle ensuite le service comme n’importe quel objet Java. Le résultat revient au contrôleur puis au client.
+
+```uml-sequence
+participant browser as Navigateur
+participant controller as HelloController
+participant service as GreetingService
+browser -> controller: GET /hello?name=Ana
+controller -> service: greet("Ana")
+service --> controller: Bonjour Ana
+controller --> browser: HTTP 200 avec texte
+```
 
 ---
 

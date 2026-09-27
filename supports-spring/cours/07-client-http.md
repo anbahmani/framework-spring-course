@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : GET, JSON, service, injection et annuaire du cours 5.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : distinguer serveur et client dans deux applications Java, lire une API avec `RestClient`, convertir la réponse et reconnaître une panne de connexion. Pas de fournisseur externe, compte ou service payant à configurer.
 
 ---
@@ -10,14 +12,8 @@ Objectifs : distinguer serveur et client dans deux applications Java, lire une A
 
 Jusqu’ici, le navigateur ou curl appelait notre serveur. Un autre programme Java peut envoyer la même requête. Les rôles client et serveur dépendent de l’échange, pas du langage utilisé.
 
-```text
-Application cliente Java, atelier 07
-      │ GET http://localhost:8080/users
-      ↓
-Application serveur Java, atelier 05
-      │ réponse JSON
-      ↓
-Application cliente : affiche les noms dans son terminal
+```diagram
+Client Java -> GET /users -> Serveur Spring -> Reponse JSON -> Client affiche les utilisateurs
 ```
 
 Les applications sont deux processus distincts. Le client ne peut pas accéder directement aux objets en mémoire du serveur. Il utilise son adresse et son contrat HTTP. Il serait possible que les deux processus fonctionnent sur des machines différentes ; ici tout reste local.
@@ -57,9 +53,23 @@ public class DirectoryClient {
 
 `RestClient` est l’outil qui envoie les requêtes HTTP. Spring Boot fournit le `RestClient.Builder` demandé au constructeur. Un **builder** est un objet qui aide à préparer un autre objet : ici on lui donne l’adresse de base, puis `build()` crée le client configuré.
 
+```uml-sequence
+participant runner as ClientRunner
+participant client as DirectoryClient
+participant server as Serveur Spring
+runner -> client: list()
+client -> server: GET http://localhost:8080/users
+server --> client: reponse HTTP avec JSON
+client --> runner: tableau UserView[]
+```
+
 Lire la dernière ligne de gauche à droite : `get()` choisit GET ; `uri("/users")` complète l’adresse ; `retrieve()` prépare la lecture de la réponse ; `body(UserView[].class)` la convertit en tableau d’objets Java. Le symbole `[]` désigne bien un tableau Java.
 
 Cet appel est **synchrone** : la suite du code attend que l’appel fournisse un résultat ou échoue. Un serveur lent peut donc faire attendre le client.
+
+```diagram
+RestClient construit la requete -> Envoie GET -> Attend la reponse -> Convertit JSON en UserView[]
+```
 
 ---
 
@@ -99,6 +109,11 @@ try {
 ```
 
 Un annuaire vide doit produire `Utilisateurs reçus : 0`. Une connexion échouée doit produire un message d’échec. Transformer toute erreur en tableau vide masquerait la différence entre « aucun utilisateur » et « impossible de savoir ».
+
+```diagram
+Serveur disponible -> Reponse HTTP -> Client lit les donnees
+Serveur arrete -> Aucune reponse HTTP -> Erreur de connexion
+```
 
 Des délais d’attente explicites sont importants dans une application déployée. Leur configuration, les tentatives multiples et les circuits de protection seront un approfondissement ; ils ne sont pas à réaliser pour ce premier client local.
 

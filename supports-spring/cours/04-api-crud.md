@@ -2,6 +2,8 @@
 
 **Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.**
 
+**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+
 Objectifs : envoyer du JSON au serveur, créer et retrouver un utilisateur, reconnaître les quatre opérations de base et retourner une erreur simple. Le stockage reste une collection Java pour se concentrer sur l’API.
 
 ---
@@ -21,6 +23,11 @@ Jusqu’ici, le serveur retournait des données écrites dans le code. Nous voul
 | Supprimer | `DELETE /users/1` | 204 sans corps, ou 404 |
 
 Nous utilisons des noms de ressources dans les chemins. REST est un style d’organisation des échanges autour de ressources ; ici nous apprenons une API HTTP simple qui suit cette logique.
+
+```diagram
+Client -> Requete HTTP -> UserController -> UserService -> Collection en memoire
+Client <- Reponse JSON <- UserController <- UserService <- Collection en memoire
+```
 
 ---
 
@@ -59,6 +66,23 @@ public ResponseEntity<UserView> create(@RequestBody UserRequest request) {
 
 `created(...)` construit une réponse 201 avec un en-tête `Location`, l’adresse du nouvel utilisateur. `.body(created)` ajoute ses données. Les imports exacts sont fournis dans `UserController.java`.
 
+```uml-sequence
+participant client as Client HTTP
+participant controller as UserController
+participant service as UserService
+participant map as Map en memoire
+client -> controller: POST /users avec nom Ana
+controller -> service: create("Ana")
+service -> map: ajoute UserView avec id
+map --> service: utilisateur cree
+service --> controller: UserView
+controller --> client: HTTP 201 et JSON
+```
+
+```diagram
+JSON du client -> UserRequest -> Validation du service -> Nouvel identifiant -> Reponse 201 et Location
+```
+
 ---
 
 ## 4. Regrouper les routes
@@ -87,6 +111,10 @@ public synchronized UserView create(String name) {
 `strip()` retire les espaces au début et à la fin. Le `synchronized` fourni protège les accès à cette collection partagée dans cette petite application ; sa programmation détaillée n’est pas demandée dans ce TP.
 
 Cette collection disparaît lorsque le processus s’arrête. Ce n’est pas un bug : nous n’avons encore écrit aucun stockage durable. Au cours 5, une base de données prendra ce rôle.
+
+```diagram
+Serveur demarre -> Collection vide -> Requetes modifient la collection -> Serveur arrete -> Donnees perdues
+```
 
 ---
 
