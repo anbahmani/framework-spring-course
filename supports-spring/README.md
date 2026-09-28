@@ -20,6 +20,4 @@ Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance
 - [Dépôt GitHub séparé des huit démos](https://github.com/anbahmani/framework-spring-demos) · [Sommaire des démos sur le site](demos/index.html)
 - [Préparer le poste et démarrer les ateliers](demarrage.html)
 - [Glossaire Spring](guide-spring.html)
-- [Guide pédagogique](guide-pedagogique.html)
-- [Bilan de vérification](verification.html)
 - [Télécharger les supports et projets des huit séances](telechargements/supports-spring-cours-complet-java25.zip)

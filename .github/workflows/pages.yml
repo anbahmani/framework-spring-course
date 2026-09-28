@@ -34,9 +34,7 @@ jobs:
           mkdir -p _site/cours _site/ateliers _site/demos _site/telechargements
           cp supports-spring/index.html supports-spring/README.md supports-spring/.nojekyll _site/
           cp supports-spring/demarrage.md supports-spring/demarrage.html _site/
-          cp supports-spring/guide-pedagogique.md supports-spring/guide-pedagogique.html _site/
           cp supports-spring/guide-spring.md supports-spring/guide-spring.html _site/
-          cp supports-spring/verification.md supports-spring/verification.html _site/
           for course in 01-premiers-pas 02-http-json 03-injection-couches 04-api-crud 05-persistance 06-tests-transactions 07-client-http 08-messages; do
             cp "supports-spring/cours/$course.md" "supports-spring/cours/$course.html" _site/cours/
             if [ -f "supports-spring/cours/$course.pdf" ]; then cp "supports-spring/cours/$course.pdf" _site/cours/; fi
