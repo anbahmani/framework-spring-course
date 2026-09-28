@@ -228,7 +228,7 @@ def main():
 <button onclick="toggleDeck()">Diaporama</button>
 <button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
 <button onclick="window.print()">Imprimer / PDF</button></header>
-<main>{body}</main><footer>Source modifiable : <a href="{source.name}">{source.name}</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<main>{body}</main>
 <script>
 const slides = Array.from(document.querySelectorAll('main section'));
 let currentSlide = 0;

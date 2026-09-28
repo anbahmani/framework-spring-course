@@ -23,5 +23,3 @@ Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance
 - [Guide pédagogique](guide-pedagogique.html)
 - [Bilan de vérification](verification.html)
 - [Télécharger les supports et projets des huit séances](telechargements/supports-spring-cours-complet-java25.zip)
-
-La démonstration est une partie à part entière du cours : elle illustre le concept sur un projet exécutable avant le TP, sans reprendre le travail pratique pas à pas. Le dépôt GitHub séparé regroupe les huit projets Maven ; les ateliers restent les espaces de modification des étudiants. Les diagrammes UML, la démonstration commentée, le TP et le quiz sont accessibles dans chaque cours ; le bouton **Diaporama** affiche une section à la fois.
