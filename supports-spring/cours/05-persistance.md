@@ -1,5 +1,9 @@
 # Cours 5 — Conserver les données avec Spring Data JPA
 
+---
+
+## Repères de la séance
+
 **Durée : 3 h. Prérequis : annuaire CRUD et injection par constructeur. SQL n’est pas un prérequis de ce cours.**
 
 **Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.

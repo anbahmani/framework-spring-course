@@ -1,5 +1,9 @@
 # Cours 1 — Découvrir Spring et lancer sa première application
 
+---
+
+## Repères de la séance
+
 **Durée : 3 h. Prérequis : écrire une classe Java, une méthode et un `main`.**
 
 À la fin, vous saurez lancer puis arrêter une application Spring Boot, appeler une première adresse et expliquer les trois annotations rencontrées. Aucun serveur ni framework n’est supposé connu.

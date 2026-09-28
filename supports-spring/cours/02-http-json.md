@@ -1,5 +1,9 @@
 # Cours 2 — Comprendre HTTP et envoyer des données JSON
 
+---
+
+## Repères de la séance
+
 **Durée : 3 h. Prérequis : lancer l’atelier 01 et lire une annotation de route.**
 
 Objectifs : lire une URL, distinguer demande et réponse, récupérer un paramètre et comprendre comment un objet Java devient du JSON.

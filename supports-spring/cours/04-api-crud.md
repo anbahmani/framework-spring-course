@@ -1,5 +1,9 @@
 # Cours 4 — Créer une petite API de gestion d’utilisateurs
 
+---
+
+## Repères de la séance
+
 **Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.**
 
 **Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
