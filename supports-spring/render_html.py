@@ -20,7 +20,7 @@ details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summar
 .sequence-diagram .lifeline{stroke:#78909a;stroke-width:1.5;stroke-dasharray:6 6}.sequence-diagram .participant{fill:#e7f3f1;stroke:#087e72;stroke-width:2}.sequence-diagram .message{stroke:#32515c;stroke-width:2;fill:none}.sequence-diagram .message.return{stroke-dasharray:7 5}.sequence-diagram .message-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}.sequence-diagram .actor-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
 .deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
 body.projection section{min-height:75vh;font-size:1.12em}
-body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck.course-deck main>section:first-child.active{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}body.deck.course-deck main>section:first-child.active h1{font-size:clamp(2.5rem,6vw,5rem);max-width:18ch;margin:auto}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
 @media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
 @media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
 """
@@ -218,9 +218,10 @@ def main():
         depth = len(source.relative_to(ROOT).parts)-1
         home = '../'*depth + 'index.html'
         body = render(text)
+        body_class = ' class="course-deck"' if source.parent == ROOT / 'cours' else ''
         page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{escape(title)}</title><style>{STYLE}</style></head><body>
+<title>{escape(title)}</title><style>{STYLE}</style></head><body{body_class}>
 <header><a href="{home}">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
 <button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
 <span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>

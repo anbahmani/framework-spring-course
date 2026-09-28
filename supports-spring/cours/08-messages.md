@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : service, injection et appel HTTP synchrone.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : expliquer producteur, file, broker et consommateur ; envoyer un texte et observer sa réception. Le TP utilise un broker embarqué fourni, sans Docker ni administration de serveur.
-
----
-
 ## 1. Un autre mode de communication
 
 Dans le cours précédent, le client attendait une réponse à son appel. Pour certaines actions, nous souhaitons plutôt déposer une demande et la traiter ensuite, par exemple préparer une notification de bienvenue.

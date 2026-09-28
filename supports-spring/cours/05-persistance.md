@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : annuaire CRUD et injection par constructeur. SQL n’est pas un prérequis de ce cours.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : comprendre table, ligne et identifiant ; reconnaître une entité et un repository ; conserver un utilisateur après arrêt et redémarrage.
-
----
-
 ## 1. Pourquoi une base de données ?
 
 Une collection Java appartient au processus en cours. Pour retrouver les informations après son arrêt, nous avons besoin de les stocker durablement. Une **base de données** organise des données et permet de les lire ou de les modifier.

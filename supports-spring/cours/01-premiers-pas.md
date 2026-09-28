@@ -2,14 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : écrire une classe Java, une méthode et un `main`.**
-
-À la fin, vous saurez lancer puis arrêter une application Spring Boot, appeler une première adresse et expliquer les trois annotations rencontrées. Aucun serveur ni framework n’est supposé connu.
-
----
-
 ## 1. Partir d’un programme Java connu
 
 Dans un programme console, `main` peut appeler `System.out.println("Bonjour")`, puis le programme se termine. Maintenant, nous voulons qu’un autre programme puisse demander ce message, éventuellement plusieurs fois. Notre application doit rester démarrée, attendre une demande et envoyer une réponse.

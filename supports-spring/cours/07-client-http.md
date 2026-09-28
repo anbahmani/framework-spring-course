@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : GET, JSON, service, injection et annuaire du cours 5.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : distinguer serveur et client dans deux applications Java, lire une API avec `RestClient`, convertir la réponse et reconnaître une panne de connexion. Pas de fournisseur externe, compte ou service payant à configurer.
-
----
-
 ## 1. Une application Java peut aussi être cliente
 
 Jusqu’ici, le navigateur ou curl appelait notre serveur. Un autre programme Java peut envoyer la même requête. Les rôles client et serveur dépendent de l’échange, pas du langage utilisé.

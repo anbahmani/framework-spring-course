@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : envoyer du JSON au serveur, créer et retrouver un utilisateur, reconnaître les quatre opérations de base et retourner une erreur simple. Le stockage reste une collection Java pour se concentrer sur l’API.
-
----
-
 ## 1. Notre annuaire et son contrat
 
 Jusqu’ici, le serveur retournait des données écrites dans le code. Nous voulons maintenant ajouter un utilisateur depuis un client. Le serveur conservera ces données pendant son exécution.

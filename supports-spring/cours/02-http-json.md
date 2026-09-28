@@ -2,14 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : lancer l’atelier 01 et lire une annotation de route.**
-
-Objectifs : lire une URL, distinguer demande et réponse, récupérer un paramètre et comprendre comment un objet Java devient du JSON.
-
----
-
 ## 1. Une conversation en deux messages
 
 **HTTP** est le protocole de communication utilisé ici entre client et serveur. Le client envoie une **requête** ; le serveur renvoie une **réponse**. Une requête indique notamment une méthode et une adresse.

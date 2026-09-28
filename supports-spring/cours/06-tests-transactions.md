@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : annuaire HTTP, service, repository et exceptions Java.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : lire une assertion, lancer des tests, distinguer trois choses à vérifier et comprendre le principe « tout ou rien » d’une transaction. Aucun outil de test n’est supposé déjà connu.
-
----
-
 ## 1. Pourquoi un test automatisé ?
 
 Nous avons vérifié l’API avec curl. Mais après chaque modification, refaire tous les essais à la main devient long et facile à oublier. Un **test automatisé** exécute une action puis compare le résultat à ce qui est attendu.

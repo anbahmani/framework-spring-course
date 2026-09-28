@@ -2,16 +2,6 @@
 
 ---
 
-## Repères de la séance
-
-**Durée : 3 h. Prérequis : cours 1–2, constructeurs et attributs Java.**
-
-**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
-
-Objectifs : comprendre qui crée les objets, expliquer une injection par constructeur et séparer un contrôleur d’un service. Les interfaces multiples, scopes particuliers et aspects ne font pas partie de cette première découverte.
-
----
-
 ## 1. Un besoin très simple de séparation
 
 Notre contrôleur salue un utilisateur. Demain, un autre écran doit utiliser la même règle de salutation. Copier cette règle dans plusieurs contrôleurs rendrait son évolution plus difficile.
