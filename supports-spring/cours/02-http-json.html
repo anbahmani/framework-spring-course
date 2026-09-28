@@ -81,23 +81,23 @@ public UserView user(@PathVariable(&quot;id&quot;) long id) {
 <pre><code>curl -i &#x27;http://localhost:8080/users/7&#x27;</code></pre>
 <p>On doit repérer un statut 200, un format <code>application/json</code> et le corps attendu. Dans PowerShell, utiliser <code>curl.exe</code> pour appeler le programme curl. Les commandes sont à lancer dans un <strong>second terminal</strong>, le premier étant occupé par le serveur.</p>
 </section><section>
-<h2>Démonstration — Requête HTTP et réponse JSON (15 min)</h2>
+<h2>Démonstration — Requête HTTP et réponse JSON</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json">projet de démonstration du cours 2</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration compare une route qui lit un paramètre dans l’URL et une route qui reçoit une valeur dans le chemin. Le contrôleur retourne ensuite un objet Java ; Spring MVC le convertit en JSON dans la réponse HTTP.</p>
 <p><code>UserController</code> déclare les routes et récupère les valeurs avec les annotations Spring. <code>UserView</code> représente les données renvoyées. On observe ainsi le passage d’une requête HTTP à un objet Java, puis à une réponse JSON.</p>
 </section><section>
 <h2>TP guidé — faire varier les entrées</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/02-http-json/index.html">atelier 02</a>. Arrêter l’atelier 01 avant de lancer celui-ci. Durée indicative : 65 min.</p>
-<h3>Étape 1 — prédire (10 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/02-http-json/index.html">atelier 02</a>. Arrêter l’atelier 01 avant de lancer celui-ci.</p>
+<h3>Étape 1 — prédire</h3>
 <p>Avant de démarrer, écrire les réponses attendues pour <code>/hello</code>, <code>/hello?name=Ana</code> et <code>/users/7</code>, en lisant <code>UserController</code>. Lancer ensuite <code>mvn spring-boot:run</code> dans le dossier de l’atelier 02 et comparer.</p>
-<h3>Étape 2 — observer HTTP (15 min)</h3>
+<h3>Étape 2 — observer HTTP</h3>
 <p>Utiliser <code>curl -i</code> pour <code>/users/7</code>, <code>/users/abc</code> et <code>/inconnu</code>. <strong>Attendu :</strong> 200, 400, 404. Pour chaque cas, distinguer « le serveur ne démarre pas » et « le serveur répond à une demande incorrecte ».</p>
-<h3>Étape 3 — lire du JSON (10 min)</h3>
+<h3>Étape 3 — lire du JSON</h3>
 <p>Noter les deux propriétés renvoyées pour <code>/users/7</code>. Identifier leur type : nombre ou texte. Expliquer pourquoi le navigateur reçoit du texte JSON plutôt qu’un objet Java vivant.</p>
-<h3>Étape 4 — ajouter une petite API (20 min)</h3>
+<h3>Étape 4 — ajouter une petite API</h3>
 <p>Créer <code>SquareView.java</code> dans <code>fr.miage.debut</code> avec deux champs <code>int number</code> et <code>int result</code>. Ajouter au contrôleur une route GET <code>/square</code> recevant un paramètre <code>number</code>, de valeur par défaut 2, puis retournant son carré dans un <code>SquareView</code>.</p>
 <p><strong>Attendu :</strong> <code>/square?number=3</code> donne <code>{&quot;number&quot;:3,&quot;result&quot;:9}</code>. Limiter les essais à de petits entiers ; la gestion du dépassement de capacité n’est pas le sujet du TP.</p>
-<h3>Étape 5 — expliquer (10 min)</h3>
+<h3>Étape 5 — expliquer</h3>
 <p>Dessiner la chaîne « URL → argument Java → valeur retournée → JSON ». Indiquer où intervient Spring.</p>
 <p><strong>À rendre :</strong> les deux fichiers modifiés/créés et les trois statuts observés. <strong>Réussite :</strong> le résultat varie avec l’entrée ; l’étudiant distingue chemin et paramètre.</p>
 <details>

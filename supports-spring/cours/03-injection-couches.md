@@ -135,7 +135,7 @@ Référence : [injection de dépendances Spring](https://docs.spring.io/spring-f
 
 ---
 
-## Démonstration — Contrôleur, service et injection (15 min)
+## Démonstration — Contrôleur, service et injection
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 3](https://github.com/anbahmani/framework-spring-demos/tree/main/course-03-injection-couches) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -147,25 +147,25 @@ La démonstration suit une requête de salutation. Spring repère le contrôleur
 
 ## TP guidé — observer puis utiliser l’injection
 
-**Projet :** [atelier 03](../ateliers/03-injection/README.md). Durée : 65 min. Arrêter le serveur précédent.
+**Projet :** [atelier 03](../ateliers/03-injection/README.md). Arrêter le serveur précédent.
 
-### Étape 1 — identifier les rôles (10 min)
+### Étape 1 — identifier les rôles
 
 Ouvrir `Application`, `HelloController` et `GreetingService`. Colorier ou noter : classe de démarrage, contrôleur, service. Entourer l’argument du constructeur et son affectation à l’attribut.
 
-### Étape 2 — suivre une demande (10 min)
+### Étape 2 — suivre une demande
 
 Lancer le projet avec `mvn spring-boot:run`. Appeler `/hello?name=Ana`. **Attendu :** `Bonjour Ana`. Écrire les noms des méthodes appelées dans l’ordre, sans supposer que Spring rappelle le constructeur à chaque requête.
 
-### Étape 3 — déplacer une règle (15 min)
+### Étape 3 — déplacer une règle
 
 Modifier uniquement `GreetingService` pour que le nom apparaisse en majuscules. Après redémarrage, `/hello?name=Ana` doit répondre `Bonjour ANA`. Vérifier que le contrôleur n’a pas changé.
 
-### Étape 4 — observer un bean manquant (15 min)
+### Étape 4 — observer un bean manquant
 
 Retirer temporairement `@Service`, arrêter et relancer. Chercher dans le message d’échec le nom `GreetingService`. Expliquer le lien avec le constructeur du contrôleur. Remettre l’annotation et relancer avec succès.
 
-### Étape 5 — réutiliser le service (15 min)
+### Étape 5 — réutiliser le service
 
 Ajouter `/welcome?name=Lea` dans le même contrôleur. La nouvelle méthode doit appeler le même service. **Attendu :** `Bonjour LEA`, sans recopier la règle de mise en majuscules.
 

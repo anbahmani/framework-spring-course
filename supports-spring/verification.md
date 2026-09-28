@@ -6,7 +6,7 @@ Le socle est **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Les huit ateliers aut
 
 ## Contrôles de contenu
 
-- Chaque cours dispose d’un déroulé de trois heures, d’un TP guidé de 65 minutes et de huit questions avec leurs réponses.
+- Chaque cours comprend un TP guidé et huit questions avec leurs réponses.
 - Les cours 1 à 8 sont rendus en HTML, avec navigation en diaporama et export imprimable.
 - Les cours 3 à 8 contiennent des diagrammes de séquence UML rendus en SVG autonome, ainsi que des schémas explicatifs.
 - Le sommaire référence les huit cours et ateliers, et le pack téléchargeable contient les projets correspondants.

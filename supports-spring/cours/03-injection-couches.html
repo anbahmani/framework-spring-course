@@ -93,22 +93,22 @@ public class HelloController {
 <p>Il faut examiner l’erreur, la présence de <code>@Service</code>, les imports et le package. Ajouter un <code>new</code> au hasard dans le contrôleur ferait perdre l’exercice d’assemblage. Plusieurs beans candidats au même type constituent un autre cas, réservé à plus tard.</p>
 <p>Référence : <a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html">injection de dépendances Spring</a>.</p>
 </section><section>
-<h2>Démonstration — Contrôleur, service et injection (15 min)</h2>
+<h2>Démonstration — Contrôleur, service et injection</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-03-injection-couches">projet de démonstration du cours 3</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration suit une requête de salutation. Spring repère le contrôleur et le service, construit les objets au démarrage, puis fournit le service au constructeur du contrôleur. Lorsqu’une requête arrive, le contrôleur délègue la règle de salutation au service.</p>
 <p><code>HelloController</code> porte la frontière HTTP ; <code>GreetingService</code> réalise le traitement. L’injection assemble les composants avant les requêtes et rend leurs responsabilités visibles.</p>
 </section><section>
 <h2>TP guidé — observer puis utiliser l’injection</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/03-injection/index.html">atelier 03</a>. Durée : 65 min. Arrêter le serveur précédent.</p>
-<h3>Étape 1 — identifier les rôles (10 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/03-injection/index.html">atelier 03</a>. Arrêter le serveur précédent.</p>
+<h3>Étape 1 — identifier les rôles</h3>
 <p>Ouvrir <code>Application</code>, <code>HelloController</code> et <code>GreetingService</code>. Colorier ou noter : classe de démarrage, contrôleur, service. Entourer l’argument du constructeur et son affectation à l’attribut.</p>
-<h3>Étape 2 — suivre une demande (10 min)</h3>
+<h3>Étape 2 — suivre une demande</h3>
 <p>Lancer le projet avec <code>mvn spring-boot:run</code>. Appeler <code>/hello?name=Ana</code>. <strong>Attendu :</strong> <code>Bonjour Ana</code>. Écrire les noms des méthodes appelées dans l’ordre, sans supposer que Spring rappelle le constructeur à chaque requête.</p>
-<h3>Étape 3 — déplacer une règle (15 min)</h3>
+<h3>Étape 3 — déplacer une règle</h3>
 <p>Modifier uniquement <code>GreetingService</code> pour que le nom apparaisse en majuscules. Après redémarrage, <code>/hello?name=Ana</code> doit répondre <code>Bonjour ANA</code>. Vérifier que le contrôleur n’a pas changé.</p>
-<h3>Étape 4 — observer un bean manquant (15 min)</h3>
+<h3>Étape 4 — observer un bean manquant</h3>
 <p>Retirer temporairement <code>@Service</code>, arrêter et relancer. Chercher dans le message d’échec le nom <code>GreetingService</code>. Expliquer le lien avec le constructeur du contrôleur. Remettre l’annotation et relancer avec succès.</p>
-<h3>Étape 5 — réutiliser le service (15 min)</h3>
+<h3>Étape 5 — réutiliser le service</h3>
 <p>Ajouter <code>/welcome?name=Lea</code> dans le même contrôleur. La nouvelle méthode doit appeler le même service. <strong>Attendu :</strong> <code>Bonjour LEA</code>, sans recopier la règle de mise en majuscules.</p>
 <p><strong>À rendre :</strong> les deux classes et un schéma des appels. <strong>Réussite :</strong> règle écrite une seule fois, constructeur expliqué et application à nouveau fonctionnelle après la manipulation.</p>
 <details>

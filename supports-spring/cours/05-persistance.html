@@ -97,25 +97,25 @@ spring.jpa.show-sql=true</code></pre>
 <p>Ce réglage de création automatique est un confort pédagogique, pas une méthode de mise à jour de schéma à généraliser sans étude. Notre objectif est d’observer une table simple. Ne pas lancer deux instances sur le même fichier H2.</p>
 <figure class="diagram"><svg role="img" viewBox="0 0 1010 142" aria-label="Lancement puis Lecture de la base fichier puis Requetes puis Arret puis Fichier conserve les donnees"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Lancement</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="62"><tspan x="301.0" dy="0">Lecture de la base</tspan><tspan x="301.0" dy="20">fichier</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Requetes</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Arret</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="62"><tspan x="913.0" dy="0">Fichier conserve</tspan><tspan x="913.0" dy="20">les donnees</tspan></text></svg></figure>
 </section><section>
-<h2>Démonstration — Repository et stockage H2 (15 min)</h2>
+<h2>Démonstration — Repository et stockage H2</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-05-persistance">projet de démonstration du cours 5</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration reprend l’API d’utilisateurs et montre ce qui change quand les données sont stockées en base. Le contrôleur délègue au service, qui utilise un repository Spring Data JPA ; celui-ci effectue les opérations sur une base H2 configurée en fichier. Les requêtes SQL produites par la persistance peuvent être observées dans la console.</p>
 <p><code>UserEntity</code> représente une ligne stockée et <code>UserRepository</code> fournit l’accès aux données. Après un redémarrage, les utilisateurs sont toujours présents. Le parcours HTTP reste semblable à celui du cours précédent ; c’est le mécanisme de stockage qui a changé.</p>
 </section><section>
 <h2>TP guidé — vérifier la persistance</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a>. Durée : 65 min. Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.</p>
-<h3>Étape 1 — retrouver les trois rôles (10 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a>. Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.</p>
+<h3>Étape 1 — retrouver les trois rôles</h3>
 <p>Ouvrir <code>UserEntity</code>, <code>UserRepository</code> et <code>UserService</code>. Dans chacun, retrouver respectivement le mapping, les opérations de stockage et les règles d’utilisation. Repérer l’injection du repository.</p>
-<h3>Étape 2 — enregistrer (10 min)</h3>
+<h3>Étape 2 — enregistrer</h3>
 <p>Démarrer depuis le dossier <code>05-persistance</code>. Envoyer le même POST <code>{&quot;name&quot;:&quot;Ana&quot;}</code> que précédemment. Noter l’identifiant, puis vérifier avec GET. <strong>Attendu :</strong> 201 puis 200, avec le nom enregistré.</p>
-<h3>Étape 3 — redémarrer au même endroit (15 min)</h3>
+<h3>Étape 3 — redémarrer au même endroit</h3>
 <p>Arrêter par Ctrl+C puis relancer depuis le même dossier. Relire l’URL notée. <strong>Attendu :</strong> l’utilisateur est encore présent. Identifier le dossier <code>data</code> sans modifier ses fichiers à la main.</p>
-<h3>Étape 4 — observer le SQL (10 min)</h3>
+<h3>Étape 4 — observer le SQL</h3>
 <p>Regarder le terminal lors d’une création puis d’une lecture. Relever les mots <code>insert</code> et <code>select</code>. Associer chaque mot à l’action réalisée. La syntaxe SQL complète ne sera pas évaluée.</p>
-<h3>Étape 5 — ajouter une lecture simple (15 min)</h3>
+<h3>Étape 5 — ajouter une lecture simple</h3>
 <p>Ajouter <code>count()</code> au service en déléguant au repository. Dans le contrôleur, ajouter GET <code>/users/count</code> qui retourne ce nombre. La route fixe <code>/count</code> est plus précise que <code>/{id}</code> et peut coexister avec elle.</p>
 <p><strong>Attendu :</strong> créer un nouvel utilisateur fait augmenter le nombre de 1 ; supprimer cet utilisateur le fait diminuer de 1. Utiliser la valeur initiale observée, pas une valeur supposée.</p>
-<h3>Étape 6 — expliquer (5 min)</h3>
+<h3>Étape 6 — expliquer</h3>
 <p>Comparer l’atelier 04 et l’atelier 05 : ce qui est identique pour le client, et ce qui change après redémarrage.</p>
 <p><strong>À rendre :</strong> les deux nouvelles méthodes, deux nombres observés et l’explication du rôle de l’entité.</p>
 <details>

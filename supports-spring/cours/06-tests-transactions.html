@@ -77,24 +77,24 @@ public void createPair(String first, String second) {
 <figure class="diagram"><svg role="img" viewBox="0 0 1214 142" aria-label="Appel du service puis Spring ouvre la transaction puis Methode termine puis Commit puis Appel du service puis Spring ouvre la transaction"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Appel du service</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="62"><tspan x="301.0" dy="0">Spring ouvre la</tspan><tspan x="301.0" dy="20">transaction</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Methode termine</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Commit</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="72"><tspan x="913.0" dy="0">Appel du service</tspan></text><path class="arrow" d="M996 70.0 H1034" marker-end="url(#arrow)"/><rect class="box" x="1042" y="32" width="150" height="76" rx="8"/><text x="1117.0" y="62"><tspan x="1117.0" dy="0">Spring ouvre la</tspan><tspan x="1117.0" dy="20">transaction</tspan></text></svg></figure>
 <p>Pour ce TP, utiliser <strong>le service injecté dans le test</strong>, pas <code>new UserService(...)</code>, afin d’exercer aussi le comportement fourni par Spring. L’infrastructure d’interception détaillée sera étudiée plus tard.</p>
 </section><section>
-<h2>Démonstration — Tests HTTP et annulation transactionnelle (15 min)</h2>
+<h2>Démonstration — Tests HTTP et annulation transactionnelle</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions">projet de démonstration du cours 6</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration montre deux façons de vérifier l’application. Un test avec MockMvc envoie une requête au contrôleur sans démarrer de serveur HTTP accessible par le réseau. Un test de service vérifie qu’une opération transactionnelle qui échoue n’enregistre aucune des écritures commencées.</p>
 <p><code>UserApiTest</code> illustre le contrat HTTP ; <code>TransactionTest</code> observe le tout-ou-rien de la transaction. La base H2 est isolée pour les tests afin que leur exécution ne modifie pas les données de l’application.</p>
 </section><section>
 <h2>TP guidé — lire un test, en ajouter un, observer un rollback</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/06-tests/index.html">atelier 06</a>. Durée : 65 min. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.</p>
-<h3>Étape 1 — exécuter la vérification (10 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/06-tests/index.html">atelier 06</a>. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.</p>
+<h3>Étape 1 — exécuter la vérification</h3>
 <p>Ouvrir le terminal dans <code>06-tests</code>, lancer <code>mvn test</code>. <strong>Attendu initial :</strong> 5 tests réussis. Repérer les fichiers sous <code>src/test/java/fr/miage/debut</code> et distinguer tests et code de l’application.</p>
-<h3>Étape 2 — comprendre une assertion HTTP (10 min)</h3>
+<h3>Étape 2 — comprendre une assertion HTTP</h3>
 <p>Ouvrir <code>UserApiTest</code>, lire <code>rejectEmptyName</code>. Identifier le JSON envoyé et le statut attendu. Remplacer temporairement <code>isBadRequest()</code> par <code>isOk()</code> et relancer. <strong>Attendu :</strong> un échec signalant 200 attendu et 400 obtenu. Remettre la bonne assertion.</p>
-<h3>Étape 3 — écrire une variante (15 min)</h3>
+<h3>Étape 3 — écrire une variante</h3>
 <p>Dupliquer ce test sous le nom <code>rejectMissingName</code>, en envoyant <code>{}</code> comme corps. Garder le statut attendu 400. <strong>Attendu :</strong> 6 tests réussis après cet ajout. L’absence de propriété produit ici un nom <code>null</code>, rejeté par le service.</p>
-<h3>Étape 4 — observer le tout-ou-rien (15 min)</h3>
+<h3>Étape 4 — observer le tout-ou-rien</h3>
 <p>Lire <code>TransactionTest.secondInvalidNameCancelsBothCreations</code>. Il vide sa base de test, appelle <code>createPair(&quot;Ana&quot;, &quot; &quot;)</code>, attend <code>InvalidName</code> et vérifie <code>repository.count() == 0</code> après l’échec. Retirer temporairement <code>@Transactional</code> de <code>createPair</code>, puis lancer seulement :</p>
 <pre><code>mvn -Dtest=TransactionTest test</code></pre>
 <p><strong>Attendu :</strong> le test d’échec ne passe plus ; le premier utilisateur reste enregistré. Remettre l’annotation et relancer : les deux tests de transaction passent.</p>
-<h3>Étape 5 — expliquer et stabiliser (15 min)</h3>
+<h3>Étape 5 — expliquer et stabiliser</h3>
 <p>Relancer tous les tests, noter le résultat et dessiner ce qui se passe avec l’annotation puis sans elle. Dans <code>NameRuleTest</code>, <code>mock(UserRepository.class)</code> fournit un faux repository et <code>verifyNoInteractions</code> vérifie qu’il n’est pas appelé pour un nom invalide ; la création de mocks est une lecture accompagnée, pas un exercice à reproduire de mémoire.</p>
 <p><strong>À rendre :</strong> nouveau test, dessin du rollback et résultat final. <strong>Réussite :</strong> test ajouté utile, bonne assertion restaurée et transaction rétablie. Ne pas annoter le test lui-même avec <code>@Transactional</code> : cela changerait l’expérience observée.</p>
 <details>

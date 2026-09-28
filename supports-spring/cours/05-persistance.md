@@ -137,7 +137,7 @@ Lancement -> Lecture de la base fichier -> Requetes -> Arret -> Fichier conserve
 
 ---
 
-## Démonstration — Repository et stockage H2 (15 min)
+## Démonstration — Repository et stockage H2
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 5](https://github.com/anbahmani/framework-spring-demos/tree/main/course-05-persistance) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -149,31 +149,31 @@ La démonstration reprend l’API d’utilisateurs et montre ce qui change quand
 
 ## TP guidé — vérifier la persistance
 
-**Projet :** [atelier 05](../ateliers/05-persistance/README.md). Durée : 65 min. Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.
+**Projet :** [atelier 05](../ateliers/05-persistance/README.md). Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.
 
-### Étape 1 — retrouver les trois rôles (10 min)
+### Étape 1 — retrouver les trois rôles
 
 Ouvrir `UserEntity`, `UserRepository` et `UserService`. Dans chacun, retrouver respectivement le mapping, les opérations de stockage et les règles d’utilisation. Repérer l’injection du repository.
 
-### Étape 2 — enregistrer (10 min)
+### Étape 2 — enregistrer
 
 Démarrer depuis le dossier `05-persistance`. Envoyer le même POST `{"name":"Ana"}` que précédemment. Noter l’identifiant, puis vérifier avec GET. **Attendu :** 201 puis 200, avec le nom enregistré.
 
-### Étape 3 — redémarrer au même endroit (15 min)
+### Étape 3 — redémarrer au même endroit
 
 Arrêter par Ctrl+C puis relancer depuis le même dossier. Relire l’URL notée. **Attendu :** l’utilisateur est encore présent. Identifier le dossier `data` sans modifier ses fichiers à la main.
 
-### Étape 4 — observer le SQL (10 min)
+### Étape 4 — observer le SQL
 
 Regarder le terminal lors d’une création puis d’une lecture. Relever les mots `insert` et `select`. Associer chaque mot à l’action réalisée. La syntaxe SQL complète ne sera pas évaluée.
 
-### Étape 5 — ajouter une lecture simple (15 min)
+### Étape 5 — ajouter une lecture simple
 
 Ajouter `count()` au service en déléguant au repository. Dans le contrôleur, ajouter GET `/users/count` qui retourne ce nombre. La route fixe `/count` est plus précise que `/{id}` et peut coexister avec elle.
 
 **Attendu :** créer un nouvel utilisateur fait augmenter le nombre de 1 ; supprimer cet utilisateur le fait diminuer de 1. Utiliser la valeur initiale observée, pas une valeur supposée.
 
-### Étape 6 — expliquer (5 min)
+### Étape 6 — expliquer
 
 Comparer l’atelier 04 et l’atelier 05 : ce qui est identique pour le client, et ce qui change après redémarrage.
 

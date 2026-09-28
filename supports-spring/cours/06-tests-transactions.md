@@ -133,7 +133,7 @@ Pour ce TP, utiliser **le service injecté dans le test**, pas `new UserService(
 
 ---
 
-## Démonstration — Tests HTTP et annulation transactionnelle (15 min)
+## Démonstration — Tests HTTP et annulation transactionnelle
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 6](https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -145,21 +145,21 @@ La démonstration montre deux façons de vérifier l’application. Un test avec
 
 ## TP guidé — lire un test, en ajouter un, observer un rollback
 
-**Projet :** [atelier 06](../ateliers/06-tests/README.md). Durée : 65 min. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.
+**Projet :** [atelier 06](../ateliers/06-tests/README.md). Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.
 
-### Étape 1 — exécuter la vérification (10 min)
+### Étape 1 — exécuter la vérification
 
 Ouvrir le terminal dans `06-tests`, lancer `mvn test`. **Attendu initial :** 5 tests réussis. Repérer les fichiers sous `src/test/java/fr/miage/debut` et distinguer tests et code de l’application.
 
-### Étape 2 — comprendre une assertion HTTP (10 min)
+### Étape 2 — comprendre une assertion HTTP
 
 Ouvrir `UserApiTest`, lire `rejectEmptyName`. Identifier le JSON envoyé et le statut attendu. Remplacer temporairement `isBadRequest()` par `isOk()` et relancer. **Attendu :** un échec signalant 200 attendu et 400 obtenu. Remettre la bonne assertion.
 
-### Étape 3 — écrire une variante (15 min)
+### Étape 3 — écrire une variante
 
 Dupliquer ce test sous le nom `rejectMissingName`, en envoyant `{}` comme corps. Garder le statut attendu 400. **Attendu :** 6 tests réussis après cet ajout. L’absence de propriété produit ici un nom `null`, rejeté par le service.
 
-### Étape 4 — observer le tout-ou-rien (15 min)
+### Étape 4 — observer le tout-ou-rien
 
 Lire `TransactionTest.secondInvalidNameCancelsBothCreations`. Il vide sa base de test, appelle `createPair("Ana", " ")`, attend `InvalidName` et vérifie `repository.count() == 0` après l’échec. Retirer temporairement `@Transactional` de `createPair`, puis lancer seulement :
 
@@ -169,7 +169,7 @@ mvn -Dtest=TransactionTest test
 
 **Attendu :** le test d’échec ne passe plus ; le premier utilisateur reste enregistré. Remettre l’annotation et relancer : les deux tests de transaction passent.
 
-### Étape 5 — expliquer et stabiliser (15 min)
+### Étape 5 — expliquer et stabiliser
 
 Relancer tous les tests, noter le résultat et dessiner ce qui se passe avec l’annotation puis sans elle. Dans `NameRuleTest`, `mock(UserRepository.class)` fournit un faux repository et `verifyNoInteractions` vérifie qu’il n’est pas appelé pour un nom invalide ; la création de mocks est une lecture accompagnée, pas un exercice à reproduire de mémoire.
 

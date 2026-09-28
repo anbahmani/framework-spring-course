@@ -82,24 +82,24 @@ if (users != null) {
 <figure class="diagram"><svg role="img" viewBox="0 0 1214 142" aria-label="Serveur disponible puis Reponse HTTP puis Client lit les donnees puis Serveur arrete puis Aucune reponse HTTP puis Erreur de connexion"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Serveur disponible</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">Reponse HTTP</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="62"><tspan x="505.0" dy="0">Client lit les</tspan><tspan x="505.0" dy="20">donnees</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Serveur arrete</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="62"><tspan x="913.0" dy="0">Aucune reponse</tspan><tspan x="913.0" dy="20">HTTP</tspan></text><path class="arrow" d="M996 70.0 H1034" marker-end="url(#arrow)"/><rect class="box" x="1042" y="32" width="150" height="76" rx="8"/><text x="1117.0" y="62"><tspan x="1117.0" dy="0">Erreur de</tspan><tspan x="1117.0" dy="20">connexion</tspan></text></svg></figure>
 <p>Des délais d’attente explicites sont importants dans une application déployée. Leur configuration, les tentatives multiples et les circuits de protection seront un approfondissement ; ils ne sont pas à réaliser pour ce premier client local.</p>
 </section><section>
-<h2>Démonstration — Client Spring et appel HTTP (15 min)</h2>
+<h2>Démonstration — Client Spring et appel HTTP</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-07-client-http">projet de démonstration du cours 7</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration met en relation deux applications distinctes : une API d’annuaire et un programme client. Le client utilise <code>RestClient</code> pour envoyer une requête HTTP au serveur, reçoit une réponse JSON et la transforme en objets Java pour l’affichage.</p>
 <p>Le client n’accède pas directement aux objets du serveur. Si celui-ci ne répond pas, le client observe une erreur de connexion ; si l’annuaire ne contient personne, il reçoit une réponse réussie avec une liste vide. Ces deux résultats correspondent à des situations différentes.</p>
 </section><section>
 <h2>TP guidé — faire communiquer deux programmes</h2>
-<p><strong>Projets :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a> côté serveur et <a href="../ateliers/07-client/index.html">atelier 07</a> côté client. Durée : 65 min. Deux terminaux sont nécessaires.</p>
-<h3>Étape 1 — préparer le serveur (10 min)</h3>
+<p><strong>Projets :</strong> <a href="../ateliers/05-persistance/index.html">atelier 05</a> côté serveur et <a href="../ateliers/07-client/index.html">atelier 07</a> côté client. Deux terminaux sont nécessaires.</p>
+<h3>Étape 1 — préparer le serveur</h3>
 <p>Dans le terminal A, ouvrir <code>05-persistance</code> et lancer <code>mvn spring-boot:run</code>. Si des utilisateurs existent déjà, les conserver. Sinon, dans un autre terminal, envoyer un POST avec <code>{&quot;name&quot;:&quot;Ana&quot;}</code> puis vérifier GET <code>/users</code>.</p>
-<h3>Étape 2 — lancer le client (10 min)</h3>
+<h3>Étape 2 — lancer le client</h3>
 <p>Dans le terminal B, ouvrir <code>07-client</code> et lancer <code>mvn spring-boot:run</code>. <strong>Attendu :</strong> le nombre d’utilisateurs, leurs identifiants et leurs noms s’affichent dans B. Le serveur A reste démarré. Le client B rend la main après son action.</p>
-<h3>Étape 3 — tracer l’échange (10 min)</h3>
+<h3>Étape 3 — tracer l’échange</h3>
 <p>Repérer <code>baseUrl</code>, <code>uri</code> et <code>UserView</code>. Écrire l’adresse finale appelée. Comparer les données affichées au JSON obtenu avec curl. Les identifiants peuvent différer des exemples selon les créations précédentes.</p>
-<h3>Étape 4 — modifier l’affichage (15 min)</h3>
+<h3>Étape 4 — modifier l’affichage</h3>
 <p>Dans <code>ClientRunner</code>, afficher chaque ligne sous la forme <code>Utilisateur #1 : Ana</code>, en conservant les vraies valeurs reçues. Relancer seulement le client. Ne pas modifier le serveur pour ce changement de présentation.</p>
-<h3>Étape 5 — observer un échec réel (10 min)</h3>
+<h3>Étape 5 — observer un échec réel</h3>
 <p>Arrêter le serveur A, puis relancer B. <strong>Attendu :</strong> le message « Impossible de lire l’annuaire… ». Ce n’est pas une réponse vide du serveur, puisqu’il est arrêté.</p>
-<h3>Étape 6 — reprendre (10 min)</h3>
+<h3>Étape 6 — reprendre</h3>
 <p>Relancer A puis B. <strong>Attendu :</strong> les données redeviennent lisibles. Dessiner les deux processus et indiquer lequel doit rester en écoute.</p>
 <p><strong>À rendre :</strong> modification de l’affichage et tableau à deux lignes « serveur démarré / arrêté » avec observations. <strong>Réussite :</strong> deux applications distinctes, données réellement lues par HTTP et différence entre panne et annuaire vide comprise.</p>
 <details>

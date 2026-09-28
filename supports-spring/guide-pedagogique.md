@@ -21,13 +21,13 @@ L’annuaire constitue le fil rouge des séances 2 à 7. Le premier endpoint et 
 
 ## La démonstration fait partie du cours
 
-Chaque séance suit le même rythme de trois heures : rappel (15 min), explications (60 min), démonstration (15 min), pause (10 min), TP (65 min), quiz et correction (15 min). La démonstration est un temps d’enseignement à part entière, pas un aperçu facultatif ni une étape du TP.
+Chaque séance alterne rappel, explications, démonstration, TP, quiz et correction. La démonstration est un temps d’enseignement à part entière, pas un aperçu facultatif ni une étape du TP.
 
 1. **Expliquer et prédire.** Lire peu de lignes, définir chaque annotation nouvelle et demander le résultat attendu avant l’exécution.
 2. **Présenter la démonstration.** Montrer le comportement global du projet dans le [dépôt des huit démos](https://github.com/anbahmani/framework-spring-demos), nommer les principaux composants et commenter le trajet des données à l’aide du diagramme UML. Garder ce temps explicatif distinct du travail pratique.
 3. **Pratiquer puis vérifier.** Réaliser le TP guidé dans son projet Maven distinct, puis répondre au quiz avant de consulter les corrigés.
 
-Chaque TP comporte des temps indicatifs, un projet explicite, des résultats attendus, une petite modification et sa correction. Il n’exige pas de recréer seul une application complète. Les étapes indépendantes évitent qu’une erreur de la séance précédente bloque toute la suite.
+Chaque TP présente un projet explicite, des résultats attendus, une petite modification et sa correction. Il n’exige pas de recréer seul une application complète. Les étapes indépendantes évitent qu’une erreur de la séance précédente bloque toute la suite.
 
 ## Réduire la charge de lecture
 

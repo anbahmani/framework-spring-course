@@ -128,7 +128,7 @@ Dans `ApiErrors`, `@RestControllerAdvice` déclare un gestionnaire commun aux co
 
 ---
 
-## Démonstration — Cycle CRUD et réponses HTTP (15 min)
+## Démonstration — Cycle CRUD et réponses HTTP
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 4](https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -140,17 +140,17 @@ Les utilisateurs sont conservés dans une collection en mémoire. Les erreurs m�
 
 ## TP guidé — un cycle complet puis une nouvelle règle
 
-**Projet :** [atelier 04](../ateliers/04-crud/README.md). Prévoir 65 min. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.
+**Projet :** [atelier 04](../ateliers/04-crud/README.md). Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.
 
-### Étape 1 — partir d’un annuaire vide (5 min)
+### Étape 1 — partir d’un annuaire vide
 
 Démarrer l’application puis envoyer `GET /users`. **Attendu :** `[]`, un tableau JSON vide. Ce résultat n’est pas une erreur.
 
-### Étape 2 — créer puis retrouver (15 min)
+### Étape 2 — créer puis retrouver
 
 Exécuter le POST montré plus haut. Repérer le statut 201, `Location` et l’identifiant retourné. Envoyer un GET à cette adresse. **Attendu :** le même identifiant et le nom `Ana`. Ne pas supposer que l’identifiant sera toujours 1 après plusieurs essais.
 
-### Étape 3 — modifier puis supprimer (15 min)
+### Étape 3 — modifier puis supprimer
 
 Dans les commandes suivantes, remplacer `1` par l’identifiant obtenu :
 
@@ -162,15 +162,15 @@ curl -i 'http://localhost:8080/users/1'
 
 **Attendu :** 200 avec `Lea`, puis 204 sans corps, puis 404. Relever ces trois résultats.
 
-### Étape 4 — suivre une erreur (10 min)
+### Étape 4 — suivre une erreur
 
 Envoyer `{"name":" "}` par POST. **Attendu :** 400 et aucune création. Retrouver `checkName`, `InvalidName` et sa méthode de traitement dans `ApiErrors`.
 
-### Étape 5 — ajouter une règle (15 min)
+### Étape 5 — ajouter une règle
 
 Dans `checkName`, refuser aussi un nom de plus de 30 caractères après suppression des espaces extérieurs. Conserver la même exception pour cet exercice. Tester un nom de 30 caractères puis de 31 : le premier est accepté, le second refusé. Utiliser le nom compté, pas une estimation visuelle.
 
-### Étape 6 — constater la limite (5 min)
+### Étape 6 — constater la limite
 
 Créer un utilisateur valide, arrêter puis redémarrer le serveur. **Attendu :** le listing est vide. Expliquer où étaient les données.
 

@@ -126,7 +126,7 @@ On doit repérer un statut 200, un format `application/json` et le corps attendu
 
 ---
 
-## Démonstration — Requête HTTP et réponse JSON (15 min)
+## Démonstration — Requête HTTP et réponse JSON
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 2](https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -138,27 +138,27 @@ La démonstration compare une route qui lit un paramètre dans l’URL et une ro
 
 ## TP guidé — faire varier les entrées
 
-**Projet :** [atelier 02](../ateliers/02-http-json/README.md). Arrêter l’atelier 01 avant de lancer celui-ci. Durée indicative : 65 min.
+**Projet :** [atelier 02](../ateliers/02-http-json/README.md). Arrêter l’atelier 01 avant de lancer celui-ci.
 
-### Étape 1 — prédire (10 min)
+### Étape 1 — prédire
 
 Avant de démarrer, écrire les réponses attendues pour `/hello`, `/hello?name=Ana` et `/users/7`, en lisant `UserController`. Lancer ensuite `mvn spring-boot:run` dans le dossier de l’atelier 02 et comparer.
 
-### Étape 2 — observer HTTP (15 min)
+### Étape 2 — observer HTTP
 
 Utiliser `curl -i` pour `/users/7`, `/users/abc` et `/inconnu`. **Attendu :** 200, 400, 404. Pour chaque cas, distinguer « le serveur ne démarre pas » et « le serveur répond à une demande incorrecte ».
 
-### Étape 3 — lire du JSON (10 min)
+### Étape 3 — lire du JSON
 
 Noter les deux propriétés renvoyées pour `/users/7`. Identifier leur type : nombre ou texte. Expliquer pourquoi le navigateur reçoit du texte JSON plutôt qu’un objet Java vivant.
 
-### Étape 4 — ajouter une petite API (20 min)
+### Étape 4 — ajouter une petite API
 
 Créer `SquareView.java` dans `fr.miage.debut` avec deux champs `int number` et `int result`. Ajouter au contrôleur une route GET `/square` recevant un paramètre `number`, de valeur par défaut 2, puis retournant son carré dans un `SquareView`.
 
 **Attendu :** `/square?number=3` donne `{"number":3,"result":9}`. Limiter les essais à de petits entiers ; la gestion du dépassement de capacité n’est pas le sujet du TP.
 
-### Étape 5 — expliquer (10 min)
+### Étape 5 — expliquer
 
 Dessiner la chaîne « URL → argument Java → valeur retournée → JSON ». Indiquer où intervient Spring.
 

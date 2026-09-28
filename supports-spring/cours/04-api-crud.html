@@ -86,28 +86,28 @@ public ResponseEntity&lt;UserView&gt; create(@RequestBody UserRequest request) {
 <p>L’exception <code>InvalidName</code> est une classe fournie qui étend <code>RuntimeException</code>. Lancer une exception interrompt le déroulement normal. Le service décrit ainsi le problème sans construire lui-même une réponse HTTP.</p>
 <p>Dans <code>ApiErrors</code>, <code>@RestControllerAdvice</code> déclare un gestionnaire commun aux contrôleurs. <code>@ExceptionHandler(InvalidName.class)</code> choisit le problème traité et <code>@ResponseStatus(HttpStatus.BAD_REQUEST)</code> impose le statut 400. Le même principe traduit <code>UserNotFound</code> en 404. Les détails du format d’erreur restent volontairement simples : un texte explicatif.</p>
 </section><section>
-<h2>Démonstration — Cycle CRUD et réponses HTTP (15 min)</h2>
+<h2>Démonstration — Cycle CRUD et réponses HTTP</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud">projet de démonstration du cours 4</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration présente la création, la lecture, la modification et la suppression d’un utilisateur. Pour chaque requête, le contrôleur interprète l’entrée, délègue l’opération au service, puis produit une réponse HTTP avec les données et le statut appropriés.</p>
 <p>Les utilisateurs sont conservés dans une collection en mémoire. Les erreurs métier deviennent des réponses HTTP grâce au traitement centralisé des exceptions. Les données disparaissent au redémarrage : cette démo montre le fonctionnement de l’API, pas la persistance.</p>
 </section><section>
 <h2>TP guidé — un cycle complet puis une nouvelle règle</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/04-crud/index.html">atelier 04</a>. Prévoir 65 min. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.</p>
-<h3>Étape 1 — partir d’un annuaire vide (5 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/04-crud/index.html">atelier 04</a>. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.</p>
+<h3>Étape 1 — partir d’un annuaire vide</h3>
 <p>Démarrer l’application puis envoyer <code>GET /users</code>. <strong>Attendu :</strong> <code>[]</code>, un tableau JSON vide. Ce résultat n’est pas une erreur.</p>
-<h3>Étape 2 — créer puis retrouver (15 min)</h3>
+<h3>Étape 2 — créer puis retrouver</h3>
 <p>Exécuter le POST montré plus haut. Repérer le statut 201, <code>Location</code> et l’identifiant retourné. Envoyer un GET à cette adresse. <strong>Attendu :</strong> le même identifiant et le nom <code>Ana</code>. Ne pas supposer que l’identifiant sera toujours 1 après plusieurs essais.</p>
-<h3>Étape 3 — modifier puis supprimer (15 min)</h3>
+<h3>Étape 3 — modifier puis supprimer</h3>
 <p>Dans les commandes suivantes, remplacer <code>1</code> par l’identifiant obtenu :</p>
 <pre><code>curl -i -X PUT &#x27;http://localhost:8080/users/1&#x27; -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot;Lea&quot;}&#x27;
 curl -i -X DELETE &#x27;http://localhost:8080/users/1&#x27;
 curl -i &#x27;http://localhost:8080/users/1&#x27;</code></pre>
 <p><strong>Attendu :</strong> 200 avec <code>Lea</code>, puis 204 sans corps, puis 404. Relever ces trois résultats.</p>
-<h3>Étape 4 — suivre une erreur (10 min)</h3>
+<h3>Étape 4 — suivre une erreur</h3>
 <p>Envoyer <code>{&quot;name&quot;:&quot; &quot;}</code> par POST. <strong>Attendu :</strong> 400 et aucune création. Retrouver <code>checkName</code>, <code>InvalidName</code> et sa méthode de traitement dans <code>ApiErrors</code>.</p>
-<h3>Étape 5 — ajouter une règle (15 min)</h3>
+<h3>Étape 5 — ajouter une règle</h3>
 <p>Dans <code>checkName</code>, refuser aussi un nom de plus de 30 caractères après suppression des espaces extérieurs. Conserver la même exception pour cet exercice. Tester un nom de 30 caractères puis de 31 : le premier est accepté, le second refusé. Utiliser le nom compté, pas une estimation visuelle.</p>
-<h3>Étape 6 — constater la limite (5 min)</h3>
+<h3>Étape 6 — constater la limite</h3>
 <p>Créer un utilisateur valide, arrêter puis redémarrer le serveur. <strong>Attendu :</strong> le listing est vide. Expliquer où étaient les données.</p>
 <p><strong>À rendre :</strong> méthode <code>checkName</code>, tableau des statuts observés et explication de la perte au redémarrage.</p>
 <details>

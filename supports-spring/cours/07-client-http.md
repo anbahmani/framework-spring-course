@@ -113,7 +113,7 @@ Des délais d’attente explicites sont importants dans une application déploy�
 
 ---
 
-## Démonstration — Client Spring et appel HTTP (15 min)
+## Démonstration — Client Spring et appel HTTP
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 7](https://github.com/anbahmani/framework-spring-demos/tree/main/course-07-client-http) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -125,29 +125,29 @@ Le client n’accède pas directement aux objets du serveur. Si celui-ci ne rép
 
 ## TP guidé — faire communiquer deux programmes
 
-**Projets :** [atelier 05](../ateliers/05-persistance/README.md) côté serveur et [atelier 07](../ateliers/07-client/README.md) côté client. Durée : 65 min. Deux terminaux sont nécessaires.
+**Projets :** [atelier 05](../ateliers/05-persistance/README.md) côté serveur et [atelier 07](../ateliers/07-client/README.md) côté client. Deux terminaux sont nécessaires.
 
-### Étape 1 — préparer le serveur (10 min)
+### Étape 1 — préparer le serveur
 
 Dans le terminal A, ouvrir `05-persistance` et lancer `mvn spring-boot:run`. Si des utilisateurs existent déjà, les conserver. Sinon, dans un autre terminal, envoyer un POST avec `{"name":"Ana"}` puis vérifier GET `/users`.
 
-### Étape 2 — lancer le client (10 min)
+### Étape 2 — lancer le client
 
 Dans le terminal B, ouvrir `07-client` et lancer `mvn spring-boot:run`. **Attendu :** le nombre d’utilisateurs, leurs identifiants et leurs noms s’affichent dans B. Le serveur A reste démarré. Le client B rend la main après son action.
 
-### Étape 3 — tracer l’échange (10 min)
+### Étape 3 — tracer l’échange
 
 Repérer `baseUrl`, `uri` et `UserView`. Écrire l’adresse finale appelée. Comparer les données affichées au JSON obtenu avec curl. Les identifiants peuvent différer des exemples selon les créations précédentes.
 
-### Étape 4 — modifier l’affichage (15 min)
+### Étape 4 — modifier l’affichage
 
 Dans `ClientRunner`, afficher chaque ligne sous la forme `Utilisateur #1 : Ana`, en conservant les vraies valeurs reçues. Relancer seulement le client. Ne pas modifier le serveur pour ce changement de présentation.
 
-### Étape 5 — observer un échec réel (10 min)
+### Étape 5 — observer un échec réel
 
 Arrêter le serveur A, puis relancer B. **Attendu :** le message « Impossible de lire l’annuaire… ». Ce n’est pas une réponse vide du serveur, puisqu’il est arrêté.
 
-### Étape 6 — reprendre (10 min)
+### Étape 6 — reprendre
 
 Relancer A puis B. **Attendu :** les données redeviennent lisibles. Dessiner les deux processus et indiquer lequel doit rester en écoute.
 

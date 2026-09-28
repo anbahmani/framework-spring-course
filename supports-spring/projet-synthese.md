@@ -4,7 +4,7 @@
 
 Réutiliser les étapes déjà pratiquées pour gérer des livres avec Spring Boot. Un livre possède un identifiant généré et un titre obligatoire. Il n’y a ni stock, ni prix, ni comptes utilisateurs, ni relation entre tables à concevoir.
 
-Le socle se réalise après le cours 6, en binôme, avec environ 2 à 3 heures de travail supplémentaire ou lors d’une séance dédiée. Il n’est pas à terminer en plus du TP de 65 minutes de la dernière séance. Les deux prolongements après les cours 7 et 8 sont facultatifs et accompagnés.
+Le socle se réalise après le cours 6, en binôme, dans le cadre d’un travail complémentaire ou lors d’une séance dédiée. Il est distinct du TP de la dernière séance. Les deux prolongements après les cours 7 et 8 sont facultatifs et accompagnés.
 
 ## Point de départ
 
@@ -59,4 +59,4 @@ Après le cours 7, adapter le client pour afficher les titres de `/books`. Aprè
 | Entité et repository | 4 | Données retrouvées après redémarrage |
 | Tests et explication des résultats | 4 | Deux comportements vérifiés automatiquement |
 
-Les prolongements ne sont pas nécessaires pour obtenir 20/20. Une explication orale de cinq minutes suit une création de livre du JSON à la base puis à la réponse. La mémorisation des imports ou du POM n’est pas évaluée.
+Les prolongements ne sont pas nécessaires pour obtenir 20/20. Une explication orale suit une création de livre du JSON à la base puis à la réponse. La mémorisation des imports ou du POM n’est pas évaluée.

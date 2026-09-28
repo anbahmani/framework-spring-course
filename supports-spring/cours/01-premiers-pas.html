@@ -90,23 +90,23 @@ public class HelloController {
 <p>Dans <code>http://localhost:8080/hello</code>, <code>http</code> indique le protocole, <code>localhost</code> notre ordinateur, <code>8080</code> le <strong>port</strong> où l’application écoute, et <code>/hello</code> le chemin demandé. Un port permet de distinguer plusieurs services sur une même machine.</p>
 <p>Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveur tourne mais que le chemin n’existe pas, il peut répondre avec une erreur 404. Nous apprendrons à lire les codes de réponse au cours suivant.</p>
 </section><section>
-<h2>Démonstration — Lancement de Spring Boot et première réponse (15 min)</h2>
+<h2>Démonstration — Lancement de Spring Boot et première réponse</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas">projet de démonstration du cours 1</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration présente le démarrage d’une application Spring Boot puis une requête HTTP adressée à <code>/hello</code>. Spring initialise le contexte, démarre le serveur web embarqué et associe la route au contrôleur. La méthode Java retourne le texte qui devient le corps de la réponse HTTP.</p>
 <p>Les classes principales sont <code>Application</code>, qui démarre l’application, et <code>HelloController</code>, qui expose la route. L’idée à retenir est qu’une application Spring fournit un serveur et relie les requêtes web aux méthodes Java.</p>
 </section><section>
 <h2>TP guidé — obtenir puis modifier une réponse</h2>
-<p><strong>Point de départ :</strong> <a href="../ateliers/01-demarrage/index.html">atelier 01</a>. Prévoir 65 minutes. Le poste doit être préparé avec la <a href="../demarrage.html">fiche de démarrage</a>.</p>
-<h3>Étape 1 — vérifier les outils (10 min)</h3>
+<p><strong>Point de départ :</strong> <a href="../ateliers/01-demarrage/index.html">atelier 01</a>. Le poste doit être préparé avec la <a href="../demarrage.html">fiche de démarrage</a>.</p>
+<h3>Étape 1 — vérifier les outils</h3>
 <p>Ouvrir un terminal dans <code>ateliers/01-demarrage</code>, le dossier contenant <code>pom.xml</code>. Exécuter <code>java -version</code> puis <code>mvn -v</code>. Vérifier que Maven utilise Java 25. Une commande introuvable se règle avec l’enseignant avant de modifier le code.</p>
-<h3>Étape 2 — démarrer (10 min)</h3>
+<h3>Étape 2 — démarrer</h3>
 <pre><code>mvn spring-boot:run</code></pre>
 <p>Attendre le message <code>Started Application</code>. Le terminal reste occupé : l’application attend les demandes. Le premier lancement peut télécharger des dépendances et nécessite un accès réseau.</p>
-<h3>Étape 3 — appeler (10 min)</h3>
+<h3>Étape 3 — appeler</h3>
 <p>Ouvrir <code>http://localhost:8080/hello</code> dans le navigateur. <strong>Résultat attendu :</strong> <code>Bonjour Spring</code>. Recharger la page : la méthode est appelée à nouveau. Lire les deux classes et tracer à la main le chemin du navigateur vers <code>hello()</code>.</p>
-<h3>Étape 4 — modifier (15 min)</h3>
+<h3>Étape 4 — modifier</h3>
 <p>Remplacer le texte retourné par <code>Bonjour MIAGE</code>. Arrêter le serveur par Ctrl+C dans son terminal, puis relancer la même commande. Actualiser la page. Le projet ne recharge pas automatiquement les modifications.</p>
-<h3>Étape 5 — ajouter une route (20 min)</h3>
+<h3>Étape 5 — ajouter une route</h3>
 <p>Dans <code>HelloController</code>, ajouter une méthode <code>info()</code> répondant à <code>/info</code> par <code>Mon premier serveur Java</code>. Utiliser le même modèle que <code>hello()</code>. Tester les deux adresses puis essayer <code>/inconnu</code>.</p>
 <p><strong>À rendre :</strong> <code>HelloController.java</code> et trois phrases expliquant client, contrôleur et rôle du <code>return</code>. <strong>Réussite :</strong> deux chemins renvoient deux textes distincts ; l’étudiant sait arrêter le serveur.</p>
 <details>

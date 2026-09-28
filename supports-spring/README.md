@@ -1,8 +1,8 @@
 # INF2 - Frameworks, Composants métiers et Web services avec Spring
 
-Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance dure **3 heures** et comprend un cours projetable, une démonstration de 15 minutes, un TP de 65 minutes et un quiz corrigé de huit questions.
+Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance comprend un cours projetable, une démonstration, un TP et un quiz corrigé de huit questions.
 
-Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance comprend une démonstration de 15 minutes — partie du cours — avant son TP distinct de 65 minutes. Les diagrammes de séquence UML sont intégrés aux supports et fonctionnent hors ligne.
+Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance comprend une démonstration — partie intégrante du cours — avant son TP distinct. Les diagrammes de séquence UML sont intégrés aux supports et fonctionnent hors ligne.
 
 | Séance | Cours | Démo | Atelier associé | Notions abordées |
 | --- | --- | --- | --- |

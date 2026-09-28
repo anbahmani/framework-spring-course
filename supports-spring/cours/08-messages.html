@@ -83,24 +83,24 @@ System.out.println(&quot;Demande envoyée&quot;);</code></pre>
 <p>Pour cette première découverte, nous attendons seulement un échange de texte observé, avec les acteurs correctement identifiés. Les reprises automatiques, files d’erreur et garanties entre base et broker sont des sujets ultérieurs.</p>
 <p>Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajoutons pas de second modèle de diffusion dans le TP : maîtriser un premier chemin complet est l’objectif.</p>
 </section><section>
-<h2>Démonstration — Producteur, broker et consommateur (15 min)</h2>
+<h2>Démonstration — Producteur, broker et consommateur</h2>
 <p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages">projet de démonstration du cours 8</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
 <p>La démonstration suit l’envoi d’un message texte par un producteur vers une file Artemis. Le broker reçoit le message puis le remet au consommateur qui écoute cette file. L’envoi et le traitement sont deux moments distincts ; le producteur ne reçoit pas directement le résultat du consommateur.</p>
 <p><code>NotificationSender</code> utilise <code>JmsTemplate</code> pour envoyer le message, et <code>NotificationReceiver</code> le traite avec un écouteur Spring JMS. Le broker est embarqué et non persistant dans cet exemple ; la démonstration présente le trajet d’un message asynchrone.</p>
 </section><section>
 <h2>TP guidé — envoyer et reconnaître deux messages</h2>
-<p><strong>Projet :</strong> <a href="../ateliers/08-messages/index.html">atelier 08</a>. Durée : 65 min. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.</p>
-<h3>Étape 1 — repérer les acteurs (10 min)</h3>
+<p><strong>Projet :</strong> <a href="../ateliers/08-messages/index.html">atelier 08</a>. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.</p>
+<h3>Étape 1 — repérer les acteurs</h3>
 <p>Ouvrir <code>NotificationSender</code>, <code>NotificationReceiver</code> et <code>DemoRunner</code>. Noter la ligne d’envoi, la méthode de réception et le nom de la file. Repérer la dépendance <code>spring-boot-starter-artemis</code> dans le POM sans modifier les bibliothèques.</p>
-<h3>Étape 2 — démarrer et observer (15 min)</h3>
+<h3>Étape 2 — démarrer et observer</h3>
 <p>Dans <code>08-messages</code>, lancer <code>mvn spring-boot:run</code>. <strong>Attendu :</strong> une ligne contenant <code>Demande envoyée</code> et une ligne <code>RECU : Bienvenue Ana</code>. Les autres logs ne sont pas des messages applicatifs à compter.</p>
-<h3>Étape 3 — changer le contenu (10 min)</h3>
+<h3>Étape 3 — changer le contenu</h3>
 <p>Remplacer dans <code>DemoRunner</code> le texte par <code>Bienvenue MIAGE</code>. Arrêter puis relancer. <strong>Attendu :</strong> <code>RECU : Bienvenue MIAGE</code>.</p>
-<h3>Étape 4 — envoyer deux messages (15 min)</h3>
+<h3>Étape 4 — envoyer deux messages</h3>
 <p>Ajouter un second appel <code>sender.send(&quot;Bienvenue Lea&quot;)</code>. Après redémarrage, identifier les deux textes reçus. Le but n’est pas de déduire une garantie générale d’ordre à partir de cette petite observation.</p>
-<h3>Étape 5 — changer ensemble la destination (10 min)</h3>
+<h3>Étape 5 — changer ensemble la destination</h3>
 <p>Remplacer le nom <code>notifications</code> par <code>accueil</code> dans le producteur, l’annotation du consommateur et la propriété <code>spring.artemis.embedded.queues</code>. Relancer et vérifier que les deux textes arrivent. Comprendre pourquoi ces trois éléments doivent désigner la même destination.</p>
-<h3>Étape 6 — expliquer (5 min)</h3>
+<h3>Étape 6 — expliquer</h3>
 <p>Dessiner la chaîne d’un message et expliquer pourquoi une ligne « envoyé » ne prouve pas à elle seule la fin d’un traitement.</p>
 <p><strong>À rendre :</strong> les trois fichiers de code/configuration concernés, deux lignes reçues et le schéma. <strong>Réussite :</strong> passage par le broker et destination cohérente, sans appel direct au récepteur.</p>
 <details>

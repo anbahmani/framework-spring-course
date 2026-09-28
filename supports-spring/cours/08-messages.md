@@ -121,7 +121,7 @@ Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajo
 
 ---
 
-## Démonstration — Producteur, broker et consommateur (15 min)
+## Démonstration — Producteur, broker et consommateur
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 8](https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -133,29 +133,29 @@ La démonstration suit l’envoi d’un message texte par un producteur vers une
 
 ## TP guidé — envoyer et reconnaître deux messages
 
-**Projet :** [atelier 08](../ateliers/08-messages/README.md). Durée : 65 min. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.
+**Projet :** [atelier 08](../ateliers/08-messages/README.md). Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.
 
-### Étape 1 — repérer les acteurs (10 min)
+### Étape 1 — repérer les acteurs
 
 Ouvrir `NotificationSender`, `NotificationReceiver` et `DemoRunner`. Noter la ligne d’envoi, la méthode de réception et le nom de la file. Repérer la dépendance `spring-boot-starter-artemis` dans le POM sans modifier les bibliothèques.
 
-### Étape 2 — démarrer et observer (15 min)
+### Étape 2 — démarrer et observer
 
 Dans `08-messages`, lancer `mvn spring-boot:run`. **Attendu :** une ligne contenant `Demande envoyée` et une ligne `RECU : Bienvenue Ana`. Les autres logs ne sont pas des messages applicatifs à compter.
 
-### Étape 3 — changer le contenu (10 min)
+### Étape 3 — changer le contenu
 
 Remplacer dans `DemoRunner` le texte par `Bienvenue MIAGE`. Arrêter puis relancer. **Attendu :** `RECU : Bienvenue MIAGE`.
 
-### Étape 4 — envoyer deux messages (15 min)
+### Étape 4 — envoyer deux messages
 
 Ajouter un second appel `sender.send("Bienvenue Lea")`. Après redémarrage, identifier les deux textes reçus. Le but n’est pas de déduire une garantie générale d’ordre à partir de cette petite observation.
 
-### Étape 5 — changer ensemble la destination (10 min)
+### Étape 5 — changer ensemble la destination
 
 Remplacer le nom `notifications` par `accueil` dans le producteur, l’annotation du consommateur et la propriété `spring.artemis.embedded.queues`. Relancer et vérifier que les deux textes arrivent. Comprendre pourquoi ces trois éléments doivent désigner la même destination.
 
-### Étape 6 — expliquer (5 min)
+### Étape 6 — expliquer
 
 Dessiner la chaîne d’un message et expliquer pourquoi une ligne « envoyé » ne prouve pas à elle seule la fin d’un traitement.
 

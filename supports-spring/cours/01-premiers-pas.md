@@ -118,7 +118,7 @@ Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveu
 
 ---
 
-## Démonstration — Lancement de Spring Boot et première réponse (15 min)
+## Démonstration — Lancement de Spring Boot et première réponse
 
 **Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 1](https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
@@ -130,13 +130,13 @@ Les classes principales sont `Application`, qui démarre l’application, et `He
 
 ## TP guidé — obtenir puis modifier une réponse
 
-**Point de départ :** [atelier 01](../ateliers/01-demarrage/README.md). Prévoir 65 minutes. Le poste doit être préparé avec la [fiche de démarrage](../demarrage.md).
+**Point de départ :** [atelier 01](../ateliers/01-demarrage/README.md). Le poste doit être préparé avec la [fiche de démarrage](../demarrage.md).
 
-### Étape 1 — vérifier les outils (10 min)
+### Étape 1 — vérifier les outils
 
 Ouvrir un terminal dans `ateliers/01-demarrage`, le dossier contenant `pom.xml`. Exécuter `java -version` puis `mvn -v`. Vérifier que Maven utilise Java 25. Une commande introuvable se règle avec l’enseignant avant de modifier le code.
 
-### Étape 2 — démarrer (10 min)
+### Étape 2 — démarrer
 
 ```bash
 mvn spring-boot:run
@@ -144,15 +144,15 @@ mvn spring-boot:run
 
 Attendre le message `Started Application`. Le terminal reste occupé : l’application attend les demandes. Le premier lancement peut télécharger des dépendances et nécessite un accès réseau.
 
-### Étape 3 — appeler (10 min)
+### Étape 3 — appeler
 
 Ouvrir `http://localhost:8080/hello` dans le navigateur. **Résultat attendu :** `Bonjour Spring`. Recharger la page : la méthode est appelée à nouveau. Lire les deux classes et tracer à la main le chemin du navigateur vers `hello()`.
 
-### Étape 4 — modifier (15 min)
+### Étape 4 — modifier
 
 Remplacer le texte retourné par `Bonjour MIAGE`. Arrêter le serveur par Ctrl+C dans son terminal, puis relancer la même commande. Actualiser la page. Le projet ne recharge pas automatiquement les modifications.
 
-### Étape 5 — ajouter une route (20 min)
+### Étape 5 — ajouter une route
 
 Dans `HelloController`, ajouter une méthode `info()` répondant à `/info` par `Mon premier serveur Java`. Utiliser le même modèle que `hello()`. Tester les deux adresses puis essayer `/inconnu`.
 
