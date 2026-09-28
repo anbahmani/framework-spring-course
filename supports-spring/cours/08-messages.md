@@ -127,7 +127,29 @@ Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajo
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 8 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-08-messages). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Observer l’envoi et la réception asynchrones (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 8](https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages). Java 25 et Maven 3.9 sont requis.
+
+### 1. Lancer la démo (5 min)
+
+Dans `course-08-messages`, exécuter `mvn spring-boot:run`. Aucun broker externe n’est nécessaire : Artemis démarre dans le processus de l’application.
+
+### 2. Suivre le producteur (7 min)
+
+Lire `DemoRunner` puis `NotificationSender`. Au démarrage, le runner envoie `Bienvenue Ana` ; le service remet le texte à `JmsTemplate`, qui l’envoie dans la file `notifications`. Repérer `Demande envoyée` dans la console.
+
+### 3. Suivre le consommateur (8 min)
+
+Lire `NotificationReceiver` et son annotation `@JmsListener`. Observer `RECU : Bienvenue Ana` dans la console. Faire comparer cette chaîne au diagramme UML : le producteur remet le message au broker, puis le consommateur le reçoit séparément.
+
+### 4. Distinguer message et appel HTTP (5 min)
+
+Faire expliquer pourquoi l’envoi ne renvoie pas le résultat du traitement du consommateur. Le broker utilisé ici est embarqué et non persistant ; l’exemple illustre le mécanisme, pas la reprise après incident. Arrêter avec Ctrl+C.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — envoyer et reconnaître deux messages
 

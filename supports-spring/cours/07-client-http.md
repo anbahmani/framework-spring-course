@@ -119,7 +119,29 @@ Des délais d’attente explicites sont importants dans une application déploy�
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 7 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-07-client-http). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Faire un appel HTTP depuis une seconde application Spring (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 7](https://github.com/anbahmani/framework-spring-demos/tree/main/course-07-client-http). Java 25 et Maven 3.9 sont requis.
+
+### 1. Démarrer l’API serveur (5 min)
+
+Dans un premier terminal, lancer le projet `course-05-persistance` du même dépôt avec `mvn spring-boot:run`. Créer Ana avec `curl -i -H 'Content-Type: application/json' -d '{"name":"Ana"}' http://localhost:8080/users`.
+
+### 2. Démarrer le client (5 min)
+
+Dans un second terminal, entrer dans `course-07-client-http` et lancer `mvn spring-boot:run`. Le client affiche les utilisateurs reçus, dont Ana. Il ne démarre pas de serveur HTTP et se termine après l’appel.
+
+### 3. Tracer l’échange (10 min)
+
+Ouvrir `DirectoryClient`, `ClientRunner` et `UserView`. Relier `RestClient`, l’adresse de base, GET `/users`, la conversion JSON en tableau Java, puis l’affichage. Suivre le diagramme de séquence : ce sont deux processus qui communiquent par HTTP, sans partager leurs objets Java.
+
+### 4. Comparer erreur et résultat vide (5 min)
+
+Arrêter le serveur et relancer le client : il affiche un message d’échec de connexion. Redémarrer le serveur puis supprimer les données ou utiliser une base vide : un tableau vide est une réponse réussie. Faire préciser pourquoi « aucun utilisateur » et « serveur inaccessible » sont deux situations différentes.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — faire communiquer deux programmes
 

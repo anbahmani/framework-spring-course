@@ -19,11 +19,14 @@ Le public connaît Java, mais pas Spring, les frameworks d’API, HTTP, JSON, Ma
 
 L’annuaire constitue le fil rouge des séances 2 à 7. Le premier endpoint et la salutation servent d’entrée progressive ; la dernière séance utilise une notification texte pour isoler la nouveauté de la messagerie.
 
-## Une séance en trois passages
+## La démonstration fait partie du cours
+
+Chaque séance suit le même rythme de trois heures : rappel (15 min), explications (50 min), démonstration guidée (25 min), pause (10 min), TP (65 min), quiz et correction (15 min). La démonstration est un temps d’enseignement à part entière, pas un aperçu facultatif ni une étape du TP.
 
 1. **Expliquer et prédire.** Lire peu de lignes, définir chaque annotation nouvelle et demander le résultat attendu avant l’exécution.
-2. **Manipuler avec guidage.** Faire fonctionner l’état fourni, observer un résultat, changer une seule chose puis vérifier.
-3. **Reformuler.** Faire dessiner le chemin de l’information et répondre au quiz avant de consulter les corrigés.
+2. **Démontrer un parcours complet.** Lancer le projet dédié du [dépôt des huit démos](https://github.com/anbahmani/framework-spring-demos), réaliser les requêtes ou tests prévus dans le support, lire ensemble les classes concernées et relier le résultat au diagramme UML.
+3. **Faire reformuler.** Demander aux étudiants d’expliquer le flux, les responsabilités et le résultat observé. La démo montre un état fonctionnel ; elle se termine avant que le TP ne demande de modifier le projet d’atelier.
+4. **Pratiquer puis vérifier.** Réaliser le TP guidé dans son projet Maven distinct, puis répondre au quiz avant de consulter les corrigés.
 
 Chaque TP comporte des temps indicatifs, un projet explicite, des résultats attendus, une petite modification et sa correction. Il n’exige pas de recréer seul une application complète. Les étapes indépendantes évitent qu’une erreur de la séance précédente bloque toute la suite.
 
@@ -45,4 +48,4 @@ Les architectures distribuées, les schémas de données complexes, les proxies 
 
 ## Préparation et vérification
 
-Précharger les dépendances Maven sur les postes ; tester Java 25, le port 8080 et les commandes avant le cours. Les huit projets utilisent un socle fixé ; les ateliers de serveur HTTP partagent le port 8080 et se lancent un à la fois. L’atelier 07 agit comme client console et l’atelier 06 exécute des tests sans serveur. Voir le bilan de vérification pour les contrôles effectués et leurs limites.
+Précharger les dépendances Maven sur les postes ; tester Java 25, le port 8080 et les commandes de démonstration et de TP avant le cours. Les démonstrations sont dans un dépôt GitHub séparé ; le code du cours est fourni en lecture, tandis que les modifications étudiantes se font dans les ateliers. Les huit projets utilisent un socle fixé ; les ateliers de serveur HTTP partagent le port 8080 et se lancent un à la fois. L’atelier 07 agit comme client console et l’atelier 06 exécute des tests sans serveur. Voir le bilan de vérification pour les contrôles effectués et leurs limites.

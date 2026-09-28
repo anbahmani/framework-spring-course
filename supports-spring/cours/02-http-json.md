@@ -130,7 +130,29 @@ On doit repérer un statut 200, un format `application/json` et le corps attendu
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 2 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-02-http-json). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Observer méthode HTTP, paramètres et conversion JSON (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 2](https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json). Java 25 et Maven 3.9 sont requis.
+
+### 1. Démarrer et comparer les requêtes (5 min)
+
+Dans `course-02-http-json`, exécuter `mvn spring-boot:run`. Lancer `curl -i http://localhost:8080/hello` puis `curl -i "http://localhost:8080/hello?name=Ada"`. Comparer le chemin, le paramètre de requête et la réponse.
+
+### 2. Lire une ressource JSON (8 min)
+
+Exécuter `curl -i http://localhost:8080/users/42`. Observer le statut et le corps JSON `{"id":42,"name":"Ana"}`. Dans `UserController`, relier `@GetMapping`, `@PathVariable` et `UserView`. Dans `UserView`, relever le `record` Java ; Spring MVC sérialise automatiquement cet objet en JSON.
+
+### 3. Distinguer les entrées (7 min)
+
+Au tableau, opposer `/users/42` (segment d’URL lu par `@PathVariable`) à `/hello?name=Ada` (paramètre lu par `@RequestParam`). Faire prédire puis tester `/users/7` et `/hello?name=MIAGE`.
+
+### 4. Résumer le contrat (5 min)
+
+Faire nommer la méthode HTTP, l’URL, le code de statut et le type du corps de réponse. Préciser que JSON est la représentation échangée, tandis que `UserView` est la classe Java manipulée côté serveur.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — faire varier les entrées
 

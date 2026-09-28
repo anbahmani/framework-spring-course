@@ -96,7 +96,18 @@ public class HelloController {
 <p>Il faut examiner l’erreur, la présence de <code>@Service</code>, les imports et le package. Ajouter un <code>new</code> au hasard dans le contrôleur ferait perdre l’exercice d’assemblage. Plusieurs beans candidats au même type constituent un autre cas, réservé à plus tard.</p>
 <p>Référence : <a href="https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html">injection de dépendances Spring</a>.</p>
 </section><section>
-<p><strong>Démo associée :</strong> <a href="https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-03-injection-couches">ouvrir le code du cours 3 dans le dépôt GitHub</a>. Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.</p>
+<h2>Démonstration guidée — Suivre l’injection entre contrôleur et service (25 min)</h2>
+<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-03-injection-couches">dépôt dédié des démos — cours 3</a>. Java 25 et Maven 3.9 sont requis.</p>
+<h3>1. Démarrer et observer (5 min)</h3>
+<p>Dans <code>course-03-injection-couches</code>, exécuter <code>mvn spring-boot:run</code>, puis <code>curl -i &quot;http://localhost:8080/hello?name=Ada&quot;</code>. La réponse attendue est <code>Bonjour Ada</code>.</p>
+<h3>2. Lire la relation de dépendance (8 min)</h3>
+<p>Ouvrir <code>HelloController</code> et <code>GreetingService</code>. Faire repérer le champ <code>private final</code>, le constructeur qui reçoit <code>GreetingService</code>, l’annotation <code>@Service</code> et l’appel <code>service.greet(name)</code>. Le contrôleur connaît le service par son type et lui délègue la règle de salutation.</p>
+<h3>3. Raconter le démarrage Spring (7 min)</h3>
+<p>À partir du diagramme de séquence UML, distinguer création des objets et traitement HTTP : Spring détecte les deux composants, crée le service, construit le contrôleur en lui passant le service, puis traite les requêtes. L’injection ne se produit pas à chaque requête.</p>
+<h3>4. Faire une modification guidée (5 min)</h3>
+<p>Changer le format de salutation dans <code>GreetingService</code>, redémarrer, puis refaire la même requête. Demander pourquoi le contrôleur n’a pas eu à changer : la règle appartient au service, alors que le contrôleur traite la frontière HTTP.</p>
+<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+</section><section>
 <h2>TP guidé — observer puis utiliser l’injection</h2>
 <p><strong>Projet :</strong> <a href="../ateliers/03-injection/index.html">atelier 03</a>. Durée : 65 min. Arrêter le serveur précédent.</p>
 <h3>Étape 1 — identifier les rôles (10 min)</h3>

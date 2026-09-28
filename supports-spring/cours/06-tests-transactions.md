@@ -139,7 +139,29 @@ Pour ce TP, utiliser **le service injecté dans le test**, pas `new UserService(
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 6 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-06-tests-transactions). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Lire les tests qui vérifient HTTP et rollback (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 6](https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions). Java 25 et Maven 3.9 sont requis.
+
+### 1. Lancer les tests (5 min)
+
+Dans `course-06-tests-transactions`, exécuter `mvn test`. Il n’y a pas de serveur à lancer : les tests démarrent le contexte nécessaire et une base H2 isolée.
+
+### 2. Suivre un test HTTP (7 min)
+
+Ouvrir `UserApiTest` et repérer `@SpringBootTest`, `@AutoConfigureMockMvc`, la requête MockMvc et l’assertion de statut. Relier le test au diagramme : le test envoie une requête au contrôleur sans ouvrir de port HTTP.
+
+### 3. Voir le rollback (8 min)
+
+Dans `TransactionTest`, lire `secondInvalidNameCancelsBothCreations`. Le service essaie d’enregistrer Ana, puis reçoit un nom invalide ; le test attend l’exception et vérifie `repository.count() == 0`. La transaction annule la première écriture pour conserver l’atomicité.
+
+### 4. Distinguer les niveaux de test (5 min)
+
+Dans `NameRuleTest`, identifier le faux repository et la vérification qu’il n’a pas été appelé pour un nom invalide. Faire classer les exemples : test de règle, test du service avec Spring, test HTTP avec MockMvc. Terminer par une nouvelle exécution de `mvn test` et lecture du bilan.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — lire un test, en ajouter un, observer un rollback
 

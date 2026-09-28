@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
       - name: Préparer GitHub Pages
         uses: actions/configure-pages@v6
       - name: Préparer le site des huit séances

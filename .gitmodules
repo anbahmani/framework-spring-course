@@ -1,0 +1,4 @@
+[submodule "supports-spring/demos"]
+	path = supports-spring/demos
+	url = https://github.com/anbahmani/framework-spring-demos.git
+	branch = main

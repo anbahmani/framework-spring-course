@@ -134,7 +134,29 @@ Dans `ApiErrors`, `@RestControllerAdvice` déclare un gestionnaire commun aux co
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 4 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-04-api-crud). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Observer le cycle CRUD et les réponses HTTP (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 4](https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud). Java 25 et Maven 3.9 sont requis.
+
+### 1. Démarrer l’API (4 min)
+
+Dans `course-04-api-crud`, exécuter `mvn spring-boot:run`, puis `curl -i http://localhost:8080/users`. Au démarrage, la collection en mémoire est vide.
+
+### 2. Créer et lire une ressource (7 min)
+
+Créer un utilisateur : `curl -i -H 'Content-Type: application/json' -d '{"name":"Ana"}' http://localhost:8080/users`. Repérer HTTP 201, l’en-tête `Location` et l’identifiant dans le JSON. Réutiliser l’URL de `Location` pour la lecture avec GET.
+
+### 3. Modifier puis supprimer (7 min)
+
+Avec l’URL obtenue, envoyer `curl -i -X PUT -H 'Content-Type: application/json' -d '{"name":"Ada"}' http://localhost:8080/users/1`, puis `curl -i -X DELETE http://localhost:8080/users/1`. Observer HTTP 200 puis 204. Dans `UserController`, retrouver les annotations GET, POST, PUT et DELETE et la délégation à `UserService`.
+
+### 4. Observer les erreurs et les rôles (7 min)
+
+Tester `curl -i -H 'Content-Type: application/json' -d '{"name":" "}' http://localhost:8080/users` (400), puis GET `/users/999` (404). Relier `UserService` aux règles métier et `ApiErrors` à la conversion d’exceptions en statuts HTTP. La collection est volatile : le redémarrage efface les données.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — un cycle complet puis une nouvelle règle
 

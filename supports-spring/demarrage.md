@@ -8,7 +8,13 @@ Créer une classe Java, appeler une méthode, utiliser un constructeur, une list
 
 Installer ou faire préparer **un JDK 25**, **Maven 3.9**, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier `pom.xml`. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.
 
-Les huit projets d’atelier sont déjà fournis : aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.
+Les huit ateliers sont fournis avec le parcours. Les huit projets de démonstration, qui servent pendant une séquence guidée du cours, sont regroupés dans un [dépôt GitHub séparé](https://github.com/anbahmani/framework-spring-demos). Pour le télécharger :
+
+```bash
+git clone https://github.com/anbahmani/framework-spring-demos.git
+```
+
+Aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.
 
 ## Vérifier avant de coder
 
@@ -70,4 +76,4 @@ Invoke-WebRequest -Uri 'http://localhost:8080/users' -Method Post -ContentType '
 
 ## Utiliser les solutions sans sauter l’apprentissage
 
-Chaque projet est un état de départ fonctionnel : commencer par observer ce qu’il fait, puis appliquer la modification demandée dans le TP. Le volet « Aide et correction du TP » montre la solution de cette modification. Au début, les tests fournis servent à vérifier le projet ; leur écriture devient un objectif au cours 6.
+La démo est un temps guidé du cours : commencer par observer ce qu’elle fait, puis relier le résultat au concept et au diagramme UML. L’atelier associé est un projet distinct où appliquer les modifications demandées dans le TP. Le volet « Aide et correction du TP » montre la solution de cette modification. Au début, les tests fournis servent à vérifier le projet ; leur écriture devient un objectif au cours 6.

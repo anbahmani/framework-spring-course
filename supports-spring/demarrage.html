@@ -30,7 +30,9 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <p>Créer une classe Java, appeler une méthode, utiliser un constructeur, une liste et une exception simple. Les mots propres à Spring et aux API seront expliqués dans les cours. Un petit rappel des records est inclus au cours 2.</p>
 <h2>Préparer le poste avec l’enseignant</h2>
 <p>Installer ou faire préparer <strong>un JDK 25</strong>, <strong>Maven 3.9</strong>, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier <code>pom.xml</code>. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.</p>
-<p>Les huit projets d’atelier sont déjà fournis : aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.</p>
+<p>Les huit ateliers sont fournis avec le parcours. Les huit projets de démonstration, qui servent pendant une séquence guidée du cours, sont regroupés dans un <a href="https://github.com/anbahmani/framework-spring-demos">dépôt GitHub séparé</a>. Pour le télécharger :</p>
+<pre><code>git clone https://github.com/anbahmani/framework-spring-demos.git</code></pre>
+<p>Aucun générateur de projet ni serveur HTTP externe n’est nécessaire. Les ateliers 5 et 6 utilisent une base H2 locale ; l’atelier 8 démarre un broker avec l’application.</p>
 <h2>Vérifier avant de coder</h2>
 <p>Ouvrir un terminal et exécuter séparément :</p>
 <pre><code>java -version
@@ -64,7 +66,7 @@ Invoke-WebRequest -Uri &#x27;http://localhost:8080/users&#x27; -Method Post -Con
 <tr><td>Base H2 verrouillée</td><td>Arrêter l’autre processus utilisant le même fichier</td></tr>
 </table></div>
 <h2>Utiliser les solutions sans sauter l’apprentissage</h2>
-<p>Chaque projet est un état de départ fonctionnel : commencer par observer ce qu’il fait, puis appliquer la modification demandée dans le TP. Le volet « Aide et correction du TP » montre la solution de cette modification. Au début, les tests fournis servent à vérifier le projet ; leur écriture devient un objectif au cours 6.</p></section></main><footer>Source modifiable : <a href="demarrage.md">demarrage.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
+<p>La démo est un temps guidé du cours : commencer par observer ce qu’elle fait, puis relier le résultat au concept et au diagramme UML. L’atelier associé est un projet distinct où appliquer les modifications demandées dans le TP. Le volet « Aide et correction du TP » montre la solution de cette modification. Au début, les tests fournis servent à vérifier le projet ; leur écriture devient un objectif au cours 6.</p></section></main><footer>Source modifiable : <a href="demarrage.md">demarrage.md</a> · Ouvrir les corrigés avant impression pour les inclure.</footer>
 <script>
 const slides = Array.from(document.querySelectorAll('main section'));
 let currentSlide = 0;

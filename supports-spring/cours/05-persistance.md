@@ -143,7 +143,29 @@ Lancement -> Lecture de la base fichier -> Requetes -> Arret -> Fichier conserve
 
 ---
 
-**Démo associée :** [ouvrir le code du cours 5 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-05-persistance). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+## Démonstration guidée — Comparer collection en mémoire et stockage H2 (25 min)
+
+**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 5](https://github.com/anbahmani/framework-spring-demos/tree/main/course-05-persistance). Java 25 et Maven 3.9 sont requis.
+
+### 1. Démarrer et lire les données (5 min)
+
+Dans `course-05-persistance`, exécuter `mvn spring-boot:run`. Lire l’annuaire avec `curl -i http://localhost:8080/users`.
+
+### 2. Créer une ligne et observer le SQL (8 min)
+
+Envoyer `curl -i -H 'Content-Type: application/json' -d '{"name":"Ana"}' http://localhost:8080/users`. Noter l’identifiant retourné, puis refaire un GET. Dans la console, repérer l’insertion SQL affichée par H2. Dans `UserEntity`, `UserRepository` et `UserService`, faire associer mapping, accès aux données et orchestration.
+
+### 3. Vérifier la persistance (7 min)
+
+Arrêter l’application avec Ctrl+C puis la relancer depuis le même dossier. Relire `/users` : Ana doit être encore présente, car la configuration utilise un fichier sous `data/`. Cette démo et son atelier ne doivent pas être lancés en parallèle sur ce fichier.
+
+### 4. Expliquer la frontière de stockage (5 min)
+
+Faire tracer client → contrôleur → service → repository → H2. Comparer le repository à la collection en mémoire du cours précédent. L’URL HTTP reste stable alors que le stockage change ; les données persistent après l’arrêt.
+
+**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+
+---
 
 ## TP guidé — vérifier la persistance
 
