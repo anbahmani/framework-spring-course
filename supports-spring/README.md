@@ -1,4 +1,4 @@
-# Sommaire des cours — Architecture et Spring
+# INF2 - Frameworks, Composants métiers et Web services avec Spring
 
 Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance dure **3 heures** et comprend un cours projetable, une démonstration de 15 minutes, un TP de 65 minutes et un quiz corrigé de huit questions.
 
