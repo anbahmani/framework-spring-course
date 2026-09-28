@@ -122,6 +122,8 @@ Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveu
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 1 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-01-premiers-pas). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — obtenir puis modifier une réponse
 
 **Point de départ :** [atelier 01](../ateliers/01-demarrage/README.md). Prévoir 65 minutes. Le poste doit être préparé avec la [fiche de démarrage](../demarrage.md).

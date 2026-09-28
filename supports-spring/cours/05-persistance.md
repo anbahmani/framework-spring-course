@@ -143,6 +143,8 @@ Lancement -> Lecture de la base fichier -> Requetes -> Arret -> Fichier conserve
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 5 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-05-persistance). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — vérifier la persistance
 
 **Projet :** [atelier 05](../ateliers/05-persistance/README.md). Durée : 65 min. Arrêter l’atelier 04 ; les projets sont indépendants et ne partagent pas ses données.

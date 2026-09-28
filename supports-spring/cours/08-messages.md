@@ -127,6 +127,8 @@ Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajo
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 8 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-08-messages). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — envoyer et reconnaître deux messages
 
 **Projet :** [atelier 08](../ateliers/08-messages/README.md). Durée : 65 min. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.

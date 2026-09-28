@@ -134,6 +134,8 @@ Dans `ApiErrors`, `@RestControllerAdvice` déclare un gestionnaire commun aux co
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 4 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-04-api-crud). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — un cycle complet puis une nouvelle règle
 
 **Projet :** [atelier 04](../ateliers/04-crud/README.md). Prévoir 65 min. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.

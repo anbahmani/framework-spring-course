@@ -119,6 +119,8 @@ Des délais d’attente explicites sont importants dans une application déploy�
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 7 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-07-client-http). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — faire communiquer deux programmes
 
 **Projets :** [atelier 05](../ateliers/05-persistance/README.md) côté serveur et [atelier 07](../ateliers/07-client/README.md) côté client. Durée : 65 min. Deux terminaux sont nécessaires.

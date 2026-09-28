@@ -141,6 +141,8 @@ Référence : [injection de dépendances Spring](https://docs.spring.io/spring-f
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 3 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-03-injection-couches). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — observer puis utiliser l’injection
 
 **Projet :** [atelier 03](../ateliers/03-injection/README.md). Durée : 65 min. Arrêter le serveur précédent.

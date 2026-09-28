@@ -139,6 +139,8 @@ Pour ce TP, utiliser **le service injecté dans le test**, pas `new UserService(
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 6 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-06-tests-transactions). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — lire un test, en ajouter un, observer un rollback
 
 **Projet :** [atelier 06](../ateliers/06-tests/README.md). Durée : 65 min. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.

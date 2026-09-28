@@ -130,6 +130,8 @@ On doit repérer un statut 200, un format `application/json` et le corps attendu
 
 ---
 
+**Démo associée :** [ouvrir le code du cours 2 dans le dépôt GitHub](https://github.com/anbahmani/framework-spring-course/tree/master/supports-spring/demos/course-02-http-json). Le dépôt regroupe les démos des huit séances ; les instructions de lancement sont dans le README de ce dossier.
+
 ## TP guidé — faire varier les entrées
 
 **Projet :** [atelier 02](../ateliers/02-http-json/README.md). Arrêter l’atelier 01 avant de lancer celui-ci. Durée indicative : 65 min.
