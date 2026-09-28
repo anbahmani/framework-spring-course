@@ -2,7 +2,7 @@
 
 **Durée : 3 h. Prérequis : cours 1–2, constructeurs et attributs Java.**
 
-**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
 
 Objectifs : comprendre qui crée les objets, expliquer une injection par constructeur et séparer un contrôleur d’un service. Les interfaces multiples, scopes particuliers et aspects ne font pas partie de cette première découverte.
 
@@ -141,27 +141,13 @@ Référence : [injection de dépendances Spring](https://docs.spring.io/spring-f
 
 ---
 
-## Démonstration guidée — Suivre l’injection entre contrôleur et service (25 min)
+## Démonstration — Contrôleur, service et injection (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 3](https://github.com/anbahmani/framework-spring-demos/tree/main/course-03-injection-couches). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 3](https://github.com/anbahmani/framework-spring-demos/tree/main/course-03-injection-couches) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Démarrer et observer (5 min)
+La démonstration suit une requête de salutation. Spring repère le contrôleur et le service, construit les objets au démarrage, puis fournit le service au constructeur du contrôleur. Lorsqu’une requête arrive, le contrôleur délègue la règle de salutation au service.
 
-Dans `course-03-injection-couches`, exécuter `mvn spring-boot:run`, puis `curl -i "http://localhost:8080/hello?name=Ada"`. La réponse attendue est `Bonjour Ada`.
-
-### 2. Lire la relation de dépendance (8 min)
-
-Ouvrir `HelloController` et `GreetingService`. Faire repérer le champ `private final`, le constructeur qui reçoit `GreetingService`, l’annotation `@Service` et l’appel `service.greet(name)`. Le contrôleur connaît le service par son type et lui délègue la règle de salutation.
-
-### 3. Raconter le démarrage Spring (7 min)
-
-À partir du diagramme de séquence UML, distinguer création des objets et traitement HTTP : Spring détecte les deux composants, crée le service, construit le contrôleur en lui passant le service, puis traite les requêtes. L’injection ne se produit pas à chaque requête.
-
-### 4. Faire une modification guidée (5 min)
-
-Changer le format de salutation dans `GreetingService`, redémarrer, puis refaire la même requête. Demander pourquoi le contrôleur n’a pas eu à changer : la règle appartient au service, alors que le contrôleur traite la frontière HTTP.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+`HelloController` porte la frontière HTTP ; `GreetingService` réalise le traitement. L’injection assemble les composants avant les requêtes et rend leurs responsabilités visibles.
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Durée : 3 h. Prérequis : service, injection et appel HTTP synchrone.**
 
-**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
 
 Objectifs : expliquer producteur, file, broker et consommateur ; envoyer un texte et observer sa réception. Le TP utilise un broker embarqué fourni, sans Docker ni administration de serveur.
 
@@ -127,27 +127,13 @@ Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajo
 
 ---
 
-## Démonstration guidée — Observer l’envoi et la réception asynchrones (25 min)
+## Démonstration — Producteur, broker et consommateur (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 8](https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 8](https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Lancer la démo (5 min)
+La démonstration suit l’envoi d’un message texte par un producteur vers une file Artemis. Le broker reçoit le message puis le remet au consommateur qui écoute cette file. L’envoi et le traitement sont deux moments distincts ; le producteur ne reçoit pas directement le résultat du consommateur.
 
-Dans `course-08-messages`, exécuter `mvn spring-boot:run`. Aucun broker externe n’est nécessaire : Artemis démarre dans le processus de l’application.
-
-### 2. Suivre le producteur (7 min)
-
-Lire `DemoRunner` puis `NotificationSender`. Au démarrage, le runner envoie `Bienvenue Ana` ; le service remet le texte à `JmsTemplate`, qui l’envoie dans la file `notifications`. Repérer `Demande envoyée` dans la console.
-
-### 3. Suivre le consommateur (8 min)
-
-Lire `NotificationReceiver` et son annotation `@JmsListener`. Observer `RECU : Bienvenue Ana` dans la console. Faire comparer cette chaîne au diagramme UML : le producteur remet le message au broker, puis le consommateur le reçoit séparément.
-
-### 4. Distinguer message et appel HTTP (5 min)
-
-Faire expliquer pourquoi l’envoi ne renvoie pas le résultat du traitement du consommateur. Le broker utilisé ici est embarqué et non persistant ; l’exemple illustre le mécanisme, pas la reprise après incident. Arrêter avec Ctrl+C.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+`NotificationSender` utilise `JmsTemplate` pour envoyer le message, et `NotificationReceiver` le traite avec un écouteur Spring JMS. Le broker est embarqué et non persistant dans cet exemple ; la démonstration présente le trajet d’un message asynchrone.
 
 ---
 

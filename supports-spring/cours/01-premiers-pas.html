@@ -92,17 +92,10 @@ public class HelloController {
 <p>Dans <code>http://localhost:8080/hello</code>, <code>http</code> indique le protocole, <code>localhost</code> notre ordinateur, <code>8080</code> le <strong>port</strong> où l’application écoute, et <code>/hello</code> le chemin demandé. Un port permet de distinguer plusieurs services sur une même machine.</p>
 <p>Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveur tourne mais que le chemin n’existe pas, il peut répondre avec une erreur 404. Nous apprendrons à lire les codes de réponse au cours suivant.</p>
 </section><section>
-<h2>Démonstration guidée — Démarrer Spring Boot et répondre à une requête HTTP (25 min)</h2>
-<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas">dépôt dédié des démos — cours 1</a>. Java 25 et Maven 3.9 sont requis.</p>
-<h3>1. Lancer l’application (5 min)</h3>
-<p>Depuis le dossier <code>course-01-premiers-pas</code> du dépôt de démos, exécuter <code>mvn spring-boot:run</code>. Repérer dans la console le démarrage de Tomcat et le message indiquant que l’application écoute sur le port 8080.</p>
-<h3>2. Faire une requête réelle (5 min)</h3>
-<p>Dans un second terminal, lancer <code>curl -i http://localhost:8080/hello</code>. Observer le statut HTTP, le type de contenu et le corps <code>Bonjour Spring</code>. Demander aux étudiants de séparer les éléments de la réponse HTTP du texte produit par le programme.</p>
-<h3>3. Relier le résultat aux classes (10 min)</h3>
-<p>Ouvrir <code>Application.java</code>, puis <code>HelloController.java</code>. Suivre le diagramme UML de la séance : la classe de démarrage lance le contexte Spring et le serveur ; <code>@RestController</code> expose le contrôleur ; <code>@GetMapping</code> associe <code>/hello</code> à <code>hello()</code>. La méthode ne démarre pas elle-même un serveur et ne lit pas le réseau.</p>
-<h3>4. Reformuler (5 min)</h3>
-<p>Faire décrire le trajet navigateur → Spring MVC → méthode Java → réponse. Demander ce qui change si l’on remplace le texte renvoyé, puis faire l’essai et relancer la requête. Arrêter l’application avec Ctrl+C.</p>
-<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+<h2>Démonstration — Lancement de Spring Boot et première réponse (15 min)</h2>
+<p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas">projet de démonstration du cours 1</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
+<p>La démonstration présente le démarrage d’une application Spring Boot puis une requête HTTP adressée à <code>/hello</code>. Spring initialise le contexte, démarre le serveur web embarqué et associe la route au contrôleur. La méthode Java retourne le texte qui devient le corps de la réponse HTTP.</p>
+<p>Les classes principales sont <code>Application</code>, qui démarre l’application, et <code>HelloController</code>, qui expose la route. L’idée à retenir est qu’une application Spring fournit un serveur et relie les requêtes web aux méthodes Java.</p>
 </section><section>
 <h2>TP guidé — obtenir puis modifier une réponse</h2>
 <p><strong>Point de départ :</strong> <a href="../ateliers/01-demarrage/index.html">atelier 01</a>. Prévoir 65 minutes. Le poste doit être préparé avec la <a href="../demarrage.html">fiche de démarrage</a>.</p>

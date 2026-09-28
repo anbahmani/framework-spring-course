@@ -2,7 +2,7 @@
 
 **Durée : 3 h. Prérequis : annuaire CRUD et injection par constructeur. SQL n’est pas un prérequis de ce cours.**
 
-**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
 
 Objectifs : comprendre table, ligne et identifiant ; reconnaître une entité et un repository ; conserver un utilisateur après arrêt et redémarrage.
 
@@ -143,27 +143,13 @@ Lancement -> Lecture de la base fichier -> Requetes -> Arret -> Fichier conserve
 
 ---
 
-## Démonstration guidée — Comparer collection en mémoire et stockage H2 (25 min)
+## Démonstration — Repository et stockage H2 (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 5](https://github.com/anbahmani/framework-spring-demos/tree/main/course-05-persistance). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 5](https://github.com/anbahmani/framework-spring-demos/tree/main/course-05-persistance) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Démarrer et lire les données (5 min)
+La démonstration reprend l’API d’utilisateurs et montre ce qui change quand les données sont stockées en base. Le contrôleur délègue au service, qui utilise un repository Spring Data JPA ; celui-ci effectue les opérations sur une base H2 configurée en fichier. Les requêtes SQL produites par la persistance peuvent être observées dans la console.
 
-Dans `course-05-persistance`, exécuter `mvn spring-boot:run`. Lire l’annuaire avec `curl -i http://localhost:8080/users`.
-
-### 2. Créer une ligne et observer le SQL (8 min)
-
-Envoyer `curl -i -H 'Content-Type: application/json' -d '{"name":"Ana"}' http://localhost:8080/users`. Noter l’identifiant retourné, puis refaire un GET. Dans la console, repérer l’insertion SQL affichée par H2. Dans `UserEntity`, `UserRepository` et `UserService`, faire associer mapping, accès aux données et orchestration.
-
-### 3. Vérifier la persistance (7 min)
-
-Arrêter l’application avec Ctrl+C puis la relancer depuis le même dossier. Relire `/users` : Ana doit être encore présente, car la configuration utilise un fichier sous `data/`. Cette démo et son atelier ne doivent pas être lancés en parallèle sur ce fichier.
-
-### 4. Expliquer la frontière de stockage (5 min)
-
-Faire tracer client → contrôleur → service → repository → H2. Comparer le repository à la collection en mémoire du cours précédent. L’URL HTTP reste stable alors que le stockage change ; les données persistent après l’arrêt.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+`UserEntity` représente une ligne stockée et `UserRepository` fournit l’accès aux données. Après un redémarrage, les utilisateurs sont toujours présents. Le parcours HTTP reste semblable à celui du cours précédent ; c’est le mécanisme de stockage qui a changé.
 
 ---
 

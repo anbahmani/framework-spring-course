@@ -83,17 +83,10 @@ public UserView user(@PathVariable(&quot;id&quot;) long id) {
 <pre><code>curl -i &#x27;http://localhost:8080/users/7&#x27;</code></pre>
 <p>On doit repérer un statut 200, un format <code>application/json</code> et le corps attendu. Dans PowerShell, utiliser <code>curl.exe</code> pour appeler le programme curl. Les commandes sont à lancer dans un <strong>second terminal</strong>, le premier étant occupé par le serveur.</p>
 </section><section>
-<h2>Démonstration guidée — Observer méthode HTTP, paramètres et conversion JSON (25 min)</h2>
-<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json">dépôt dédié des démos — cours 2</a>. Java 25 et Maven 3.9 sont requis.</p>
-<h3>1. Démarrer et comparer les requêtes (5 min)</h3>
-<p>Dans <code>course-02-http-json</code>, exécuter <code>mvn spring-boot:run</code>. Lancer <code>curl -i http://localhost:8080/hello</code> puis <code>curl -i &quot;http://localhost:8080/hello?name=Ada&quot;</code>. Comparer le chemin, le paramètre de requête et la réponse.</p>
-<h3>2. Lire une ressource JSON (8 min)</h3>
-<p>Exécuter <code>curl -i http://localhost:8080/users/42</code>. Observer le statut et le corps JSON <code>{&quot;id&quot;:42,&quot;name&quot;:&quot;Ana&quot;}</code>. Dans <code>UserController</code>, relier <code>@GetMapping</code>, <code>@PathVariable</code> et <code>UserView</code>. Dans <code>UserView</code>, relever le <code>record</code> Java ; Spring MVC sérialise automatiquement cet objet en JSON.</p>
-<h3>3. Distinguer les entrées (7 min)</h3>
-<p>Au tableau, opposer <code>/users/42</code> (segment d’URL lu par <code>@PathVariable</code>) à <code>/hello?name=Ada</code> (paramètre lu par <code>@RequestParam</code>). Faire prédire puis tester <code>/users/7</code> et <code>/hello?name=MIAGE</code>.</p>
-<h3>4. Résumer le contrat (5 min)</h3>
-<p>Faire nommer la méthode HTTP, l’URL, le code de statut et le type du corps de réponse. Préciser que JSON est la représentation échangée, tandis que <code>UserView</code> est la classe Java manipulée côté serveur.</p>
-<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+<h2>Démonstration — Requête HTTP et réponse JSON (15 min)</h2>
+<p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json">projet de démonstration du cours 2</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
+<p>La démonstration compare une route qui lit un paramètre dans l’URL et une route qui reçoit une valeur dans le chemin. Le contrôleur retourne ensuite un objet Java ; Spring MVC le convertit en JSON dans la réponse HTTP.</p>
+<p><code>UserController</code> déclare les routes et récupère les valeurs avec les annotations Spring. <code>UserView</code> représente les données renvoyées. On observe ainsi le passage d’une requête HTTP à un objet Java, puis à une réponse JSON.</p>
 </section><section>
 <h2>TP guidé — faire varier les entrées</h2>
 <p><strong>Projet :</strong> <a href="../ateliers/02-http-json/index.html">atelier 02</a>. Arrêter l’atelier 01 avant de lancer celui-ci. Durée indicative : 65 min.</p>

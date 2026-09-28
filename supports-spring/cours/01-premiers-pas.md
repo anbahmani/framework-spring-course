@@ -122,27 +122,13 @@ Si le serveur est arrêté, le navigateur ne peut pas se connecter. Si le serveu
 
 ---
 
-## Démonstration guidée — Démarrer Spring Boot et répondre à une requête HTTP (25 min)
+## Démonstration — Lancement de Spring Boot et première réponse (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 1](https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 1](https://github.com/anbahmani/framework-spring-demos/tree/main/course-01-premiers-pas) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Lancer l’application (5 min)
+La démonstration présente le démarrage d’une application Spring Boot puis une requête HTTP adressée à `/hello`. Spring initialise le contexte, démarre le serveur web embarqué et associe la route au contrôleur. La méthode Java retourne le texte qui devient le corps de la réponse HTTP.
 
-Depuis le dossier `course-01-premiers-pas` du dépôt de démos, exécuter `mvn spring-boot:run`. Repérer dans la console le démarrage de Tomcat et le message indiquant que l’application écoute sur le port 8080.
-
-### 2. Faire une requête réelle (5 min)
-
-Dans un second terminal, lancer `curl -i http://localhost:8080/hello`. Observer le statut HTTP, le type de contenu et le corps `Bonjour Spring`. Demander aux étudiants de séparer les éléments de la réponse HTTP du texte produit par le programme.
-
-### 3. Relier le résultat aux classes (10 min)
-
-Ouvrir `Application.java`, puis `HelloController.java`. Suivre le diagramme UML de la séance : la classe de démarrage lance le contexte Spring et le serveur ; `@RestController` expose le contrôleur ; `@GetMapping` associe `/hello` à `hello()`. La méthode ne démarre pas elle-même un serveur et ne lit pas le réseau.
-
-### 4. Reformuler (5 min)
-
-Faire décrire le trajet navigateur → Spring MVC → méthode Java → réponse. Demander ce qui change si l’on remplace le texte renvoyé, puis faire l’essai et relancer la requête. Arrêter l’application avec Ctrl+C.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+Les classes principales sont `Application`, qui démarre l’application, et `HelloController`, qui expose la route. L’idée à retenir est qu’une application Spring fournit un serveur et relie les requêtes web aux méthodes Java.
 
 ---
 

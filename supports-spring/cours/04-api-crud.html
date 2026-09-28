@@ -27,7 +27,7 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <main><section>
 <h1>Cours 4 — Créer une petite API de gestion d’utilisateurs</h1>
 <p><strong>Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.</strong></p>
-<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
+<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
 <p>Objectifs : envoyer du JSON au serveur, créer et retrouver un utilisateur, reconnaître les quatre opérations de base et retourner une erreur simple. Le stockage reste une collection Java pour se concentrer sur l’API.</p>
 </section><section>
 <h2>1. Notre annuaire et son contrat</h2>
@@ -89,17 +89,10 @@ public ResponseEntity&lt;UserView&gt; create(@RequestBody UserRequest request) {
 <p>L’exception <code>InvalidName</code> est une classe fournie qui étend <code>RuntimeException</code>. Lancer une exception interrompt le déroulement normal. Le service décrit ainsi le problème sans construire lui-même une réponse HTTP.</p>
 <p>Dans <code>ApiErrors</code>, <code>@RestControllerAdvice</code> déclare un gestionnaire commun aux contrôleurs. <code>@ExceptionHandler(InvalidName.class)</code> choisit le problème traité et <code>@ResponseStatus(HttpStatus.BAD_REQUEST)</code> impose le statut 400. Le même principe traduit <code>UserNotFound</code> en 404. Les détails du format d’erreur restent volontairement simples : un texte explicatif.</p>
 </section><section>
-<h2>Démonstration guidée — Observer le cycle CRUD et les réponses HTTP (25 min)</h2>
-<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud">dépôt dédié des démos — cours 4</a>. Java 25 et Maven 3.9 sont requis.</p>
-<h3>1. Démarrer l’API (4 min)</h3>
-<p>Dans <code>course-04-api-crud</code>, exécuter <code>mvn spring-boot:run</code>, puis <code>curl -i http://localhost:8080/users</code>. Au démarrage, la collection en mémoire est vide.</p>
-<h3>2. Créer et lire une ressource (7 min)</h3>
-<p>Créer un utilisateur : <code>curl -i -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot;Ana&quot;}&#x27; http://localhost:8080/users</code>. Repérer HTTP 201, l’en-tête <code>Location</code> et l’identifiant dans le JSON. Réutiliser l’URL de <code>Location</code> pour la lecture avec GET.</p>
-<h3>3. Modifier puis supprimer (7 min)</h3>
-<p>Avec l’URL obtenue, envoyer <code>curl -i -X PUT -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot;Ada&quot;}&#x27; http://localhost:8080/users/1</code>, puis <code>curl -i -X DELETE http://localhost:8080/users/1</code>. Observer HTTP 200 puis 204. Dans <code>UserController</code>, retrouver les annotations GET, POST, PUT et DELETE et la délégation à <code>UserService</code>.</p>
-<h3>4. Observer les erreurs et les rôles (7 min)</h3>
-<p>Tester <code>curl -i -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;name&quot;:&quot; &quot;}&#x27; http://localhost:8080/users</code> (400), puis GET <code>/users/999</code> (404). Relier <code>UserService</code> aux règles métier et <code>ApiErrors</code> à la conversion d’exceptions en statuts HTTP. La collection est volatile : le redémarrage efface les données.</p>
-<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+<h2>Démonstration — Cycle CRUD et réponses HTTP (15 min)</h2>
+<p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud">projet de démonstration du cours 4</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
+<p>La démonstration présente la création, la lecture, la modification et la suppression d’un utilisateur. Pour chaque requête, le contrôleur interprète l’entrée, délègue l’opération au service, puis produit une réponse HTTP avec les données et le statut appropriés.</p>
+<p>Les utilisateurs sont conservés dans une collection en mémoire. Les erreurs métier deviennent des réponses HTTP grâce au traitement centralisé des exceptions. Les données disparaissent au redémarrage : cette démo montre le fonctionnement de l’API, pas la persistance.</p>
 </section><section>
 <h2>TP guidé — un cycle complet puis une nouvelle règle</h2>
 <p><strong>Projet :</strong> <a href="../ateliers/04-crud/index.html">atelier 04</a>. Prévoir 65 min. Utiliser le projet fourni et lire seulement les fichiers indiqués à chaque étape.</p>

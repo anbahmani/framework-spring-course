@@ -130,27 +130,13 @@ On doit repérer un statut 200, un format `application/json` et le corps attendu
 
 ---
 
-## Démonstration guidée — Observer méthode HTTP, paramètres et conversion JSON (25 min)
+## Démonstration — Requête HTTP et réponse JSON (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 2](https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 2](https://github.com/anbahmani/framework-spring-demos/tree/main/course-02-http-json) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Démarrer et comparer les requêtes (5 min)
+La démonstration compare une route qui lit un paramètre dans l’URL et une route qui reçoit une valeur dans le chemin. Le contrôleur retourne ensuite un objet Java ; Spring MVC le convertit en JSON dans la réponse HTTP.
 
-Dans `course-02-http-json`, exécuter `mvn spring-boot:run`. Lancer `curl -i http://localhost:8080/hello` puis `curl -i "http://localhost:8080/hello?name=Ada"`. Comparer le chemin, le paramètre de requête et la réponse.
-
-### 2. Lire une ressource JSON (8 min)
-
-Exécuter `curl -i http://localhost:8080/users/42`. Observer le statut et le corps JSON `{"id":42,"name":"Ana"}`. Dans `UserController`, relier `@GetMapping`, `@PathVariable` et `UserView`. Dans `UserView`, relever le `record` Java ; Spring MVC sérialise automatiquement cet objet en JSON.
-
-### 3. Distinguer les entrées (7 min)
-
-Au tableau, opposer `/users/42` (segment d’URL lu par `@PathVariable`) à `/hello?name=Ada` (paramètre lu par `@RequestParam`). Faire prédire puis tester `/users/7` et `/hello?name=MIAGE`.
-
-### 4. Résumer le contrat (5 min)
-
-Faire nommer la méthode HTTP, l’URL, le code de statut et le type du corps de réponse. Préciser que JSON est la représentation échangée, tandis que `UserView` est la classe Java manipulée côté serveur.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+`UserController` déclare les routes et récupère les valeurs avec les annotations Spring. `UserView` représente les données renvoyées. On observe ainsi le passage d’une requête HTTP à un objet Java, puis à une réponse JSON.
 
 ---
 

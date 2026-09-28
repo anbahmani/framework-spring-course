@@ -27,7 +27,7 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <main><section>
 <h1>Cours 6 — Vérifier son application et découvrir les transactions</h1>
 <p><strong>Durée : 3 h. Prérequis : annuaire HTTP, service, repository et exceptions Java.</strong></p>
-<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
+<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
 <p>Objectifs : lire une assertion, lancer des tests, distinguer trois choses à vérifier et comprendre le principe « tout ou rien » d’une transaction. Aucun outil de test n’est supposé déjà connu.</p>
 </section><section>
 <h2>1. Pourquoi un test automatisé ?</h2>
@@ -80,17 +80,10 @@ public void createPair(String first, String second) {
 <figure class="diagram"><svg role="img" viewBox="0 0 1214 142" aria-label="Appel du service puis Spring ouvre la transaction puis Methode termine puis Commit puis Appel du service puis Spring ouvre la transaction"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Appel du service</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="62"><tspan x="301.0" dy="0">Spring ouvre la</tspan><tspan x="301.0" dy="20">transaction</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Methode termine</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Commit</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="72"><tspan x="913.0" dy="0">Appel du service</tspan></text><path class="arrow" d="M996 70.0 H1034" marker-end="url(#arrow)"/><rect class="box" x="1042" y="32" width="150" height="76" rx="8"/><text x="1117.0" y="62"><tspan x="1117.0" dy="0">Spring ouvre la</tspan><tspan x="1117.0" dy="20">transaction</tspan></text></svg></figure>
 <p>Pour ce TP, utiliser <strong>le service injecté dans le test</strong>, pas <code>new UserService(...)</code>, afin d’exercer aussi le comportement fourni par Spring. L’infrastructure d’interception détaillée sera étudiée plus tard.</p>
 </section><section>
-<h2>Démonstration guidée — Lire les tests qui vérifient HTTP et rollback (25 min)</h2>
-<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions">dépôt dédié des démos — cours 6</a>. Java 25 et Maven 3.9 sont requis.</p>
-<h3>1. Lancer les tests (5 min)</h3>
-<p>Dans <code>course-06-tests-transactions</code>, exécuter <code>mvn test</code>. Il n’y a pas de serveur à lancer : les tests démarrent le contexte nécessaire et une base H2 isolée.</p>
-<h3>2. Suivre un test HTTP (7 min)</h3>
-<p>Ouvrir <code>UserApiTest</code> et repérer <code>@SpringBootTest</code>, <code>@AutoConfigureMockMvc</code>, la requête MockMvc et l’assertion de statut. Relier le test au diagramme : le test envoie une requête au contrôleur sans ouvrir de port HTTP.</p>
-<h3>3. Voir le rollback (8 min)</h3>
-<p>Dans <code>TransactionTest</code>, lire <code>secondInvalidNameCancelsBothCreations</code>. Le service essaie d’enregistrer Ana, puis reçoit un nom invalide ; le test attend l’exception et vérifie <code>repository.count() == 0</code>. La transaction annule la première écriture pour conserver l’atomicité.</p>
-<h3>4. Distinguer les niveaux de test (5 min)</h3>
-<p>Dans <code>NameRuleTest</code>, identifier le faux repository et la vérification qu’il n’a pas été appelé pour un nom invalide. Faire classer les exemples : test de règle, test du service avec Spring, test HTTP avec MockMvc. Terminer par une nouvelle exécution de <code>mvn test</code> et lecture du bilan.</p>
-<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+<h2>Démonstration — Tests HTTP et annulation transactionnelle (15 min)</h2>
+<p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions">projet de démonstration du cours 6</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
+<p>La démonstration montre deux façons de vérifier l’application. Un test avec MockMvc envoie une requête au contrôleur sans démarrer de serveur HTTP accessible par le réseau. Un test de service vérifie qu’une opération transactionnelle qui échoue n’enregistre aucune des écritures commencées.</p>
+<p><code>UserApiTest</code> illustre le contrat HTTP ; <code>TransactionTest</code> observe le tout-ou-rien de la transaction. La base H2 est isolée pour les tests afin que leur exécution ne modifie pas les données de l’application.</p>
 </section><section>
 <h2>TP guidé — lire un test, en ajouter un, observer un rollback</h2>
 <p><strong>Projet :</strong> <a href="../ateliers/06-tests/index.html">atelier 06</a>. Durée : 65 min. Il reprend l’annuaire du cours 5 avec une opération supplémentaire et des tests. Aucun serveur à lancer.</p>

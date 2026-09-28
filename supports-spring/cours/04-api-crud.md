@@ -2,7 +2,7 @@
 
 **Durée : 3 h. Prérequis : requête/réponse HTTP, JSON, contrôleur et service.**
 
-**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
 
 Objectifs : envoyer du JSON au serveur, créer et retrouver un utilisateur, reconnaître les quatre opérations de base et retourner une erreur simple. Le stockage reste une collection Java pour se concentrer sur l’API.
 
@@ -134,27 +134,13 @@ Dans `ApiErrors`, `@RestControllerAdvice` déclare un gestionnaire commun aux co
 
 ---
 
-## Démonstration guidée — Observer le cycle CRUD et les réponses HTTP (25 min)
+## Démonstration — Cycle CRUD et réponses HTTP (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 4](https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 4](https://github.com/anbahmani/framework-spring-demos/tree/main/course-04-api-crud) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Démarrer l’API (4 min)
+La démonstration présente la création, la lecture, la modification et la suppression d’un utilisateur. Pour chaque requête, le contrôleur interprète l’entrée, délègue l’opération au service, puis produit une réponse HTTP avec les données et le statut appropriés.
 
-Dans `course-04-api-crud`, exécuter `mvn spring-boot:run`, puis `curl -i http://localhost:8080/users`. Au démarrage, la collection en mémoire est vide.
-
-### 2. Créer et lire une ressource (7 min)
-
-Créer un utilisateur : `curl -i -H 'Content-Type: application/json' -d '{"name":"Ana"}' http://localhost:8080/users`. Repérer HTTP 201, l’en-tête `Location` et l’identifiant dans le JSON. Réutiliser l’URL de `Location` pour la lecture avec GET.
-
-### 3. Modifier puis supprimer (7 min)
-
-Avec l’URL obtenue, envoyer `curl -i -X PUT -H 'Content-Type: application/json' -d '{"name":"Ada"}' http://localhost:8080/users/1`, puis `curl -i -X DELETE http://localhost:8080/users/1`. Observer HTTP 200 puis 204. Dans `UserController`, retrouver les annotations GET, POST, PUT et DELETE et la délégation à `UserService`.
-
-### 4. Observer les erreurs et les rôles (7 min)
-
-Tester `curl -i -H 'Content-Type: application/json' -d '{"name":" "}' http://localhost:8080/users` (400), puis GET `/users/999` (404). Relier `UserService` aux règles métier et `ApiErrors` à la conversion d’exceptions en statuts HTTP. La collection est volatile : le redémarrage efface les données.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+Les utilisateurs sont conservés dans une collection en mémoire. Les erreurs métier deviennent des réponses HTTP grâce au traitement centralisé des exceptions. Les données disparaissent au redémarrage : cette démo montre le fonctionnement de l’API, pas la persistance.
 
 ---
 

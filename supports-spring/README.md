@@ -1,8 +1,8 @@
 # Sommaire des cours — Architecture et Spring
 
-Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance dure **3 heures** et comprend un cours projetable, une démonstration guidée de 25 minutes, un TP de 65 minutes et un quiz corrigé de huit questions.
+Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance dure **3 heures** et comprend un cours projetable, une démonstration de 15 minutes, un TP de 65 minutes et un quiz corrigé de huit questions.
 
-Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance comprend une démonstration guidée de 25 minutes — partie du cours — avant son TP distinct de 65 minutes. Les diagrammes de séquence UML sont intégrés aux supports et fonctionnent hors ligne.
+Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance comprend une démonstration de 15 minutes — partie du cours — avant son TP distinct de 65 minutes. Les diagrammes de séquence UML sont intégrés aux supports et fonctionnent hors ligne.
 
 | Séance | Cours | Démo | Atelier associé | Notions abordées |
 | --- | --- | --- | --- |
@@ -24,4 +24,4 @@ Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance
 - [Bilan de vérification](verification.html)
 - [Télécharger les supports et projets des huit séances](telechargements/supports-spring-cours-complet-java25.zip)
 
-La démonstration guidée est une partie à part entière du cours : elle introduit le concept sur un projet exécutable avant le TP. Le dépôt GitHub séparé regroupe les huit projets Maven ; les ateliers restent les espaces de modification des étudiants. Les diagrammes UML, la démonstration guidée, le TP et le quiz sont accessibles dans chaque cours ; le bouton **Diaporama** affiche une section à la fois.
+La démonstration est une partie à part entière du cours : elle illustre le concept sur un projet exécutable avant le TP, sans reprendre le travail pratique pas à pas. Le dépôt GitHub séparé regroupe les huit projets Maven ; les ateliers restent les espaces de modification des étudiants. Les diagrammes UML, la démonstration commentée, le TP et le quiz sont accessibles dans chaque cours ; le bouton **Diaporama** affiche une section à la fois.

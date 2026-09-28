@@ -27,7 +27,7 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 <main><section>
 <h1>Cours 8 — Découvrir les messages asynchrones avec Spring JMS</h1>
 <p><strong>Durée : 3 h. Prérequis : service, injection et appel HTTP synchrone.</strong></p>
-<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
+<p><strong>Déroulé indicatif :</strong> 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.</p>
 <p>Objectifs : expliquer producteur, file, broker et consommateur ; envoyer un texte et observer sa réception. Le TP utilise un broker embarqué fourni, sans Docker ni administration de serveur.</p>
 </section><section>
 <h2>1. Un autre mode de communication</h2>
@@ -86,17 +86,10 @@ System.out.println(&quot;Demande envoyée&quot;);</code></pre>
 <p>Pour cette première découverte, nous attendons seulement un échange de texte observé, avec les acteurs correctement identifiés. Les reprises automatiques, files d’erreur et garanties entre base et broker sont des sujets ultérieurs.</p>
 <p>Une file est utile pour distribuer des travaux entre consommateurs. Nous n’ajoutons pas de second modèle de diffusion dans le TP : maîtriser un premier chemin complet est l’objectif.</p>
 </section><section>
-<h2>Démonstration guidée — Observer l’envoi et la réception asynchrones (25 min)</h2>
-<p><strong>Objectif de la démonstration :</strong> comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages">dépôt dédié des démos — cours 8</a>. Java 25 et Maven 3.9 sont requis.</p>
-<h3>1. Lancer la démo (5 min)</h3>
-<p>Dans <code>course-08-messages</code>, exécuter <code>mvn spring-boot:run</code>. Aucun broker externe n’est nécessaire : Artemis démarre dans le processus de l’application.</p>
-<h3>2. Suivre le producteur (7 min)</h3>
-<p>Lire <code>DemoRunner</code> puis <code>NotificationSender</code>. Au démarrage, le runner envoie <code>Bienvenue Ana</code> ; le service remet le texte à <code>JmsTemplate</code>, qui l’envoie dans la file <code>notifications</code>. Repérer <code>Demande envoyée</code> dans la console.</p>
-<h3>3. Suivre le consommateur (8 min)</h3>
-<p>Lire <code>NotificationReceiver</code> et son annotation <code>@JmsListener</code>. Observer <code>RECU : Bienvenue Ana</code> dans la console. Faire comparer cette chaîne au diagramme UML : le producteur remet le message au broker, puis le consommateur le reçoit séparément.</p>
-<h3>4. Distinguer message et appel HTTP (5 min)</h3>
-<p>Faire expliquer pourquoi l’envoi ne renvoie pas le résultat du traitement du consommateur. Le broker utilisé ici est embarqué et non persistant ; l’exemple illustre le mécanisme, pas la reprise après incident. Arrêter avec Ctrl+C.</p>
-<p><strong>Transition vers le TP :</strong> la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.</p>
+<h2>Démonstration — Producteur, broker et consommateur (15 min)</h2>
+<p><strong>Place dans le cours :</strong> cette démonstration illustre le concept présenté dans la partie précédente. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages">projet de démonstration du cours 8</a> permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.</p>
+<p>La démonstration suit l’envoi d’un message texte par un producteur vers une file Artemis. Le broker reçoit le message puis le remet au consommateur qui écoute cette file. L’envoi et le traitement sont deux moments distincts ; le producteur ne reçoit pas directement le résultat du consommateur.</p>
+<p><code>NotificationSender</code> utilise <code>JmsTemplate</code> pour envoyer le message, et <code>NotificationReceiver</code> le traite avec un écouteur Spring JMS. Le broker est embarqué et non persistant dans cet exemple ; la démonstration présente le trajet d’un message asynchrone.</p>
 </section><section>
 <h2>TP guidé — envoyer et reconnaître deux messages</h2>
 <p><strong>Projet :</strong> <a href="../ateliers/08-messages/index.html">atelier 08</a>. Durée : 65 min. Utiliser Java 25. Aucun serveur HTTP précédent n’est nécessaire ; vous pouvez l’arrêter.</p>

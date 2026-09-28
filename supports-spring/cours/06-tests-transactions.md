@@ -2,7 +2,7 @@
 
 **Durée : 3 h. Prérequis : annuaire HTTP, service, repository et exceptions Java.**
 
-**Déroulé indicatif :** 15 min de rappel, 50 min d’explications, 25 min de démonstration guidée, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
+**Déroulé indicatif :** 15 min de rappel, 60 min d’explications, 15 min de démonstration, 10 min de pause, 65 min de TP et 15 min de quiz/correction.
 
 Objectifs : lire une assertion, lancer des tests, distinguer trois choses à vérifier et comprendre le principe « tout ou rien » d’une transaction. Aucun outil de test n’est supposé déjà connu.
 
@@ -139,27 +139,13 @@ Pour ce TP, utiliser **le service injecté dans le test**, pas `new UserService(
 
 ---
 
-## Démonstration guidée — Lire les tests qui vérifient HTTP et rollback (25 min)
+## Démonstration — Tests HTTP et annulation transactionnelle (15 min)
 
-**Objectif de la démonstration :** comprendre un parcours Spring complet en observant le projet exécutable avant de le modifier dans le TP. Le code, les étapes de lancement et les vérifications sont regroupés dans le [dépôt dédié des démos — cours 6](https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions). Java 25 et Maven 3.9 sont requis.
+**Place dans le cours :** cette démonstration illustre le concept présenté dans la partie précédente. Le [projet de démonstration du cours 6](https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions) permet de voir le comportement complet et les principaux composants. Elle sert d’exemple commenté ; les modifications sont réservées au TP.
 
-### 1. Lancer les tests (5 min)
+La démonstration montre deux façons de vérifier l’application. Un test avec MockMvc envoie une requête au contrôleur sans démarrer de serveur HTTP accessible par le réseau. Un test de service vérifie qu’une opération transactionnelle qui échoue n’enregistre aucune des écritures commencées.
 
-Dans `course-06-tests-transactions`, exécuter `mvn test`. Il n’y a pas de serveur à lancer : les tests démarrent le contexte nécessaire et une base H2 isolée.
-
-### 2. Suivre un test HTTP (7 min)
-
-Ouvrir `UserApiTest` et repérer `@SpringBootTest`, `@AutoConfigureMockMvc`, la requête MockMvc et l’assertion de statut. Relier le test au diagramme : le test envoie une requête au contrôleur sans ouvrir de port HTTP.
-
-### 3. Voir le rollback (8 min)
-
-Dans `TransactionTest`, lire `secondInvalidNameCancelsBothCreations`. Le service essaie d’enregistrer Ana, puis reçoit un nom invalide ; le test attend l’exception et vérifie `repository.count() == 0`. La transaction annule la première écriture pour conserver l’atomicité.
-
-### 4. Distinguer les niveaux de test (5 min)
-
-Dans `NameRuleTest`, identifier le faux repository et la vérification qu’il n’a pas été appelé pour un nom invalide. Faire classer les exemples : test de règle, test du service avec Spring, test HTTP avec MockMvc. Terminer par une nouvelle exécution de `mvn test` et lecture du bilan.
-
-**Transition vers le TP :** la démo montre un parcours fonctionnel ; le TP reprend le même sujet pour faire modifier et expliquer le code.
+`UserApiTest` illustre le contrat HTTP ; `TransactionTest` observe le tout-ou-rien de la transaction. La base H2 est isolée pour les tests afin que leur exécution ne modifie pas les données de l’application.
 
 ---
 
