@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cours 1 — Découvrir Spring et lancer sa première application</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+<link rel="icon" type="image/svg+xml" href="../favicon.svg"><title>Cours 1 — Découvrir Spring et lancer sa première application</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
 header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
@@ -51,7 +51,7 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
     └── test/java/...</code></pre>
 <p><code>src/main/java</code> contient le code de l’application. <code>src/main/resources</code> contient sa configuration. Les fichiers de <code>src/test</code> vérifient le fonctionnement ; nous apprendrons à les lire à la séance 6.</p>
 <p><strong>Maven</strong> est l’outil qui télécharge les bibliothèques, compile et lance certaines commandes du projet. Sa recette s’appelle <code>pom.xml</code>. Une <strong>dépendance Maven</strong> est une bibliothèque nécessaire au projet. Le <strong>starter web</strong> est un ensemble de dépendances préparé pour une application web.</p>
-<p>Dans le POM, repérer <code>spring-boot-starter-web</code>, <code>java.version</code> et <code>spring-boot-maven-plugin</code>. Le parent fixe des réglages communs ; le plugin permet notamment la commande de lancement. Il n’est pas demandé d’écrire tout le POM de mémoire.</p>
+<p>Dans le POM, repérer <code>spring-boot-starter-webmvc</code>, <code>java.version</code> et <code>spring-boot-maven-plugin</code>. Le parent fixe des réglages communs ; le plugin permet notamment la commande de lancement. Il n’est pas demandé d’écrire tout le POM de mémoire.</p>
 </section><section>
 <h2>4. Le point de départ reste <code>main</code></h2>
 <pre><code>package fr.miage.debut;
@@ -116,7 +116,7 @@ public class HelloController {
 public String info() { return &quot;Mon premier serveur Java&quot;; }</code></pre>
 <p>Si <code>/info</code> n’existe pas : vérifier le chemin, l’annotation, l’emplacement de la méthode dans la classe et le redémarrage. Si le port est occupé, arrêter l’autre application. Une classe nommée <code>InfoController</code> n’est pas nécessaire pour cette petite variante.</p>
 </details>
-<p>Référence enseignant : <a href="https://docs.spring.io/spring-boot/3.5/tutorial/first-application/index.html">première application Spring Boot</a>.</p>
+<p>Référence enseignant : <a href="https://docs.spring.io/spring-boot/4.1/tutorial/first-application/index.html">première application Spring Boot</a>.</p>
 </section><section>
 <h2>Quiz — 8 questions</h2>
 <p>Une réponse attendue par question ; répondre avec les notions de cette séance.</p>

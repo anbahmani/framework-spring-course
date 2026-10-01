@@ -211,17 +211,18 @@ def render(markdown):
 
 def main():
     for source in sorted(ROOT.rglob('*.md')):
-        if 'target' in source.parts:
+        if 'target' in source.parts or 'demos' in source.relative_to(ROOT).parts:
             continue
         text = source.read_text()
         title = text.splitlines()[0].lstrip('# ')
         depth = len(source.relative_to(ROOT).parts)-1
         home = '../'*depth + 'index.html'
+        favicon = '../'*depth + 'favicon.svg'
         body = render(text)
         body_class = ' class="course-deck"' if source.parent == ROOT / 'cours' else ''
         page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{escape(title)}</title><style>{STYLE}</style></head><body{body_class}>
+<link rel="icon" type="image/svg+xml" href="{favicon}"><title>{escape(title)}</title><style>{STYLE}</style></head><body{body_class}>
 <header><a href="{home}">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
 <button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
 <span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>

@@ -2,7 +2,7 @@
 
 Chaque sous-dossier est un projet Maven autonome. Ouvrir l’atelier lié au cours en cours : il constitue un état de départ fonctionnel. La modification à réaliser et sa correction sont dans le cours associé.
 
-Tous les ateliers utilisent **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Aucun ne demande de clé API ou de service payant ; les bases et le broker utilisés démarrent localement.
+Tous les ateliers utilisent **Java 25, Maven 3.9 et Spring Boot 4.1.1**. Le dernier atelier utilise Spring AI 2.0.1 et MCP Inspector ; aucun ne demande de clé API ou de service payant.
 
 | Atelier | Cours associé | Projet |
 | --- | --- | --- |
@@ -14,6 +14,7 @@ Tous les ateliers utilisent **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Aucun 
 | 6 | [Tests et transactions](../cours/06-tests-transactions.html) | [Tests de l’annuaire](06-tests/index.html) |
 | 7 | [Client HTTP](../cours/07-client-http.html) | [Client Java de l’annuaire](07-client/index.html) |
 | 8 | [Messages](../cours/08-messages.html) | [Envoi et réception de messages](08-messages/index.html) |
+| 9 | [MCP](../cours/09-mcp.html) | [Outil de recherche MCP](09-mcp/index.html) |
 
 ## Lancement
 

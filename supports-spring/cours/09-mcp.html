@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg"><title>Cours 9 — Exposer un service Spring avec MCP</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
+header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
+main{max-width:1120px;margin:28px auto;padding:0 24px}section{background:var(--paper);padding:38px 48px;margin-bottom:24px;border-radius:12px;border-top:4px solid var(--accent);box-shadow:0 2px 12px #16343a0a}
+h1{font-size:2.1rem;line-height:1.2}h2{font-size:1.55rem;line-height:1.3;color:#086b63}h3{font-size:1.15rem}a{color:#076a87;text-underline-offset:3px}
+p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;background:#edf3f5;padding:2px 4px;border-radius:4px}
+pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
+.table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
+details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.sequence-diagram .lifeline{stroke:#78909a;stroke-width:1.5;stroke-dasharray:6 6}.sequence-diagram .participant{fill:#e7f3f1;stroke:#087e72;stroke-width:2}.sequence-diagram .message{stroke:#32515c;stroke-width:2;fill:none}.sequence-diagram .message.return{stroke-dasharray:7 5}.sequence-diagram .message-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}.sequence-diagram .actor-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
+.deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
+body.projection section{min-height:75vh;font-size:1.12em}
+body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;min-height:calc(100vh - 150px);font-size:1.18em;margin-bottom:0}body.deck section.active{display:block}body.deck.course-deck main>section:first-child.active{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}body.deck.course-deck main>section:first-child.active h1{font-size:clamp(2.5rem,6vw,5rem);max-width:18ch;margin:auto}body.deck footer{display:none}body.deck .deck-controls{display:flex}body.hide-answers details{display:none}
+@media(max-width:700px){main{padding:0 10px}section{padding:20px}h1{font-size:1.7rem}}
+@media print{body{background:white;font-size:11pt}header,footer{display:none}main{max-width:none;margin:0;padding:0}section{box-shadow:none;border:0;padding:0;margin:0;break-after:page}section:last-child{break-after:auto}pre{background:#f1f4f5;color:black;font-size:9pt}h2,h3{break-after:avoid}tr,pre{break-inside:avoid}a{color:inherit}details{background:white}.table{overflow:visible}}
+</style></head><body class="course-deck">
+<header><a href="../index.html">Architecture &amp; Spring</a><span>M1 MIAGE · Supports pédagogiques</span>
+<button onclick="document.body.classList.toggle('projection')">Lecture / projection</button>
+<span class="deck-controls"><button onclick="prevSlide()" aria-label="Diapositive précédente">◀</button><span class="slide-count" id="slideCount"></span><button onclick="nextSlide()" aria-label="Diapositive suivante">▶</button></span>
+<button onclick="toggleDeck()">Diaporama</button>
+<button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
+<button onclick="window.print()">Imprimer / PDF</button></header>
+<main><section>
+<h1>Cours 9 — Exposer un service Spring avec MCP</h1>
+</section><section>
+<h2>1. De l’API appelée par un programme à l’outil découvert par un client IA</h2>
+<p>Dans les cours précédents, nous avons appelé une API HTTP avec une adresse et un contrat connus à l’avance. Avec <strong>Model Context Protocol (MCP)</strong>, une application hôte peut découvrir les capacités d’un serveur puis demander l’exécution d’un outil avec des arguments structurés.</p>
+<p>MCP ne remplace pas HTTP ou les API REST. C’est un protocole standardisé pour présenter des capacités à des applications compatibles. Le serveur reste une application Spring ; ses outils appellent ses composants métier.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 1010 142" aria-label="Application hote puis Client MCP puis Protocole MCP puis Serveur Spring puis Service metier"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Application hote</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">Client MCP</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Protocole MCP</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Serveur Spring</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="72"><tspan x="913.0" dy="0">Service metier</tspan></text></svg></figure>
+</section><section>
+<h2>2. Les trois rôles</h2>
+<div class="table"><table>
+<tr><th>Rôle</th><th>Responsabilité</th><th>Exemple de ce cours</th></tr>
+<tr><td>Hôte</td><td>Application qui fournit l’interface à l’utilisateur et gère les connexions MCP</td><td>Inspecteur MCP pendant le TP</td></tr>
+<tr><td>Client MCP</td><td>Partie de l’hôte qui parle le protocole à un serveur</td><td>Client activé dans l’inspecteur</td></tr>
+<tr><td>Serveur MCP</td><td>Application qui annonce et réalise ses capacités</td><td>Serveur Spring Boot de l’annuaire</td></tr>
+</table></div>
+<p>Un hôte peut utiliser plusieurs clients pour se connecter à plusieurs serveurs. Le client MCP et le serveur négocient leurs versions et capacités ; ils ne partagent pas leurs objets Java.</p>
+<figure class="diagram sequence-diagram"><svg role="img" viewBox="0 0 782 462" aria-label="Diagramme de séquence UML : host: Application hote; client: Client MCP; server: Serveur Spring; service: Service metier"><defs><marker id="umlArrow12" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="participant" x="34.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="109.0" y="59.0"><tspan x="109.0" dy="0">Application hote</tspan></text><path class="lifeline" d="M109.0 78 V430"/><rect class="participant" x="222.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="297.0" y="59.0"><tspan x="297.0" dy="0">Client MCP</tspan></text><path class="lifeline" d="M297.0 78 V430"/><rect class="participant" x="410.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="485.0" y="59.0"><tspan x="485.0" dy="0">Serveur Spring</tspan></text><path class="lifeline" d="M485.0 78 V430"/><rect class="participant" x="598.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="673.0" y="59.0"><tspan x="673.0" dy="0">Service metier</tspan></text><path class="lifeline" d="M673.0 78 V430"/><path class="message" d="M114.0 112 H289.0" marker-end="url(#umlArrow12)"/><text class="message-label" x="203.0" y="100"><tspan x="203.0" dy="0">demarre une connexion MCP</tspan></text><path class="message" d="M302.0 178 H477.0" marker-end="url(#umlArrow12)"/><text class="message-label" x="391.0" y="166"><tspan x="391.0" dy="0">initialize et capacites</tspan></text><path class="message return" d="M480.0 244 H305.0" marker-end="url(#umlArrow12)"/><text class="message-label" x="391.0" y="232"><tspan x="391.0" dy="0">version et capacites acceptees</tspan></text><path class="message" d="M302.0 310 H477.0" marker-end="url(#umlArrow12)"/><text class="message-label" x="391.0" y="298"><tspan x="391.0" dy="0">tools/list</tspan></text><path class="message return" d="M480.0 376 H305.0" marker-end="url(#umlArrow12)"/><text class="message-label" x="391.0" y="364"><tspan x="391.0" dy="0">noms, descriptions et schemas</tspan></text></svg><figcaption>Diagramme de séquence UML</figcaption></figure>
+</section><section>
+<h2>3. Outils, ressources et prompts</h2>
+<p>MCP décrit plusieurs types de capacités. Spring AI fournit des annotations pour les déclarer dans une application Spring.</p>
+<div class="table"><table>
+<tr><th>Capacité</th><th>À quoi elle sert</th><th>Exemple</th></tr>
+<tr><td>Outil (tool)</td><td>Exécuter une opération demandée par l’utilisateur ou le modèle</td><td>Rechercher une fiche dans l’annuaire</td></tr>
+<tr><td>Ressource (resource)</td><td>Lire une donnée présentée comme contexte</td><td>Consulter un document ou une fiche accessible par URI</td></tr>
+<tr><td>Prompt</td><td>Proposer un modèle de consigne réutilisable</td><td>Guider un diagnostic selon un scénario</td></tr>
+</table></div>
+<p>Nous allons implémenter un outil en lecture seule. Les ressources et prompts sont des capacités différentes ; une méthode Java ne devient pas l’une ou l’autre simplement parce qu’elle renvoie du texte.</p>
+</section><section>
+<h2>4. Ce que MCP échange</h2>
+<p>Les messages MCP utilisent JSON-RPC 2.0 et un cycle de découverte. Le client initialise la connexion, demande les outils disponibles, puis en invoque un par son nom et ses arguments.</p>
+<figure class="diagram sequence-diagram"><svg role="img" viewBox="0 0 782 792" aria-label="Diagramme de séquence UML : client: Client MCP; server: Serveur Spring; tool: Outil annuaire; service: DirectoryService"><defs><marker id="umlArrow13" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="participant" x="34.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="109.0" y="59.0"><tspan x="109.0" dy="0">Client MCP</tspan></text><path class="lifeline" d="M109.0 78 V760"/><rect class="participant" x="222.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="297.0" y="59.0"><tspan x="297.0" dy="0">Serveur Spring</tspan></text><path class="lifeline" d="M297.0 78 V760"/><rect class="participant" x="410.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="485.0" y="59.0"><tspan x="485.0" dy="0">Outil annuaire</tspan></text><path class="lifeline" d="M485.0 78 V760"/><rect class="participant" x="598.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="673.0" y="59.0"><tspan x="673.0" dy="0">DirectoryService</tspan></text><path class="lifeline" d="M673.0 78 V760"/><path class="message" d="M114.0 112 H289.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="100"><tspan x="203.0" dy="0">initialize</tspan></text><path class="message return" d="M292.0 178 H117.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="166"><tspan x="203.0" dy="0">protocolVersion et capabilities</tspan></text><path class="message" d="M114.0 244 H289.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="232"><tspan x="203.0" dy="0">tools/list</tspan></text><path class="message return" d="M292.0 310 H117.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="298"><tspan x="203.0" dy="0">findUserById(id: number)</tspan></text><path class="message" d="M114.0 376 H289.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="364"><tspan x="203.0" dy="0">tools/call(name, arguments)</tspan></text><path class="message" d="M302.0 442 H477.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="391.0" y="430"><tspan x="391.0" dy="0">appelle la methode annotee</tspan></text><path class="message" d="M490.0 508 H665.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="579.0" y="496"><tspan x="579.0" dy="0">findUserById(id)</tspan></text><path class="message return" d="M668.0 574 H493.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="579.0" y="562"><tspan x="579.0" dy="0">resultat metier</tspan></text><path class="message return" d="M480.0 640 H305.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="391.0" y="628"><tspan x="391.0" dy="0">resultat de l outil</tspan></text><path class="message return" d="M292.0 706 H117.0" marker-end="url(#umlArrow13)"/><text class="message-label" x="203.0" y="694"><tspan x="203.0" dy="0">reponse JSON-RPC</tspan></text></svg><figcaption>Diagramme de séquence UML</figcaption></figure>
+<p>Le schéma de l’outil décrit ses paramètres. Une bonne description aide le client à choisir et appeler la bonne capacité, mais ne remplace ni la validation Java ni les règles métier.</p>
+</section><section>
+<h2>5. Le transport : comment les messages arrivent au serveur</h2>
+<p>Le protocole MCP et son transport répondent à deux questions différentes : <strong>quels messages échanger ?</strong> et <strong>par quel canal les transporter ?</strong></p>
+<div class="table"><table>
+<tr><th>Transport</th><th>Canal</th><th>Exemple d’utilisation</th></tr>
+<tr><td>STDIO</td><td>Entrée et sortie standard d’un processus local</td><td>Hôte qui démarre un serveur sur le même poste</td></tr>
+<tr><td>Streamable HTTP</td><td>Requêtes HTTP vers un serveur indépendant, avec flux facultatif</td><td>Serveur Spring sur <code>http://localhost:8080/mcp</code></td></tr>
+</table></div>
+<p>Ce cours utilise Streamable HTTP pour rendre visibles deux applications séparées. Spring AI propose aussi un transport SSE historique ; le cours ne l’utilise pas. Le transport ne définit pas à lui seul l’authentification ni les permissions métier.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 806 142" aria-label="Inspecteur MCP puis HTTP POST /mcp puis Spring AI puis Outil annuaire"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Inspecteur MCP</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">HTTP POST /mcp</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Spring AI</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Outil annuaire</tspan></text></svg></figure>
+</section><section>
+<h2>6. Déclarer un outil avec Spring AI</h2>
+<p>Le projet de démonstration utilise une annotation sur une méthode d’un bean Spring :</p>
+<pre><code>@Component
+public class DirectoryTools {
+    private final DirectoryService directory;
+
+    public DirectoryTools(DirectoryService directory) {
+        this.directory = directory;
+    }
+
+    @McpTool(description = &quot;Recherche une fiche utilisateur par son identifiant&quot;)
+    public String findUserById(
+            @McpToolParam(description = &quot;Identifiant numérique de la fiche&quot;) long id) {
+        return directory.findUserById(id);
+    }
+}</code></pre>
+<p>Spring crée <code>DirectoryTools</code> et lui injecte le service par constructeur. Spring AI détecte la méthode annotée, publie son nom, sa description et le type de son paramètre. Lors d’un appel, la méthode délègue au service métier.</p>
+<figure class="diagram sequence-diagram"><svg role="img" viewBox="0 0 594 396" aria-label="Diagramme de séquence UML : client: Client MCP; tools: DirectoryTools; service: DirectoryService"><defs><marker id="umlArrow14" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="participant" x="34.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="109.0" y="59.0"><tspan x="109.0" dy="0">Client MCP</tspan></text><path class="lifeline" d="M109.0 78 V364"/><rect class="participant" x="222.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="297.0" y="59.0"><tspan x="297.0" dy="0">DirectoryTools</tspan></text><path class="lifeline" d="M297.0 78 V364"/><rect class="participant" x="410.0" y="30" width="150" height="48" rx="7"/><text class="actor-label" x="485.0" y="59.0"><tspan x="485.0" dy="0">DirectoryService</tspan></text><path class="lifeline" d="M485.0 78 V364"/><path class="message" d="M114.0 112 H289.0" marker-end="url(#umlArrow14)"/><text class="message-label" x="203.0" y="100"><tspan x="203.0" dy="0">findUserById(id=1)</tspan></text><path class="message" d="M302.0 178 H477.0" marker-end="url(#umlArrow14)"/><text class="message-label" x="391.0" y="166"><tspan x="391.0" dy="0">findUserById(1)</tspan></text><path class="message return" d="M480.0 244 H305.0" marker-end="url(#umlArrow14)"/><text class="message-label" x="391.0" y="232"><tspan x="391.0" dy="0">fiche ou resultat absent</tspan></text><path class="message return" d="M292.0 310 H117.0" marker-end="url(#umlArrow14)"/><text class="message-label" x="203.0" y="298"><tspan x="203.0" dy="0">contenu du resultat</tspan></text></svg><figcaption>Diagramme de séquence UML</figcaption></figure>
+</section><section>
+<h2>7. Le serveur MCP reste un adaptateur</h2>
+<p>Le serveur MCP expose des opérations, mais ne doit pas contenir les règles métier. Le composant annoté traduit les arguments du protocole vers un appel de service ; le service conserve la responsabilité de la recherche et de ses règles.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 1010 142" aria-label="Client MCP puis Annotation @McpTool puis DirectoryTools puis DirectoryService puis Fiches de demonstration"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="72"><tspan x="97.0" dy="0">Client MCP</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="62"><tspan x="301.0" dy="0">Annotation</tspan><tspan x="301.0" dy="20">@McpTool</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">DirectoryTools</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">DirectoryService</tspan></text><path class="arrow" d="M792 70.0 H830" marker-end="url(#arrow)"/><rect class="box" x="838" y="32" width="150" height="76" rx="8"/><text x="913.0" y="62"><tspan x="913.0" dy="0">Fiches de</tspan><tspan x="913.0" dy="20">demonstration</tspan></text></svg></figure>
+<p>Cette séparation permet de faire évoluer l’interface MCP sans déplacer la logique de l’annuaire. Le cours se concentre sur ce chemin simple ; il ne demande pas de construire une architecture hexagonale complète.</p>
+</section><section>
+<h2>8. On peut essayer MCP sans fournir de modèle IA</h2>
+<p>Le <strong>MCP Inspector</strong> permet de se connecter au serveur, consulter la liste des outils et les appeler manuellement. Il n’a pas besoin d’un fournisseur de modèle pour cet essai : l’étudiant choisit lui-même l’outil et les valeurs des arguments.</p>
+<figure class="diagram"><svg role="img" viewBox="0 0 806 142" aria-label="Etudiant choisit outil et arguments puis Inspecteur MCP puis Serveur Spring puis Resultat affiche"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#32515c"/></marker></defs><rect class="box" x="22" y="32" width="150" height="76" rx="8"/><text x="97.0" y="62"><tspan x="97.0" dy="0">Etudiant choisit</tspan><tspan x="97.0" dy="20">outil et arguments</tspan></text><path class="arrow" d="M180 70.0 H218" marker-end="url(#arrow)"/><rect class="box" x="226" y="32" width="150" height="76" rx="8"/><text x="301.0" y="72"><tspan x="301.0" dy="0">Inspecteur MCP</tspan></text><path class="arrow" d="M384 70.0 H422" marker-end="url(#arrow)"/><rect class="box" x="430" y="32" width="150" height="76" rx="8"/><text x="505.0" y="72"><tspan x="505.0" dy="0">Serveur Spring</tspan></text><path class="arrow" d="M588 70.0 H626" marker-end="url(#arrow)"/><rect class="box" x="634" y="32" width="150" height="76" rx="8"/><text x="709.0" y="72"><tspan x="709.0" dy="0">Resultat affiche</tspan></text></svg></figure>
+<p>Un modèle de langage peut ensuite utiliser les descriptions et schémas pour proposer des appels, mais cette couche d’inférence n’est pas nécessaire pour comprendre le protocole ou vérifier un outil.</p>
+</section><section>
+<h2>9. Sécurité : un outil expose une véritable capacité</h2>
+<p>Un outil MCP n’est pas une simple annotation documentaire. Un client qui peut atteindre le serveur peut découvrir les capacités exposées et tenter de les invoquer. Il faut donc choisir soigneusement les opérations publiées, valider leurs arguments et appliquer les contrôles d’accès adaptés au déploiement.</p>
+<p>Le projet reste local et expose une recherche en lecture seule. Avant d’exposer un transport HTTP sur un réseau, il faut configurer une frontière d’authentification et d’autorisation ; Spring AI ne fournit pas à lui seul ces règles métier. Une confirmation côté utilisateur et une validation côté serveur sont nécessaires pour les actions sensibles.</p>
+</section><section>
+<h2>Démonstration — Découvrir et appeler un outil MCP</h2>
+<p><strong>Place dans le cours :</strong> la démonstration montre le protocole en action avant le TP. Le <a href="https://github.com/anbahmani/framework-spring-demos/tree/main/course-09-mcp">projet de démonstration du cours 9</a> expose un outil de recherche d’utilisateur via un serveur Spring AI. Il permet d’observer la découverte puis l’appel depuis MCP Inspector, sans clé d’API de modèle.</p>
+<p>On voit <code>DirectoryTools</code> déclarer l’outil, <code>DirectoryService</code> fournir le résultat et Spring AI relier l’annotation au serveur MCP. Le TP demandera ensuite d’ajouter une seconde capacité et de vérifier qu’elle apparaît dans la découverte.</p>
+</section><section>
+<h2>TP guidé — ajouter une capacité MCP</h2>
+<p><strong>Projet :</strong> <a href="../ateliers/09-mcp/index.html">atelier 09 — outils MCP</a>. Le projet démarre un serveur Streamable HTTP local, sans fournisseur d’IA.</p>
+<h3>Étape 1 — démarrer le serveur</h3>
+<p>Dans <code>09-mcp</code>, exécuter <code>mvn spring-boot:run</code>. <strong>Attendu :</strong> Spring Boot démarre et le serveur écoute sur le port 8080.</p>
+<h3>Étape 2 — ouvrir l’inspecteur</h3>
+<p>Lancer MCP Inspector avec <code>npx -y @modelcontextprotocol/inspector</code>. Dans l’interface, choisir le transport Streamable HTTP et l’adresse <code>http://localhost:8080/mcp</code>, puis connecter le client.</p>
+<h3>Étape 3 — explorer la capacité fournie</h3>
+<p>Ouvrir la liste des outils et repérer <code>findUserById</code>, sa description et son paramètre <code>id</code>. L’appeler avec <code>id = 1</code>, puis <code>id = 42</code>. Comparer les résultats retournés par le service.</p>
+<h3>Étape 4 — ajouter une capacité métier</h3>
+<p>Ajouter dans <code>DirectoryService</code> une méthode qui retourne le nombre de fiches, puis l’exposer avec une méthode annotée <code>@McpTool</code> dans <code>DirectoryTools</code>. Donner à l’outil un nom et une description compréhensibles. Ne pas exposer directement la collection interne.</p>
+<h3>Étape 5 — vérifier la découverte et l’appel</h3>
+<p>Relancer le serveur, reconnecter l’inspecteur, confirmer que le nouvel outil apparaît et l’appeler sans argument. <strong>Attendu :</strong> un résultat numérique correspondant aux fiches de démonstration.</p>
+<h3>Étape 6 — tester le service</h3>
+<p>Lancer <code>mvn test</code>. Ajouter ou adapter un test unitaire qui vérifie le nombre retourné, puis dessiner le chemin client MCP → outil Spring → service.</p>
+<p><strong>À rendre :</strong> les deux classes modifiées, le test, une capture ou transcription de la découverte et de l’appel, et le diagramme. <strong>Réussite :</strong> l’outil est découvert, son appel atteint le service, et le test vérifie le résultat.</p>
+<details>
+<summary>Aide et correction du TP</summary>
+<p>Le service peut exposer une méthode <code>public int countUsers()</code> qui retourne la taille de sa collection. L’adaptateur MCP peut proposer <code>@McpTool(description = &quot;Compte les fiches utilisateur disponibles&quot;) public int countUsers()</code>. Le test vérifie la valeur initiale connue du jeu de démonstration.</p>
+<p>Si l’inspecteur ne se connecte pas, vérifier que le serveur a démarré, que le protocole sélectionné est Streamable HTTP et que l’adresse finit par <code>/mcp</code>.</p>
+</details>
+<p>Références : <a href="https://docs.spring.io/spring-ai/reference/guides/getting-started-mcp.html">guide de démarrage MCP avec Spring AI</a>, <a href="https://docs.spring.io/spring-ai/reference/api/mcp/mcp-streamable-http-server-boot-starter-docs.html">transport HTTP Streamable</a>.</p>
+</section><section>
+<h2>Quiz — 8 questions</h2>
+<ol>
+<li>Quel problème MCP résout-il entre un hôte et un serveur ?</li>
+<li>Quel rôle joue le serveur Spring dans le TP ?</li>
+<li>Que fait une capacité de type outil ?</li>
+<li>Quel format d’échange est utilisé par MCP ?</li>
+<li>Quelle est la différence entre le protocole MCP et Streamable HTTP ?</li>
+<li>Faut-il une clé d’API de modèle pour découvrir et appeler un outil depuis MCP Inspector ?</li>
+<li>Pourquoi l’outil délègue-t-il à <code>DirectoryService</code> ?</li>
+<li>Que faut-il ajouter avant d’exposer le serveur HTTP hors de la machine locale ?</li>
+</ol>
+<details>
+<summary>Corrigé du quiz</summary>
+<ol>
+<li>Il standardise la découverte et l’utilisation de capacités fournies par des serveurs.</li>
+<li>Il expose des capacités MCP et reçoit les appels du client.</li>
+<li>Elle exécute une opération, par exemple rechercher une fiche.</li>
+<li>Des messages JSON-RPC 2.0 selon les règles MCP.</li>
+<li>MCP définit les messages et leur sens ; Streamable HTTP transporte ces messages par HTTP.</li>
+<li>Non. L’inspecteur permet de choisir et d’appeler les outils manuellement.</li>
+<li>Pour garder la logique métier séparée de l’adaptateur protocolaire.</li>
+<li>Des contrôles d’authentification, d’autorisation et la validation adaptée au service.</li>
+</ol>
+</details></section></main>
+<script>
+const slides = Array.from(document.querySelectorAll('main section'));
+let currentSlide = 0;
+function showSlide(index) {
+  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+  const count = document.getElementById('slideCount');
+  if (count) count.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+function toggleDeck() {
+  document.body.classList.toggle('deck');
+  showSlide(currentSlide);
+}
+function nextSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide + 1); }
+function prevSlide() { if (document.body.classList.contains('deck')) showSlide(currentSlide - 1); }
+document.addEventListener('keydown', event => {
+  if (!document.body.classList.contains('deck')) return;
+  if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); nextSlide(); }
+  if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); prevSlide(); }
+  if (event.key === 'Home') { event.preventDefault(); showSlide(0); }
+  if (event.key === 'End') { event.preventDefault(); showSlide(slides.length - 1); }
+});
+showSlide(0);
+</script>
+</body></html>

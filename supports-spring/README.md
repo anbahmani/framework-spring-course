@@ -2,7 +2,7 @@
 
 Supports destinés à des étudiants qui connaissent Java et découvrent Spring ainsi que les frameworks d’API. Chaque séance comprend un cours projetable, une démonstration, un TP et un quiz corrigé de huit questions.
 
-Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance comprend une démonstration — partie intégrante du cours — avant son TP distinct. Les diagrammes de séquence UML sont intégrés aux supports et fonctionnent hors ligne.
+Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 4.1.1**. Le cours MCP utilise également Spring AI 2.0.1. Chaque séance comprend une démonstration — partie intégrante du cours — avant son TP distinct. Les diagrammes UML sont intégrés aux supports et fonctionnent hors ligne.
 
 | Séance | Cours | Démo | Atelier associé | Notions abordées |
 | --- | --- | --- | --- |
@@ -14,10 +14,11 @@ Le parcours utilise **Java 25, Maven 3.9 et Spring Boot 3.5.16**. Chaque séance
 | 6 | [Vérifier son application et découvrir les transactions](cours/06-tests-transactions.html) | [Démo du cours](https://github.com/anbahmani/framework-spring-demos/tree/main/course-06-tests-transactions) | [Atelier 06 — Tests et transactions](ateliers/06-tests/index.html) | JUnit, assertions, MockMvc et rollback |
 | 7 | [Appeler une API depuis un programme Spring](cours/07-client-http.html) | [Démo du cours](https://github.com/anbahmani/framework-spring-demos/tree/main/course-07-client-http) | [Atelier 07 — Client HTTP](ateliers/07-client/index.html) | RestClient, contrat HTTP, JSON et erreurs de connexion |
 | 8 | [Découvrir les messages asynchrones avec Spring JMS](cours/08-messages.html) | [Démo du cours](https://github.com/anbahmani/framework-spring-demos/tree/main/course-08-messages) | [Atelier 08 — Messages texte](ateliers/08-messages/index.html) | Producteur, broker, file et consommateur |
+| 9 | [Exposer un service Spring avec MCP](cours/09-mcp.html) | [Démo du cours](https://github.com/anbahmani/framework-spring-demos/tree/main/course-09-mcp) | [Atelier 09 — Outils MCP](ateliers/09-mcp/index.html) | Serveur MCP, outils, découverte et Spring AI |
 
 ## Ressources
 
-- [Dépôt GitHub séparé des huit démos](https://github.com/anbahmani/framework-spring-demos) · [Sommaire des démos sur le site](demos/index.html)
+- [Dépôt GitHub séparé des neuf démos](https://github.com/anbahmani/framework-spring-demos) · [Sommaire des démos sur le site](demos/index.html)
 - [Préparer le poste et démarrer les ateliers](demarrage.html)
 - [Glossaire Spring](guide-spring.html)
-- [Télécharger les supports et projets des huit séances](telechargements/supports-spring-cours-complet-java25.zip)
+- [Télécharger les supports et projets des neuf séances](telechargements/supports-spring-cours-complet-java25.zip)

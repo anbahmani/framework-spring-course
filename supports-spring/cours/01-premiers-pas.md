@@ -49,7 +49,7 @@ Ouvrir `ateliers/01-demarrage`. C’est un petit projet complet, sans base de do
 
 **Maven** est l’outil qui télécharge les bibliothèques, compile et lance certaines commandes du projet. Sa recette s’appelle `pom.xml`. Une **dépendance Maven** est une bibliothèque nécessaire au projet. Le **starter web** est un ensemble de dépendances préparé pour une application web.
 
-Dans le POM, repérer `spring-boot-starter-web`, `java.version` et `spring-boot-maven-plugin`. Le parent fixe des réglages communs ; le plugin permet notamment la commande de lancement. Il n’est pas demandé d’écrire tout le POM de mémoire.
+Dans le POM, repérer `spring-boot-starter-webmvc`, `java.version` et `spring-boot-maven-plugin`. Le parent fixe des réglages communs ; le plugin permet notamment la commande de lancement. Il n’est pas demandé d’écrire tout le POM de mémoire.
 
 ---
 
@@ -172,7 +172,7 @@ Si `/info` n’existe pas : vérifier le chemin, l’annotation, l’emplacement
 
 </details>
 
-Référence enseignant : [première application Spring Boot](https://docs.spring.io/spring-boot/3.5/tutorial/first-application/index.html).
+Référence enseignant : [première application Spring Boot](https://docs.spring.io/spring-boot/4.1/tutorial/first-application/index.html).
 
 ---
 

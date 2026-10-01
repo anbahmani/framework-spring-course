@@ -29,24 +29,27 @@ jobs:
           submodules: recursive
       - name: Préparer GitHub Pages
         uses: actions/configure-pages@v6
-      - name: Préparer le site des huit séances
+      - name: Préparer le site des neuf séances
         run: |
           mkdir -p _site/cours _site/ateliers _site/demos _site/telechargements
           cp supports-spring/index.html supports-spring/README.md supports-spring/.nojekyll _site/
+          cp supports-spring/favicon.svg _site/
           cp supports-spring/demarrage.md supports-spring/demarrage.html _site/
           cp supports-spring/guide-spring.md supports-spring/guide-spring.html _site/
-          for course in 01-premiers-pas 02-http-json 03-injection-couches 04-api-crud 05-persistance 06-tests-transactions 07-client-http 08-messages; do
+          for course in 01-premiers-pas 02-http-json 03-injection-couches 04-api-crud 05-persistance 06-tests-transactions 07-client-http 08-messages 09-mcp; do
             cp "supports-spring/cours/$course.md" "supports-spring/cours/$course.html" _site/cours/
             if [ -f "supports-spring/cours/$course.pdf" ]; then cp "supports-spring/cours/$course.pdf" _site/cours/; fi
           done
           cp supports-spring/ateliers/README.md supports-spring/ateliers/index.html _site/ateliers/
           cp supports-spring/demos/README.md supports-spring/demos/index.html supports-spring/demos/pom.xml _site/demos/
-          for demo in course-01-premiers-pas course-02-http-json course-03-injection-couches course-04-api-crud course-05-persistance course-06-tests-transactions course-07-client-http course-08-messages rest-users jms-orders; do
+          for demo in course-01-premiers-pas course-02-http-json course-03-injection-couches course-04-api-crud course-05-persistance course-06-tests-transactions course-07-client-http course-08-messages course-09-mcp rest-users jms-orders; do
             mkdir -p "_site/demos/$demo"
             cp "supports-spring/demos/$demo/README.md" "supports-spring/demos/$demo/index.html" "supports-spring/demos/$demo/pom.xml" "_site/demos/$demo/"
+            if [ -d "supports-spring/demos/$demo/bruno" ]; then cp -R "supports-spring/demos/$demo/bruno" "_site/demos/$demo/"; fi
+            if [ -d "supports-spring/demos/$demo/postman" ]; then cp -R "supports-spring/demos/$demo/postman" "_site/demos/$demo/"; fi
             if [ -d "supports-spring/demos/$demo/src" ]; then cp -R "supports-spring/demos/$demo/src" "_site/demos/$demo/"; fi
           done
-          for atelier in 01-demarrage 02-http-json 03-injection 04-crud 05-persistance 06-tests 07-client 08-messages; do
+          for atelier in 01-demarrage 02-http-json 03-injection 04-crud 05-persistance 06-tests 07-client 08-messages 09-mcp; do
             mkdir -p "_site/ateliers/$atelier"
             cp "supports-spring/ateliers/$atelier/README.md" "supports-spring/ateliers/$atelier/index.html" "supports-spring/ateliers/$atelier/pom.xml" "_site/ateliers/$atelier/"
             cp -R "supports-spring/ateliers/$atelier/src" "_site/ateliers/$atelier/"

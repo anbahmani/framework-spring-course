@@ -8,7 +8,7 @@ Créer une classe Java, appeler une méthode, utiliser un constructeur, une list
 
 Installer ou faire préparer **un JDK 25**, **Maven 3.9**, un éditeur Java et un navigateur. Le JDK contient les outils de compilation et d’exécution Java. Maven prépare le projet à partir du fichier `pom.xml`. Il faut une connexion réseau au premier lancement pour télécharger les bibliothèques ; une fois téléchargées, elles sont gardées localement.
 
-Les huit ateliers sont fournis avec le parcours. Les huit projets de démonstration, qui servent pendant une séquence guidée du cours, sont regroupés dans un [dépôt GitHub séparé](https://github.com/anbahmani/framework-spring-demos). Pour le télécharger :
+Les neuf ateliers sont fournis avec le parcours. Les neuf projets de démonstration, qui servent pendant une séquence guidée du cours, sont regroupés dans un [dépôt GitHub séparé](https://github.com/anbahmani/framework-spring-demos). Pour le télécharger :
 
 ```bash
 git clone https://github.com/anbahmani/framework-spring-demos.git

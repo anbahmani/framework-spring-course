@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cours 8 — Découvrir les messages asynchrones avec Spring JMS</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
+<link rel="icon" type="image/svg+xml" href="../favicon.svg"><title>Cours 8 — Découvrir les messages asynchrones avec Spring JMS</title><style>:root{color-scheme:light;--ink:#172b3a;--accent:#087e72;--paper:#fff;--bg:#eff4f5}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:18px/1.65 system-ui,sans-serif}
 header{background:#102f3c;color:white;padding:16px 5%;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 header a{color:white}header span{flex:1}button{border:1px solid #b6dbd5;border-radius:6px;background:white;color:#123b3a;padding:8px 12px;cursor:pointer}
@@ -111,7 +111,7 @@ sender.send(&quot;Bienvenue Lea&quot;);
 System.out.println(&quot;Demandes envoyées&quot;);</code></pre>
 <p>Pour le changement de file : <code>convertAndSend(&quot;accueil&quot;, message)</code>, <code>@JmsListener(destination=&quot;accueil&quot;)</code> et <code>spring.artemis.embedded.queues=accueil</code>. Redémarrer pour prendre en compte toutes les modifications. Garder l’application active assez longtemps pour observer les réceptions.</p>
 </details>
-<p>Référence : <a href="https://docs.spring.io/spring-boot/3.5/reference/messaging/jms.html">messagerie avec Spring Boot</a>.</p>
+<p>Référence : <a href="https://docs.spring.io/spring-boot/4.1/reference/messaging/jms.html">messagerie avec Spring Boot</a>.</p>
 </section><section>
 <h2>Quiz — 8 questions</h2>
 <ol>

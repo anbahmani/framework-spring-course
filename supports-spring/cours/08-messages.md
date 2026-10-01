@@ -176,7 +176,7 @@ Pour le changement de file : `convertAndSend("accueil", message)`, `@JmsListener
 
 </details>
 
-Référence : [messagerie avec Spring Boot](https://docs.spring.io/spring-boot/3.5/reference/messaging/jms.html).
+Référence : [messagerie avec Spring Boot](https://docs.spring.io/spring-boot/4.1/reference/messaging/jms.html).
 
 ---
 
