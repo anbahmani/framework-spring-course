@@ -16,6 +16,7 @@ p{margin:15px 0}li{margin:8px 0}code{font:0.87em ui-monospace,monospace;backgrou
 pre{padding:20px;background:#102f3c;color:#edf8fa;overflow:auto;border-radius:8px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}pre code{padding:0;background:none;color:inherit}
 .table{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9em}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid #d8e3e5}th{background:#e5f0ee}
 details{margin-top:26px;padding:18px;background:#edf7f4;border-radius:8px}summary{cursor:pointer;font-weight:700}footer{text-align:center;font-size:14px;padding:25px}
+.course-navigation{display:flex;justify-content:space-between;gap:16px;padding:12px 5%;background:#e5f0ee;font-size:16px}.course-navigation a{font-weight:650;text-decoration:none}.course-navigation a:hover,.course-footer a:hover{text-decoration:underline}.course-footer{max-width:1120px;margin:28px auto;padding:24px;background:var(--paper);border-top:4px solid var(--accent);border-radius:10px}.course-footer h2{margin-top:0}.course-footer ul{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;padding:0}.course-footer li{margin:0}.course-footer a{font-size:15px}
 .diagram{margin:26px 0;padding:14px;background:#f8fbfb;border:1px solid #d8e8e7;border-radius:10px;overflow:auto}.diagram svg{display:block;max-width:100%;height:auto;margin:auto}.diagram .box{fill:#ffffff;stroke:#087e72;stroke-width:2}.diagram .arrow{stroke:#32515c;stroke-width:2.5;fill:none}.diagram text{font:15px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
 .sequence-diagram .lifeline{stroke:#78909a;stroke-width:1.5;stroke-dasharray:6 6}.sequence-diagram .participant{fill:#e7f3f1;stroke:#087e72;stroke-width:2}.sequence-diagram .message{stroke:#32515c;stroke-width:2;fill:none}.sequence-diagram .message.return{stroke-dasharray:7 5}.sequence-diagram .message-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}.sequence-diagram .actor-label{font:14px system-ui,sans-serif;fill:#172b3a;text-anchor:middle}
 .deck-controls{display:none;gap:8px;align-items:center}.slide-count{min-width:4.5em;text-align:center;color:#e9fbf8}
@@ -27,6 +28,32 @@ body.deck main{max-width:1240px;margin:20px auto}body.deck section{display:none;
 
 def output_path(path):
     return path.with_name('index.html') if path.name == 'README.md' else path.with_suffix('.html')
+
+def course_catalog():
+    courses = []
+    for source in sorted((ROOT / 'cours').glob('*.md')):
+        if not re.match(r'^\d+-', source.stem):
+            continue
+        title = source.read_text().splitlines()[0].lstrip('# ').strip()
+        courses.append((source, title))
+    return courses
+
+def course_navigation(source, courses):
+    index = next(i for i, (path, _) in enumerate(courses) if path == source)
+    links = []
+    if index > 0:
+        path, title = courses[index - 1]
+        links.append(f'<a class="previous-course" href="{path.name.replace(".md", ".html")}" rel="prev"><span aria-hidden="true">←</span> Cours précédent : {escape(title)}</a>')
+    if index + 1 < len(courses):
+        path, title = courses[index + 1]
+        links.append(f'<a class="next-course" href="{path.name.replace(".md", ".html")}" rel="next">Cours suivant : {escape(title)} <span aria-hidden="true">→</span></a>')
+    footer_links = [
+        f'<li><a href="{path.name.replace(".md", ".html")}">{escape(title)}</a></li>'
+        for i, (path, title) in enumerate(courses) if i != index
+    ]
+    nav = '<nav class="course-navigation" aria-label="Navigation entre les cours">' + ''.join(links) + '</nav>'
+    footer = '<footer class="course-footer"><h2>Autres cours</h2><nav aria-label="Tous les autres cours"><ul>' + ''.join(footer_links) + '</ul></nav></footer>'
+    return nav, footer
 
 def inline(value):
     # Protéger les fragments de code contre la mise en forme des astérisques.
@@ -210,6 +237,7 @@ def render(markdown):
     return '\n'.join(out) + '</section>'
 
 def main():
+    courses = course_catalog()
     for source in sorted(ROOT.rglob('*.md')):
         if 'target' in source.parts or 'demos' in source.relative_to(ROOT).parts:
             continue
@@ -219,7 +247,9 @@ def main():
         home = '../'*depth + 'index.html'
         favicon = '../'*depth + 'favicon.svg'
         body = render(text)
-        body_class = ' class="course-deck"' if source.parent == ROOT / 'cours' else ''
+        is_course = source.parent == ROOT / 'cours' and source in [path for path, _ in courses]
+        body_class = ' class="course-deck"' if is_course else ''
+        course_nav, course_footer = course_navigation(source, courses) if is_course else ('', '')
         page = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="{favicon}"><title>{escape(title)}</title><style>{STYLE}</style></head><body{body_class}>
@@ -229,7 +259,9 @@ def main():
 <button onclick="toggleDeck()">Diaporama</button>
 <button onclick="document.body.classList.toggle('hide-answers')">Afficher / masquer les corrigés</button>
 <button onclick="window.print()">Imprimer / PDF</button></header>
+{course_nav}
 <main>{body}</main>
+{course_footer}
 <script>
 const slides = Array.from(document.querySelectorAll('main section'));
 let currentSlide = 0;
